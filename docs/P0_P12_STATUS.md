@@ -1,4 +1,4 @@
-# What actually works: P0 to P12
+# What Actually Works: P0 to P12
 
 This page exists because "implemented" is a word with too much range in it. A
 feature can have a module, a test suite and a documentation page and still be
@@ -29,13 +29,13 @@ scripts/security_scan.py: exit 0
 The 30 skips are all one of two honest reasons: a generated dataset or model
 artifact that is not distributed in the source archive, or the isolated-Linux
 namespace lab, which requires `E4E_RUN_NAMESPACE_LAB=1` and a machine you own.
-Neither is a silenced failure. **Run the suite as a normal user** — as root, the
+Neither is a silenced failure. **Run the suite as a normal user**: as root, the
 artifact reader correctly refuses model files owned by anyone else, and several
 P7 tests fail for that reason alone.
 
 ---
 
-## The short version
+## The Short Version
 
 Everything that *observes* is implemented. Everything that *acts on the network*
 is lab-only or off. Everything that *learns on its own* is deliberately missing.
@@ -44,9 +44,9 @@ That ordering is the design, not an accident of what got finished first.
 
 ---
 
-## By stage
+## By Stage
 
-### P0-P1 — Foundation, capture, privileges, storage
+### P0-P1: Foundation, Capture, Privileges, Storage
 
 **IMPLEMENTED.** Configuration with validation, bounded event intake, the
 privilege-separated capture helper, the SQLite store with migrations, retention
@@ -59,7 +59,7 @@ Tests: `test_p1_foundation` (8), `test_p1_storage` (10), `test_p1_firewall` (6),
 Note on the firewall module at this stage: the *code* is implemented and tested;
 the *use* of it is covered under enforcement below and is LAB_ONLY.
 
-### P2 — Correlation and fingerprinting
+### P2: Correlation and Fingerprinting
 
 **IMPLEMENTED.** The bounded correlation table, source sequences, the p0f
 adapter, IP-ID and uptime observation, and offline PCAP replay.
@@ -68,7 +68,7 @@ Tests: `test_p2_correlation` (14), `test_p2_fingerprints` (11),
 `test_p2_offline` (7), `test_fingerprints` (7), `test_p0f_contract` (2),
 `test_probes` (16).
 
-### P3 — Deception profiles
+### P3: Deception Profiles
 
 **IMPLEMENTED**, and on by default in `sensor` mode, which answers nothing.
 Finite, bounded, non-interactive service profiles with a privacy projection at
@@ -77,7 +77,7 @@ the telemetry boundary.
 Tests: `test_p3_engine` (15), `test_p3_protocols` (5), `test_p3_catalogue` (2),
 `test_p3_storage` (3), `test_profiles` (9).
 
-### P4-P5 — API, metrics, logging, backpressure
+### P4-P5: API, Metrics, Logging, Backpressure
 
 **IMPLEMENTED**, all off by default. Local-only HTTP API, Prometheus-style
 metrics, bounded JSONL logging, load shedding and batched storage.
@@ -87,14 +87,14 @@ Tests: `test_p4_api` (11), `test_p4_metrics` (2), `test_p4_events_logging` (4),
 `test_p5_storage_batch` (4), `test_p5_performance_contracts` (2),
 `test_p5_benchmark_smoke` (1), `test_cache` (8).
 
-### P6 — Release operations
+### P6: Release Operations
 
 **IMPLEMENTED.** Backup and restore, storage lifecycle, migration planning,
 release build and package smoke.
 
 Tests: `test_p6_release_operations` (27).
 
-### P7 — Decision engine and the local ONNX boundary
+### P7: Decision Engine and the Local ONNX Boundary
 
 **IMPLEMENTED.** The deterministic mathematical engine, the feature schema, the
 fusion and policy guard, and the killable subprocess that owns the only
@@ -106,7 +106,7 @@ Tests: `test_p7_decisions` (23), `test_p7_onnx` (8), `test_p7_features` (3),
 The mathematical engine has never depended on a model. A deployment with no
 model file is a supported configuration, not a degraded one.
 
-### P8 — Reliability: OOD, drift, model health, anomaly
+### P8 Reliability: OOD, Drift, Model Health, Anomaly
 
 **IMPLEMENTED** as a mechanism. The reference distribution, out-of-distribution
 scoring, population drift, model health and the unsupervised anomaly model all
@@ -117,7 +117,7 @@ the classifier is given.
 Tests: `test_p11_reliability` (43), `test_p11_anomaly` (20),
 `test_p8_model_manifest` (6).
 
-### The shipped classifier — EXPERIMENTAL
+### The Shipped Classifier: EXPERIMENTAL
 
 `models/risk-logreg-v1` is shipped, and its own model card records why it should
 not be trusted to act:
@@ -136,7 +136,7 @@ which is exactly what you would expect from a synthetic corpus and exactly why
 the gate says no. It is shipped so that the pipeline around it can be exercised
 end to end, and it is shipped in shadow.
 
-### P9 — Dataset pipeline, review queue, training jobs
+### P9: Dataset Pipeline, Review Queue, Training Jobs
 
 **IMPLEMENTED**, with one qualification recorded below.
 
@@ -159,7 +159,7 @@ Treat the loop as **PARTIAL until a real deployment has run it**: every stage is
 implemented and tested, and none of it has ever been driven by traffic from a
 server somebody depends on.
 
-### P10 — Web sensor
+### P10: Web Sensor
 
 **IMPLEMENTED**, off by default. Nginx access-log parsing, client identity
 behind trusted proxies, per-source web behaviour and the action ladder up to
@@ -171,7 +171,7 @@ Tests: `test_web_parser` (57), `test_web_identity` (30), `test_web_behaviour`
 The sensor reads a log, which means it sees a request only after the server has
 already answered it. That is why it cannot break a website: it never touches one.
 
-### P11 — Adaptive web challenge
+### P11: Adaptive Web Challenge
 
 **IMPLEMENTED**, off by default, shadow by default.
 
@@ -186,7 +186,7 @@ label: failing one cannot make a source malicious and passing one cannot make it
 benign. The fuzzing suite found three genuine token-malleability bugs that no
 hand-written case would have reached.
 
-### P12 — Multi-site profiles
+### P12: Multi-site Profiles
 
 **IMPLEMENTED**, off by default (`sites.enabled = false`), every site starting
 in shadow.
@@ -205,22 +205,22 @@ network block reaches every site on the machine, which is why a site must be
 explicitly configured before it may ask for one, and why it is off in every
 profile template.
 
-### P13 — the audit itself
+### P13: The Audit Itself
 
 Not a feature, so it has no status word. It added four test files that ask
 whole-system questions rather than component ones, and they are listed here
 because the stage counts above do not otherwise account for them.
 
-Tests: `test_p13_degraded_modes` (37) — one injected failure per case;
-`test_p13_integration` (34) — the failures that hide behind a caught exception;
-`test_p13_drills` (19) — model rollback, site rollback, configuration migration;
-`test_p13_schemas` (10) — the compatibility matrix and training/runtime parity.
+Tests: `test_p13_degraded_modes` (37) (one injected failure per case;
+`test_p13_integration` (34)) the failures that hide behind a caught exception;
+`test_p13_drills` (19) (model rollback, site rollback, configuration migration;
+`test_p13_schemas` (10)) the compatibility matrix and training/runtime parity.
 
 Two defects found there had passed every component test for months: a review
 queue that received nothing, and a rollback that never reached the running
 process. See [reports/P13_FULL_SYSTEM_AUDIT_REPORT.md](../reports/P13_FULL_SYSTEM_AUDIT_REPORT.md).
 
-### P14 — model governance — IMPLEMENTED, OFF BY DEFAULT
+### P14 Model Governance: IMPLEMENTED, OFF BY DEFAULT
 
 Eleven lifecycle states with an explicit transition table; an assess-only engine
 of 45 gates, separate from the activator; guarded activation under a reduced
@@ -236,7 +236,7 @@ Tests: `test_p14_governance`, `test_p14_activation`, `test_p14_rollback`,
 `test_p14_readiness`, `test_p14_operations`, `test_p14_docs`.
 See [reports/P14_SCOPED_SAFE_AUTO_PROMOTION_REPORT.md](../reports/P14_SCOPED_SAFE_AUTO_PROMOTION_REPORT.md).
 
-### P15 — autonomous decision authority — IMPLEMENTED, OFF BY DEFAULT
+### P15 Autonomous Decision Authority: IMPLEMENTED, OFF BY DEFAULT
 
 A final ALLOW / TEMP_BLOCK authority with a cost-sensitive cutoff, a conservative
 probability estimate, ten independent evidence families, an assumption registry,
@@ -250,7 +250,7 @@ readiness gate refuses an installation with no protected networks configured.
 **What autonomous mode is on a production host.** Autonomous *decisions*, made
 and recorded without per-event approval, plus the web-layer actions where the web
 sensor is deployed. Autonomous *enforcement* stays lab-only, for the reason in
-the next section — and the readiness gate reports that rather than implying
+the next section, and the readiness gate reports that rather than implying
 otherwise.
 
 Tests: `test_p15_autonomy` (88), `test_p15_invariants` (45, including the
@@ -260,14 +260,14 @@ See [reports/P15_FINAL_AUTONOMOUS_DEFENSE_REPORT.md](../reports/P15_FINAL_AUTONO
 
 ---
 
-## Enforcement — LAB_ONLY
+## Enforcement: LAB_ONLY
 
 The firewall integration is implemented and tested, `enforcement.enabled`
 defaults to `false`, and the only places a temporary block has ever been
 exercised are an isolated network namespace and a container lab.
 
 No block has been placed on a production server by this software. Until that
-changes, enforcement is LAB_ONLY regardless of how much test coverage it has —
+changes, enforcement is LAB_ONLY regardless of how much test coverage it has,
 coverage is not deployment evidence, and saying otherwise to somebody choosing a
 tool for a server they cannot afford to lose would be a lie with consequences.
 
@@ -275,32 +275,32 @@ Tests: `tests/linux_lab/` (3, skipped unless `E4E_RUN_NAMESPACE_LAB=1`).
 
 ---
 
-## Deliberately missing
+## Deliberately Missing
 
-**Automatic model promotion — MISSING, by design.** There is no
+**Automatic model promotion: MISSING, by design.** There is no
 `auto_promote` setting anywhere in the configuration, because a name that does
 not exist cannot be set by accident. Promotion requires a person and a passing
 quality gate at the registry itself. This is P14's question, not P13's.
 
-**`learning.auto_train` and `learning.auto_prepare_dataset` — RESERVED, not
+**`learning.auto_train` and `learning.auto_prepare_dataset`: RESERVED, not
 honoured.** Both names exist and default to `false`. No code path reads either
 one to start anything. Setting either to `true` changes no behaviour in this
 release. They are kept so that a future release wiring them up cannot silently
 inherit a value an operator set expecting something else. `learning status` says
 this in those words.
 
-**Hack-back, retaliation, active response beyond deception — MISSING, and will
+**Hack-back, retaliation, active response beyond deception; MISSING, and will
 stay missing.** The name of the project is a description of what attackers do,
 not a description of what this software does.
 
 ---
 
-## Known limits that no amount of testing removes
+## Known Limits That No Amount of Testing Removes
 
 * **No at-risk user has run this.** The design choices follow from thinking
   about independent media and small NGOs running their own servers. None of them
   has used it. That gap closes by talking to operators, not by writing more code.
-* **The corpus is synthetic.** Reproducible, documented, leakage-checked — and
+* **The corpus is synthetic.** Reproducible, documented, leakage-checked; and
   generated. The held-out test PR-AUC above is what that costs.
 * **One process.** Multi-site is separation of state and policy, not a sandbox.
 * **Bus factor of one.**
@@ -310,9 +310,9 @@ not a description of what this software does.
   in `LICENSE` and in `pyproject.toml`. One optional dependency (scapy) is
   GPL-2.0-only; see `THIRD_PARTY_NOTICES.md` before bundling it.
 
-## See also
+## See Also
 
-* [ARCHITECTURE.md](ARCHITECTURE.md) — how the parts fit together
-* [THREAT_MODEL.md](THREAT_MODEL.md) — what this defends against, and what it does not
+* [ARCHITECTURE.md](ARCHITECTURE.md): how the parts fit together
+* [THREAT_MODEL.md](THREAT_MODEL.md): what this defends against, and what it does not
 * [LIMITATIONS.md](LIMITATIONS.md) and [RISKS_AND_LIMITATIONS.md](RISKS_AND_LIMITATIONS.md)
-* [SECURITY_REVIEW_SCOPE.md](SECURITY_REVIEW_SCOPE.md) — where an auditor should start
+* [SECURITY_REVIEW_SCOPE.md](SECURITY_REVIEW_SCOPE.md): where an auditor should start

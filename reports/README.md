@@ -1,9 +1,9 @@
-# Reports published with this repository
+# Reports Published With This Repository
 
 Two different kinds of document live here. The difference matters, because one
 kind is complete and the other deliberately is not.
 
-## Dataset and model reports
+## Dataset and Model Reports
 
 Generated from measured JSON artifacts. Every number comes from a dataset
 manifest or a file under `models/`; nothing is written by hand.
@@ -14,17 +14,17 @@ manifest or a file under `models/`; nothing is written by hand.
 - [`model-risk-logreg-v1.md`](model-risk-logreg-v1.md) - first ONNX risk baseline.
   ENGINEERING BASELINE ONLY, quality gate failed, SHADOW ONLY.
 
-The corpora those reports describe are **not** published - they are generated,
+The corpora those reports describe are **not** published; they are generated,
 and [`docs/RELEASE_CONTENTS.md`](../docs/RELEASE_CONTENTS.md) says why. The
 generators, schema, validators and data cards ship; the data is rebuilt.
 
-## Phase reports, and what they cite
+## Phase Reports, and What They Cite
 
 The remaining files are development-phase records, published because the
 documentation cites their conclusions by name: the P13 full-system audit, the
 P14 scoped auto-promotion report, the P15.1 final report and decision
 evaluation, the P15.2 final report, the P15.5 final release validation, and the
-P15 final autonomous-defence report - plus four small JSON records that the
+P15 final autonomous-defence report, plus four small JSON records that the
 published test suite reads.
 
 **These reports cite working evidence from their own phase that is not published
@@ -39,7 +39,7 @@ Three reasons they are absent, none of them an oversight.
   a report rather than a second copy of it. The conclusions are in the report
   you are reading.
 * One, the P15.5R runtime-integration report, is excluded **deliberately**: it
-  quotes the development machine directly - account names, absolute paths, the
+  quotes the development machine directly: account names, absolute paths, the
   exact privileged commands a run was made with.
   [`docs/VALIDATION_STATUS.md`](../docs/VALIDATION_STATUS.md) carries its
   conclusions instead, because sanitising it line by line would have left a

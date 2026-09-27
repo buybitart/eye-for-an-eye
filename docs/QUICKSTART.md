@@ -28,7 +28,7 @@ Storage: OK
 If `~/.local/bin` is not in your `PATH`, the installer says so. Add it, or use
 the full path it prints.
 
-## 2. Check the health
+## 2. Check the Health
 
 ```sh
 cd ~/.local/share/eye-for-an-eye/data
@@ -48,11 +48,11 @@ Normal answers on a fresh install:
 
 `doctor` exits with code 0 when nothing is degraded, and 7 when something is.
 
-## 3. Try it without any setup
+## 3. Try It Without Any Setup
 
-The fastest way to see it work is the built-in demo. It is finite: it starts a
-local listener, sends one local HTTP request to itself, checks that an event was
-recorded, and cleans up.
+The fastest way to see it work is the built-in demo. The demo stops on its own.
+It starts a local listener. It sends one local HTTP request to itself. It checks
+that an event was recorded. Then it cleans up.
 
 ```sh
 eye-for-an-eye demo
@@ -60,38 +60,38 @@ eye-for-an-eye demo
 
 No root. No firewall. No open port to the Internet.
 
-## 4. Add a source of traffic
+## 4. Add a Source of Traffic
 
 The service can watch traffic in three ways.
 
-**(a) A saved capture file — easiest, and completely offline:**
+**(a) A saved capture file.** This needs no setup, and it works offline:
 
 ```sh
 eye-for-an-eye analyze-pcap capture.pcap --config eye-for-an-eye.toml
 ```
 
-**(b) A live capture helper — the normal server case.** This needs a small
-helper process with `CAP_NET_RAW`. The main service stays unprivileged and talks
-to the helper over a Unix socket. See [Privileges](PRIVILEGES.md) and
+**(b) A live capture helper.** This is the normal case for a server. It needs a
+small helper process with `CAP_NET_RAW`. The main service keeps no extra rights.
+It talks to the helper over a Unix socket. See [Privileges](PRIVILEGES.md) and
 [Deployment](DEPLOYMENT.md).
 
-**(c) Decoy ports — the honeypot case.** Use the `honeypot` profile. See
+**(c) Decoy ports.** This is the honeypot case. Use the `honeypot` profile. See
 [Deception](DECEPTION.md).
 
-## 5. Run it
+## 5. Run It
 
 ```sh
 eye-for-an-eye run --config eye-for-an-eye.toml
 ```
 
-It stays in the foreground. On start it prints what it will do: the profile, the
-endpoints, whether egress is off, whether probes are off, and the firewall
-policy. Press `Ctrl+C` to stop.
+It stays in the front window. When it starts, it prints what it will do:
+the profile, the endpoints, whether outgoing network access is off, whether
+active probes are off, and the firewall policy. Press `Ctrl+C` to stop.
 
 To run it as a background service, see [systemd](SYSTEMD.md). Nothing is
 installed as a service automatically.
 
-## 6. Read what it saw
+## 6. Read What It Saw
 
 From a second terminal, in the same folder:
 
@@ -104,7 +104,7 @@ eye-for-an-eye storage info --config eye-for-an-eye.toml --json
 
 The output shows metadata only. It never shows a password or a raw payload.
 
-## 7. Check the model
+## 7. Check the Model
 
 ```sh
 eye-for-an-eye model status --config eye-for-an-eye.toml
@@ -121,14 +121,14 @@ manifest_path = "models/risk-logreg-v1.json"
 
 The model is for **watching only**. Keep `decision.mode = "shadow"`.
 
-## 8. What next
+## 8. What Next
 
 * Read [Shadow Mode](SHADOW_MODE.md) to understand what a decision means.
 * Read [Configuration](CONFIGURATION.md) to change a setting safely.
 * Read [Privacy](PRIVACY.md) to see what is stored.
-* Read [Enforcement](ENFORCEMENT.md) before you even think about blocking.
+* Read [Enforcement](ENFORCEMENT.md) before you turn blocking on.
 
-## If something goes wrong
+## If Something Goes Wrong
 
 See [Troubleshooting](TROUBLESHOOTING.md). Start with:
 

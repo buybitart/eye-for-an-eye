@@ -5,28 +5,28 @@ Eye for an Eye can export. Read this page if you want to watch the sensor
 with a tool like Prometheus, or if you want to know what each metric name
 means.
 
-## New metrics in P5
+## New Metrics in P5
 
 Phase P5 adds these metrics:
 
-* `storage_batches_total` — how many times the system tried to flush (write
+* `storage_batches_total`: how many times the system tried to flush (write
   out) a batch of events.
-* `storage_pending_events` — how many events are in a batch that has not
+* `storage_pending_events`: how many events are in a batch that has not
   been written yet.
 * `events_shed_low_total`, `events_shed_low_normal_total`,
-  `events_shed_high_total` — early refusals. These count events turned away
+  `events_shed_high_total`: early refusals. These count events turned away
   on purpose, based on a priority system, before they even join the queue.
-* `enrichment_suppressed_backpressure_total` — enrichment lookups skipped
+* `enrichment_suppressed_backpressure_total`: enrichment lookups skipped
   because the system was under too much load.
 
 Drops caused by a hard cap, a closed queue, or shutdown are all counted in
 the general `events_dropped_total` metric. The "shed" counters above only
 count refusals caused by crossing a load watermark (a load level that
 triggers a response). Even HIGH-priority events get no special exception
-from the hard cap. None of these new metrics carry dynamic labels — Prometheus
+from the hard cap. None of these new metrics carry dynamic labels, Prometheus
 labels are extra tags on a metric, and these metrics do not use them.
 
-## Batching and timing
+## Batching and Timing
 
 When batch size is greater than 1, `storage_write_duration_seconds` measures
 the time to flush (write out) the whole batch, not just one event.
@@ -38,7 +38,7 @@ the full wait time until one specific record is safely durable (saved to
 disk in a way that survives a crash). By default, batch size is 1, so the
 older, simpler meaning of this metric still applies.
 
-## The metrics endpoint
+## The Metrics Endpoint
 
 `GET /metrics` is served on its own loopback port, `8778`. "Loopback" means
 the port only answers requests from the same machine, using address
@@ -69,11 +69,11 @@ scrape_configs:
 
 The loopback address belongs to the network namespace of the process doing
 the scraping (collecting the metrics). If your scraper runs in a different
-container, you need a proxy or network setup made just for this. Simply
-publishing a host port does not make a container's loopback address reachable
+container, you need a proxy or network setup made just for this. Publishing
+a host port does not make a container's loopback address reachable
 from outside that container.
 
-## Metric families
+## Metric Families
 
 The table below omits the `e4e_` prefix for readability. Add it back when
 using the real metric name.
@@ -95,7 +95,7 @@ using the real metric name.
 | log_suppressed_total / log_dropped_total / log_errors_total | Repeated errors hidden by suppression / drops from sampling, a full queue, or disk problems / writer or start-up errors |
 | api_requests_total / api_errors_total / metrics_errors_total | Parsed API requests; storage, query, or start-up errors; metrics start-up errors |
 
-## Timing metrics
+## Timing Metrics
 
 Timings are shown as pairs: `handler_duration_seconds_sum` /
 `handler_duration_seconds_count`, `enrichment_duration_seconds_sum` /
@@ -105,13 +105,13 @@ are no quantiles or buckets (no percentile breakdowns). To get an average
 duration over a time window, divide `rate(sum)` by `rate(count)`.
 
 The handler timing includes analysis, storage, and putting the event on the
-logger's queue — it does not include the whole life of a TCP connection.
+logger's queue. It does not include the whole life of a TCP connection.
 Storage timing includes the time to hit a bounded refusal, if one happens.
 Enrichment timing only covers completed worker jobs. All durations are
-measured with a monotonic clock — a clock that only ever moves forward, so
+measured with a monotonic clock. A clock that only ever moves forward, so
 it cannot be fooled by the system clock being changed.
 
-## Older metric names (aliases)
+## Older Metric Names (Aliases)
 
 These P1 metric names are kept as aliases, so older dashboards keep
 working: `storage_written_total`, `storage_failures_total`,
@@ -121,10 +121,10 @@ working: `storage_written_total`, `storage_failures_total`,
 The event counter counts up to the point where an event is admitted to the
 queue. A telemetry drop after that point does not mean the number of wire
 packets (raw network packets) is unknown. A failed storage write increases
-its own separate counter — it is not counted as a queue drop. Logs can be
+its own separate counter. It is not counted as a queue drop. Logs can be
 sampled (only some kept) with zero loss on the SQLite side.
 
-## General notes
+## General Notes
 
 Counters reset to zero on restart. The running system publishes gauges
 (point-in-time values) about once per second. The storage row-count and
@@ -134,7 +134,7 @@ source labels on their own. In short: these counters are useful signals, but
 they are not a durable ledger (a permanent record) of everything that ever
 happened.
 
-## What to watch, as an operator
+## What to Watch, as an Operator
 
 Watch for:
 
@@ -144,11 +144,11 @@ Watch for:
 * `storage_pressure` greater than 0
 * readiness reported as `false`
 
-Exact thresholds and SLOs (Service Level Objectives — target numbers for how
+Exact thresholds and SLOs (Service Level Objectives, target numbers for how
 well the system should perform) need to come from a separate P5
 measurement exercise. That measurement has not been run yet.
 
-## See also
+## See Also
 
 * [API](API.md)
 * [Observability](OBSERVABILITY.md)

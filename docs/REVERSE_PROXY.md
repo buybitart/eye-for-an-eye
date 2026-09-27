@@ -1,20 +1,20 @@
-# Reverse proxies, CDNs and client identity
+# Reverse Proxies, CDNs and Client Identity
 
 This is the most security-critical page in the web layer. Two things can go
 wrong, and both are serious.
 
 Status: **Beta.**
 
-## Problem one: a header anyone can write
+## Problem One: A Header Anyone Can Write
 
 `X-Forwarded-For` is a string the client sends. Anyone on the Internet can put
 anything in it.
 
 If a system believes it without checking, then an attacker can:
 
-* **frame somebody else** — send `X-Forwarded-For: <your customer's address>`
+* **frame somebody else**: send `X-Forwarded-For: <your customer's address>`
   while probing, and get your customer blocked;
-* **hide** — claim to be an address the system trusts and never be acted on.
+* **hide**: claim to be an address the system trusts and never be acted on.
 
 So this project holds one rule:
 
@@ -24,7 +24,7 @@ So this project holds one rule:
 Nothing is trusted by default. With no configuration, forwarded headers are read
 and ignored, and the address that actually connected is used.
 
-## Problem two: blocking the proxy
+## Problem Two: Blocking the Proxy
 
 When a site is behind Nginx, a load balancer or a CDN, every request arrives from
 the proxy's address. The real client is only known at the HTTP layer.
@@ -45,7 +45,7 @@ Reduced because:
 
 This is a regression test, not a policy setting. There is no way to turn it off.
 
-## How the client is resolved
+## How the Client Is Resolved
 
 ```text
 direct peer  +  forwarded chain  +  trusted proxy networks  ->  client identity
@@ -59,7 +59,7 @@ client our own infrastructure vouched for.
 The left-most address is never taken blindly. That is the address the client
 wrote, and it is exactly what an attacker controls.
 
-## What comes out
+## What Comes Out
 
 | Origin | Confidence | Blockable at the network layer |
 | --- | --- | --- |
@@ -76,7 +76,7 @@ recorded.
 Low confidence reduces the strongest action available: an address the system is
 not sure about is not an address to act on.
 
-## Configuring it
+## Configuring It
 
 ```toml
 [web]
@@ -94,9 +94,9 @@ the address the connection arrived from, and you must state it. CDN-specific
 helpers may come later; today it is explicit configuration.
 
 If the site is directly exposed with no proxy, leave the list empty. That is not
-a limitation — it is the correct configuration.
+a limitation: it is the correct configuration.
 
-## NAT and shared addresses
+## NAT and Shared Addresses
 
 One public address can be many people: an office, a mobile network, a university.
 So a block is never permanent, always short at first, and lengthens only on
@@ -109,7 +109,7 @@ The project never says "source address" and means "person". A source is a source
 Fully supported. IPv6 proxy chains, bracketed addresses with ports
 (`[2001:db8::1]:443`), and IPv6 trusted networks all work and are tested.
 
-## Tested attacks
+## Tested Attacks
 
 Each of these is a test, not a claim:
 
@@ -125,6 +125,6 @@ Each of these is a test, not a claim:
 
 ## Related
 
-* [WEB_ENFORCEMENT.md](WEB_ENFORCEMENT.md) — what may be acted on
-* [NGINX.md](NGINX.md) — where the header comes from
-* [WEB_PROTECTION.md](WEB_PROTECTION.md) — the wider picture
+* [WEB_ENFORCEMENT.md](WEB_ENFORCEMENT.md): what may be acted on
+* [NGINX.md](NGINX.md): where the header comes from
+* [WEB_PROTECTION.md](WEB_PROTECTION.md): the wider picture

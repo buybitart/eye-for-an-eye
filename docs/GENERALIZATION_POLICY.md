@@ -1,10 +1,10 @@
-# Generalization policy
+# Generalization Policy
 
 What Eye for an Eye claims to generalise to, what it does not, and what counts
 as a failure. Written before the P15.3 locked benchmark existed, so that
 acceptance is a standard rather than a description of whatever happened.
 
-## What generalization means here
+## What Generalization Means Here
 
 **Reasoning from behavioural primitives rather than from remembered scenarios.**
 
@@ -30,7 +30,7 @@ Three things this explicitly does **not** claim:
   A deterministic engine reasons from the evidence families it has. A genuinely
   new phenomenon needs a new observation, not a better weight.
 
-## Behaviour classes in product scope
+## Behaviour Classes in Product Scope
 
 Eye for an Eye protects **one host**, from **one sensor**, watching **network
 and web traffic arriving at that host**. In scope:
@@ -55,28 +55,28 @@ Out of scope, by architecture:
 | anything requiring correlation with another organisation's telemetry | there is no such feed and there will not be one |
 | volumetric denial of service | stated in `LIMITATIONS.md`; a packet filter on the target is the wrong place to solve it |
 
-## Observability classes
+## Observability Classes
 
 `docs/BEHAVIOR_OBSERVABILITY.md` classifies every scenario family. The classes
 and their consequences:
 
-**`IN_SCOPE_OBSERVABLE`** — the evidence reaches the sensor and the feature
+**`IN_SCOPE_OBSERVABLE`**: the evidence reaches the sensor and the feature
 schema can represent it. Detection failure is a real generalisation failure. It
 must be fixed in the evidence and may never be reclassified because it turned
 out to be hard.
 
-**`IN_SCOPE_PARTIALLY_OBSERVABLE`** — some evidence is unavailable by
+**`IN_SCOPE_PARTIALLY_OBSERVABLE`**: some evidence is unavailable by
 construction. A truncated capture has no payload, so payload digests, credential
 shapes and protocol-family classification cannot contribute. Evaluated only on
 the signals that survive.
 
-**`OUT_OF_SCOPE`** — the behaviour happens where this sensor is not. Documented,
+**`OUT_OF_SCOPE`**: the behaviour happens where this sensor is not. Documented,
 never faked. Zero detection is the correct result and not a failure.
 
-**`INVALID_TEST_SCENARIO`** — the label cannot be justified. None is currently
+**`INVALID_TEST_SCENARIO`**: the label cannot be justified. None is currently
 so classified.
 
-## Expected action per class
+## Expected Action Per Class
 
 Detection and enforcement are separate questions (§54), and a family can be
 correctly recognised as suspicious without being eligible for a network block.
@@ -90,13 +90,13 @@ correctly recognised as suspicious without being eligible for a network block.
 | any class, `payment_webhook` profile | **never** a network block, at any probability. Policy outranks arithmetic, and its absence is not a detection failure (§42, §62) |
 | any class, client behind a proxy or CDN | never a network block. The address belongs to infrastructure carrying everyone else |
 
-## What constitutes a Gate C failure
+## What Constitutes a Gate C Failure
 
 Gate C fails if **any** of these is true.
 
 1. **A critical in-scope observable family, eligible for `TEMP_BLOCK`, is
    detected on zero sources.** Aggregate recall may not hide it. "Critical" means
-   malicious and `IN_SCOPE_OBSERVABLE` — every malicious family in the corpus
+   malicious and `IN_SCOPE_OBSERVABLE`: every malicious family in the corpus
    qualifies unless `BEHAVIOR_OBSERVABILITY.md` classified it otherwise before
    the test.
 2. **Unseen-family recall is zero** while seen-family recall is not. That is the
@@ -104,7 +104,7 @@ Gate C fails if **any** of these is true.
 3. **Probability semantics are wrong**: an uncalibrated quantity reaching the
    cost arithmetic, a calibrator applied to a model it was not fitted against, a
    non-finite value producing an action.
-4. **Generalisation is not measured** — a report that omits the seen/unseen
+4. **Generalisation is not measured**: a report that omits the seen/unseen
    split, the per-family table or the worst family has not demonstrated
    anything, whatever its headline.
 5. **Leakage is found** and not excluded: a locked-test row that also appears in
@@ -122,17 +122,17 @@ Gate C does **not** fail because:
   a result would be the same error in the opposite direction. What is required is
   *non-zero detection of each critical family*, not a number.
 
-## What constitutes a Gate E failure
+## What Constitutes a Gate E Failure
 
 Unchanged from P15.2, and P15.3 may not trade one gate for the other:
 
 * block precision or false blocks per 1000 benign not measured on trusted ground
   truth;
-* a degenerate decision — allow-all or block-all;
+* a degenerate decision: allow-all or block-all;
 * hard negatives untested;
 * uncertainty unreported, or observed zero reported as proven zero.
 
-## The rule that makes this a policy
+## The Rule That Makes This a Policy
 
 Acceptance criteria written after a result are not criteria. If the locked test
 shows a family at zero detection, the only permitted responses are to fix the
@@ -140,9 +140,9 @@ evidence and build a new test, or to record Gate C as FAIL. Reclassifying that
 family as out of scope after the fact is forbidden, and a reviewer should treat
 any such reclassification in a later cycle as a finding in itself.
 
-## See also
+## See Also
 
-- [BEHAVIOR_OBSERVABILITY.md](BEHAVIOR_OBSERVABILITY.md) — the per-family classification
+- [BEHAVIOR_OBSERVABILITY.md](BEHAVIOR_OBSERVABILITY.md): the per-family classification
 - [LIMITATIONS.md](LIMITATIONS.md)
-- [COST_SENSITIVE_POLICY.md](COST_SENSITIVE_POLICY.md) — the cutoff this policy does not touch
-- [../reports/P15_2_FINAL_REPORT.md](../reports/P15_2_FINAL_REPORT.md) — the result that made this cycle necessary
+- [COST_SENSITIVE_POLICY.md](COST_SENSITIVE_POLICY.md): the cutoff this policy does not touch
+- [../reports/P15_2_FINAL_REPORT.md](../reports/P15_2_FINAL_REPORT.md): the result that made this cycle necessary

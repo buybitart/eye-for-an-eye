@@ -1,7 +1,7 @@
 # P15.1 PRODUCTION READINESS CLOSURE REPORT
 
 **Date:** 2026-09-12
-**Cycle:** P15.1 — production readiness evidence and enforcement closure
+**Cycle:** P15.1, production readiness evidence and enforcement closure
 **Predecessor:** [P15_FINAL_AUTONOMOUS_DEFENSE_REPORT.md](P15_FINAL_AUTONOMOUS_DEFENSE_REPORT.md), unedited
 **Baseline matrix:** [P15_1_BASELINE.md](P15_1_BASELINE.md)
 
@@ -22,7 +22,7 @@ Two gates still fail. They fail on evidence, and no threshold was moved.
 `LICENSE` holds the standard MIT text, unmodified. `pyproject.toml` carries
 `license = "MIT"`, `license-files = ["LICENSE"]` and the author metadata;
 `MANIFEST.in` includes it in the sdist. `THIRD_PARTY_NOTICES.md` records the one
-copyleft dependency — `scapy`, GPL-2.0-only, in the optional `capture` extra —
+copyleft dependency (`scapy`, GPL-2.0-only, in the optional `capture` extra)
 and notes that the base package has `dependencies = []`.
 `scripts/license_audit.py` reads installed distribution metadata and flags
 copyleft, so the notice file can be checked rather than believed.
@@ -31,7 +31,7 @@ copyleft, so the notice file can be checked rather than believed.
 **Copyright:** Copyright (c) 2026 Aliaksandr Zasinets
 **SPDX:** `MIT`
 
-## Git initialized
+## Git Initialized
 
 **YES.**
 
@@ -52,7 +52,7 @@ The repository was created in a temporary build environment, so it travels to
 the project machine as a git bundle. `P15_1_REPOSITORY_HANDOVER.md` says how to
 restore it and which route writes to existing files.
 
-## Clean clone
+## Clean Clone
 
 **PASS.**
 
@@ -64,18 +64,18 @@ git clone <repo> cleanclone
 ```
 
 **2,071 passed, 88 skipped, 0 failed**, against 2,095 passed / 64 skipped in
-the development tree — 2,159 collected in both. The 24 tests that pass there and
+the development tree, 2,159 collected in both. The 24 tests that pass there and
 skip here are exactly the ones that need generated corpora or research model
 artifacts, which are deliberately not committed. No test depends on anything
 outside the clone.
 
 One finding worth stating: with the `enrichment` extra absent, two P1 provider
-tests **fail** rather than skip. They are not development-tree dependencies —
-they are optional-dependency dependencies — but a test that hard-fails on a
+tests **fail** rather than skip. They are not development-tree dependencies (
+they are optional-dependency dependencies), but a test that hard-fails on a
 missing optional extra is a packaging honesty problem, and it is recorded here
 rather than repaired inside a release-evidence cycle.
 
-## Beta evidence
+## Beta Evidence
 
 **OWNER_REPORTED_ONLY.**
 
@@ -89,16 +89,16 @@ No raw private traffic was imported.
 
 ---
 
-## Trusted decision dataset
+## Trusted Decision Dataset
 
 `dataset-eval-v1`, built from `dataset/scenarios/matrix-eval-v1.toml`: 27
 controlled scenario groups, generated offline, deterministic from its seeds.
 Labels come only from `controlled_scenario`, `manual_review` and
 `trusted_fixture`. The corpus format cannot hold a label derived from this
-system's own block, allow, model score or math score — `DatasetSample` raises on
+system's own block, allow, model score or math score, `DatasetSample` raises on
 construction, and `tests/test_p15_1_replay.py` pins that.
 
-Rows dropped before scoring: 5, for `identical_vector_under_both_labels` — the
+Rows dropped before scoring: 5, for `identical_vector_under_both_labels`. The
 same bounded window appearing under both labels, where ground truth does not
 exist at the resolution the system can see.
 
@@ -113,16 +113,16 @@ much traffic can be generated and changes no gate.
 
 Hard negatives (§8), all benign, all scored: `hard-negative-monitoring` (26
 sources), `-health-check` (18), `-admin` (105), `-discovery` (28), `-connect`
-(17), `-deception` (35) — 229 sources, 2,954 windows.
+(17), `-deception` (35); 229 sources, 2,954 windows.
 
 Hard positives (§9), all malicious, all scored: `scan-slow`, `scan-randomized`,
 `credential-low-rate`, `protocol-mismatch`, `deception-enumeration`,
-`probe-truncated`, `recon-multi-stage` — plus the rest of the scan and probe
+`probe-truncated`, `recon-multi-stage`: plus the rest of the scan and probe
 families.
 
 No public target was contacted at any point.
 
-## Final-decision metrics
+## Final-decision Metrics
 
 Replayed through the complete system to the final ALLOW / TEMP_BLOCK (§7), not
 to a score. Per source, which is the unit a block applies to:
@@ -132,14 +132,14 @@ to a score. Per source, which is the unit a block applies to:
 | actual benign | 565 | **0** |
 | actual malicious | 144 | **0** |
 
-**precision:** undefined — no positive decisions
+**precision:** undefined. No positive decisions
 **recall:** 0.000
 **specificity:** 1.000
 **FPR:** 0.000
 **FNR:** 1.000
 **PR-AUC:** 0.699 (per source) / 0.515 (per window)
 **ROC-AUC:** 0.783 (per source) / 0.626 (per window)
-**block precision:** undefined — block precision of an empty set is not a number
+**block precision:** undefined, block precision of an empty set is not a number
 **false blocks / 1000 benign:** 0.0
 **bootstrap interval:** FPR [0.000, 0.000]; false blocks/1000 [0.000, 0.000];
 block precision `null`. 400 percentile resamples over evaluation rows. The
@@ -155,9 +155,9 @@ to it would be the most dishonest thing in this report.
 Full working: [P15_1_DECISION_EVALUATION.md](P15_1_DECISION_EVALUATION.md),
 raw output `P15_1_DECISION_EVALUATION.json`.
 
-### Why zero
+### Why Zero
 
-A units error. The cost-sensitive cutoff is `C_FP / (C_FP + C_FN)` — a
+A units error. The cost-sensitive cutoff is `C_FP / (C_FP + C_FN)`. A
 *probability* of maliciousness at which blocking becomes the cheaper mistake.
 When no calibrated estimate was available, P15's code fell back to comparing
 `MathRisk`, an uncalibrated score on its own scale, against that number. The
@@ -178,13 +178,13 @@ step that decides.
 
 ## Classifier
 
-**old model:** `risk-logreg-v1` — the shipped and only model
+**old model:** `risk-logreg-v1`. The shipped and only model
 **old quality gate:** `PROVISIONAL`; `quality_gate_passed: false`; the manifest's
 own `recommended_mode` is `shadow` and `recommended_shadow_only` is `true`
 **candidate:** none. No model was trained in P15.1
 **candidate quality gate:** n/a
 **active production model:** `risk-logreg-v1`, shadow-only by its own manifest;
-`threshold_authority` is `DecisionFusion and PolicyGuard` — the model never
+`threshold_authority` is `DecisionFusion and PolicyGuard`. The model never
 selects an action
 **ONNX parity:** `NOT_RUN`. `tests/test_p8_onnx_parity.py` skips (8 tests)
 because the training corpus it compares against is not committed. Unchanged
@@ -195,7 +195,7 @@ the sklearn original.
 
 **The generalisation number** was already in
 `models/risk-logreg-v1-evaluation.json` and had never reached a summary: on the
-four withheld scenario families, ROC-AUC **0.517** — chance. Held-out test
+four withheld scenario families, ROC-AUC **0.517**: chance. Held-out test
 ROC-AUC is 0.829 and PR-AUC 0.699, on a split that shares scenario families with
 training. At threshold 0.5 on the withheld families the model produces 619 false
 blocks per 1000 benign sources.
@@ -207,15 +207,15 @@ set is forbidden by §10.
 
 ---
 
-## Production enforcement
+## Production Enforcement
 
-**implemented:** YES — `eye_for_an_eye/security/{enforcement,host_firewall,firewall_helper,host_enforcer}.py`
+**implemented:** YES, `eye_for_an_eye/security/{enforcement,host_firewall,firewall_helper,host_enforcer}.py`
 **privilege separation:** PASS
 **nftables ownership:** PASS
 **management safety:** PASS
 **proxy/CDN safety:** PASS
 **TTL:** PASS
-**maximum automatic TTL:** **43,200 s (12 hours)** — unchanged from P15, not raised
+**maximum automatic TTL:** **43,200 s (12 hours)**, unchanged from P15, not raised
 **mass-block breaker:** PASS
 **apply/verify:** PASS
 **crash safety:** PASS
@@ -224,7 +224,7 @@ set is forbidden by §10.
 The authority holds no firewall handle (`tests/test_p15_1_enforcement.py` parses
 its imports). What crosses the privilege boundary is an `EnforcementRequest`
 carrying an address, a family, a scope, a lifetime, a decision id and reasons,
-and **no command field** — a privileged helper that accepted a command from an
+and **no command field**. A privileged helper that accepted a command from an
 unprivileged process would be a remote shell with extra steps. An unknown field
 is refused rather than ignored. The helper re-validates against its own copy of
 the configuration immediately before writing, because the interesting failure is
@@ -260,41 +260,41 @@ tested against a neighbour table this project created, which is the same
 mechanism and not the same evidence. Also untested: multi-hour operation, and any
 host that is not this container.
 
-## Autonomous recovery
+## Autonomous Recovery
 
 **PASS.**
 
 Degrade, safe mode, cooldown, health gate and resume, with no administrator in
 either direction. Degrading is immediate; returning needs the fault cleared, the
-cooldown passed and the readiness gate to pass again. Four brakes — block budget,
+cooldown passed and the readiness gate to pass again. Four brakes: block budget,
 mass-block breaker, a false-positive breaker fed only by trusted evaluation, and
-a technical breaker for nine named subsystem faults — any of which opens
+a technical breaker for nine named subsystem faults, any of which opens
 `AUTONOMOUS_SAFE_MODE`: no new blocks, everything else continues, existing blocks
 expire on their own. Covered by `tests/test_p15_runtime.py` and
 `tests/test_p15_autonomy.py`, and now also end to end against a real kernel.
 
 ---
 
-## Release gates
+## Release Gates
 
 | Gate | Verdict | Evidence |
 | --- | --- | --- |
-| **A — Module graduation** | **PASS** | every module classified by behaviour; the four new security modules classified in `MODULE_GRADUATION.md` as PRODUCTIONIZE_WITH_GUARDS; the dangerous class still empty; the lab namespace path's three gates unchanged and still asserted |
-| **B — Data quality** | **PASS** | no leakage; group-aware splits; provenance enforced; the self-label loop is structurally impossible — the corpus format raises on a label sourced from this system's own decision, and 19 new tests pin the measurement harness against scoring one |
-| **C — ML validity** | **FAIL** | §37 offers two routes and neither is satisfied. The classifier is not validated: `quality_gate_passed: false`, and ROC-AUC 0.517 on withheld scenario families. The deterministic fallback is not validated either: measured at recall 0.000, it is inert rather than validated, and a system that never acts has not demonstrated that it acts correctly |
-| **D — Cost decision** | **PASS** | the threshold comes from an explicit per-profile cost policy, never 0.5, with a content digest in every record. Strengthened this cycle: the policy can now only be applied to a calibrated probability, which is the quantity it was always defined over |
-| **E — False-positive safety** | **FAIL** | now **measured** rather than unmeasurable, on 565 trusted benign and 144 trusted positive sources. False blocks per 1000 benign: 0.0. Block precision: **undefined**, because there are no blocks. §38 requires both measured; one of them cannot exist yet |
-| **F — Site / proxy safety** | **PASS** | multi-site, CDN, trusted proxy and management protection pass, and now at the enforcement layer too: `HOST_NETWORK` is the only scope that exists, a record that is not network-enforceable cannot produce a request at all, and the helper refuses a trusted proxy against its own configuration |
-| **G — Enforcement** | **PASS** | §39's list, item by item: a real-host implementation exists, is privilege separated, is bounded at 12 hours and by a block budget and an entry ceiling, is ownership-isolated by owner comment, was tested on a realistic owned environment against a real kernel with automatic expiry demonstrated and management and proxy protections passing — and a real TCP connection that stops when the block goes on. Controlled deployment evidence, which §39 states is sufficient |
-| **H — Autonomous recovery** | **PASS** | degrade, rollback, safe mode, cooldown, health gate, resume — none of it needs a person |
-| **I — Resource safety** | **PASS** | every window, table and list bounded by construction; caps asserted by filling them; the enforcement path adds its own entry ceiling, verified against the kernel by filling it |
-| **J — Repository / documentation** | **PASS** | §40's four items: MIT LICENSE exists; the git repository exists; the private security disclosure workflow is prepared and documented; documentation matches real behaviour — the README no longer claims blocking is lab-only, because that stopped being true this cycle, and the P15-era test that pinned the old sentence was rewritten to pin the new facts rather than the README reverted to match it |
+| **A: Module graduation** | **PASS** | every module classified by behaviour; the four new security modules classified in `MODULE_GRADUATION.md` as PRODUCTIONIZE_WITH_GUARDS; the dangerous class still empty; the lab namespace path's three gates unchanged and still asserted |
+| **B (Data quality** | **PASS** | no leakage; group-aware splits; provenance enforced; the self-label loop is structurally impossible) the corpus format raises on a label sourced from this system's own decision, and 19 new tests pin the measurement harness against scoring one |
+| **C: ML validity** | **FAIL** | §37 offers two routes and neither is satisfied. The classifier is not validated: `quality_gate_passed: false`, and ROC-AUC 0.517 on withheld scenario families. The deterministic fallback is not validated either: measured at recall 0.000, it is inert rather than validated, and a system that never acts has not demonstrated that it acts correctly |
+| **D: Cost decision** | **PASS** | the threshold comes from an explicit per-profile cost policy, never 0.5, with a content digest in every record. Strengthened this cycle: the policy can now only be applied to a calibrated probability, which is the quantity it was always defined over |
+| **E: False-positive safety** | **FAIL** | now **measured** rather than unmeasurable, on 565 trusted benign and 144 trusted positive sources. False blocks per 1000 benign: 0.0. Block precision: **undefined**, because there are no blocks. §38 requires both measured; one of them cannot exist yet |
+| **F, Site / proxy safety** | **PASS** | multi-site, CDN, trusted proxy and management protection pass, and now at the enforcement layer too: `HOST_NETWORK` is the only scope that exists, a record that is not network-enforceable cannot produce a request at all, and the helper refuses a trusted proxy against its own configuration |
+| **G, Enforcement** | **PASS** | §39's list, item by item: a real-host implementation exists, is privilege separated, is bounded at 12 hours and by a block budget and an entry ceiling, is ownership-isolated by owner comment, was tested on a realistic owned environment against a real kernel with automatic expiry demonstrated and management and proxy protections passing, and a real TCP connection that stops when the block goes on. Controlled deployment evidence, which §39 states is sufficient |
+| **H (Autonomous recovery** | **PASS** | degrade, rollback, safe mode, cooldown, health gate, resume) none of it needs a person |
+| **I: Resource safety** | **PASS** | every window, table and list bounded by construction; caps asserted by filling them; the enforcement path adds its own entry ceiling, verified against the kernel by filling it |
+| **J, Repository / documentation** | **PASS** | §40's four items: MIT LICENSE exists; the git repository exists; the private security disclosure workflow is prepared and documented; documentation matches real behaviour. The README no longer claims blocking is lab-only, because that stopped being true this cycle, and the P15-era test that pinned the old sentence was rewritten to pin the new facts rather than the README reverted to match it |
 
 ### AUTONOMOUS_READY
 
 **NO.**
 
-### Final status
+### Final Status
 
 **AUTONOMOUS_LAB.**
 
@@ -308,7 +308,7 @@ for a better-understood reason than P15 had.
 
 §43's test is whether public packaging would hide an unresolved critical runtime
 safety problem. It would. Packaging this now ships a defender that, on the only
-trusted evaluation that exists, detects nothing — and the danger is not the
+trusted evaluation that exists, detects nothing, and the danger is not the
 nothing, which is safe. It is that "0.0 false blocks per 1000 benign" reads like
 a result, and would be quoted as one by somebody who stopped reading before the
 recall line.
@@ -318,7 +318,7 @@ control, clean clone, security workflow, documentation. The measurement is not.
 
 ---
 
-## Remaining blockers
+## Remaining Blockers
 
 1. **No calibrated probability estimate.** This is the one that matters. The
    cost-sensitive policy is defined over a probability, and nothing in the
@@ -331,9 +331,9 @@ control, clean clone, security workflow, documentation. The measurement is not.
    estimate is not rank-preserving across different observation counts. It must
    not be reused anywhere a ranking matters, and it is currently the only thing
    the decision sees.
-4. **Beta deployment remains `BETA_REPORTED_BY_OWNER`** — owner input needed:
+4. **Beta deployment remains `BETA_REPORTED_BY_OWNER`**, owner input needed:
    sanitised derived artefacts, or an explicit statement that none exist.
-5. **Private security reporting is prepared, not enabled** — owner action: turn
+5. **Private security reporting is prepared, not enabled**, owner action: turn
    on GitHub Private Vulnerability Reporting once a repository exists. No email
    address was invented. `scripts/release_check.py` blocks release until
    `SECURITY.md` stops saying `OWNER_ACTION_REQUIRED`.
@@ -414,9 +414,9 @@ The `LICENSE`, `pyproject.toml`, `MANIFEST.in`, `SECURITY.md`,
 `THIRD_PARTY_NOTICES.md` and `scripts/` licence changes are not in this range:
 they were made before the repository existed and are part of `6e0f6fe`.
 
-### The exact tests executed
+### The Exact Tests Executed
 
-**Full suite, development tree, as `e4etest` with `umask 022`** — as root the
+**Full suite, development tree, as `e4etest` with `umask 022`**; as root the
 hardened ONNX artifact reader refuses a file owned by another user, so running
 as root would have hidden real coverage behind a false skip:
 
@@ -501,12 +501,12 @@ Recommended mode: SHADOW
 
 ---
 
-## See also
+## See Also
 
-- [P15_1_BASELINE.md](P15_1_BASELINE.md) — the blocker matrix this cycle worked from
-- [P15_1_REPOSITORY_HANDOVER.md](P15_1_REPOSITORY_HANDOVER.md) — how to restore the repository, and what was kept out of it
-- [P15_1_DECISION_EVALUATION.md](P15_1_DECISION_EVALUATION.md) — the measurement
-- [BETA_EVIDENCE.md](BETA_EVIDENCE.md) — owner statement against repository evidence
-- [P15_FINAL_AUTONOMOUS_DEFENSE_REPORT.md](P15_FINAL_AUTONOMOUS_DEFENSE_REPORT.md) — unedited
+- [P15_1_BASELINE.md](P15_1_BASELINE.md): the blocker matrix this cycle worked from
+- [P15_1_REPOSITORY_HANDOVER.md](P15_1_REPOSITORY_HANDOVER.md): how to restore the repository, and what was kept out of it
+- [P15_1_DECISION_EVALUATION.md](P15_1_DECISION_EVALUATION.md): the measurement
+- [BETA_EVIDENCE.md](BETA_EVIDENCE.md): owner statement against repository evidence
+- [P15_FINAL_AUTONOMOUS_DEFENSE_REPORT.md](P15_FINAL_AUTONOMOUS_DEFENSE_REPORT.md): unedited
 - [../docs/HOST_ENFORCEMENT.md](../docs/HOST_ENFORCEMENT.md)
 - [../docs/MODULE_GRADUATION.md](../docs/MODULE_GRADUATION.md)

@@ -11,12 +11,12 @@ written down so they can be tested and corrected.
 
 A plan for fixing this is at the end of the page.
 
-## Intended beneficiaries
+## Intended Beneficiaries
 
 The project's stated intent is to help **independent media organisations and
 NGOs** that run their own small servers.
 
-## Profile 1: administrator of a small independent news site
+## Profile 1: Administrator of a Small Independent News Site
 
 | Question | Assumed answer |
 | --- | --- |
@@ -28,7 +28,7 @@ NGOs** that run their own small servers.
 | Install problem | Anything with more than a few steps will not get installed. |
 | Expected benefit | Sees who is probing the site, and gets a documented way to slow them down later. |
 
-## Profile 2: system administrator at a small NGO
+## Profile 2: System Administrator at a Small NGO
 
 | Question | Assumed answer |
 | --- | --- |
@@ -40,7 +40,7 @@ NGOs** that run their own small servers.
 | Install problem | Must be able to explain what it does to a director who will ask. |
 | Expected benefit | Evidence of what is happening, in a form that can go into a report. |
 
-## Profile 3: owner of a small business website or VPS
+## Profile 3: Owner of a Small Business Website or VPS
 
 | Question | Assumed answer |
 | --- | --- |
@@ -54,7 +54,7 @@ NGOs** that run their own small servers.
 This group is not an internet-freedom beneficiary. It is listed because it is a
 realistic early adopter and a source of feedback.
 
-## Profile 4: security researcher or home-lab user
+## Profile 4: Security Researcher or Home-lab User
 
 | Question | Assumed answer |
 | --- | --- |
@@ -65,7 +65,7 @@ realistic early adopter and a source of feedback.
 This group is the most likely source of the first bug reports and the first
 independent review.
 
-## What every profile needs
+## What Every Profile Needs
 
 This is the design pressure that produced the current defaults:
 
@@ -77,7 +77,7 @@ This is the design pressure that produced the current defaults:
 * Small resource use, because the machine is a small VPS.
 * A way to see **why** a decision was made.
 
-## Feedback plan
+## Feedback Plan
 
 Feedback must be opt-in and must never collect traffic automatically.
 
@@ -91,7 +91,7 @@ Planned channels:
 
 The software will never phone home. See [Privacy](PRIVACY.md).
 
-## Plan to close the user-research gap
+## Plan to Close the User-research Gap
 
 1. Publish a public alpha with an honest status.
 2. Ask three to five small self-hosted operators to install it and record where
@@ -106,6 +106,6 @@ The software will never phone home. See [Privacy](PRIVACY.md).
 Until step 5 produces results, the internet-freedom beneficiary claim stays
 marked as a gap.
 
-## See also
+## See Also
 
 * [Distribution](DISTRIBUTION.md)

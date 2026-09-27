@@ -6,7 +6,7 @@ Read [NGINX.md](NGINX.md) first. Nothing there changes: Eye for an Eye still
 reads a local JSON access log, still never edits your configuration, and still
 never reloads Nginx.
 
-## One log, several sites
+## One Log, Several Sites
 
 You do not need one log per site. The log format already records `$host`, and
 that is what the site resolver matches against your configuration.
@@ -32,7 +32,7 @@ Separate log files per site work too. Both arrangements resolve the same way,
 because the site comes from the host field and not from which file the line was
 in.
 
-## Mapping server blocks to sites
+## Mapping Server Blocks to Sites
 
 ```nginx
 server {
@@ -68,7 +68,7 @@ Either way the value is client-controlled, and the resolver treats it as such:
 it is a lookup key, never an identity. A value that matches nothing goes to the
 bounded `unknown-site` bucket.
 
-## The default server block
+## The Default Server Block
 
 If you have a catch-all `server` block, traffic to unconfigured hostnames
 reaches it and appears in the log with whatever host the client sent. Those
@@ -76,13 +76,13 @@ requests land in `unknown-site`.
 
 That is the intended behaviour, and it is why `sites.default_site` is empty by
 default. Setting it makes unmatched traffic run under a real site's policy,
-which `sites doctor` flags — a scanner sweeping hostnames should not be judged
+which `sites doctor` flags. A scanner sweeping hostnames should not be judged
 by your main site's rules.
 
-## Do not discover sites from traffic
+## Do Not Discover Sites From Traffic
 
 Eye for an Eye will not add a site because it saw a hostname. Unknown hosts
-appear constantly — scanners sweep them — and treating traffic as a source of
+appear constantly (scanners sweep them), and treating traffic as a source of
 configuration is how an attacker gets to create entries in your security
 config.
 
@@ -96,7 +96,7 @@ and that is a reasonable hint during setup. It is not authoritative: a
 certificate may cover hostnames you no longer serve, or omit ones you do. The
 configuration is what decides.
 
-## Behind a proxy or CDN
+## Behind a Proxy or CDN
 
 Unchanged from P10 and P11. See [TRUSTED_PROXIES.md](TRUSTED_PROXIES.md). Two
 sites behind the same trusted proxy resolve their clients independently, and
@@ -108,5 +108,5 @@ neither can get the proxy's address blocked.
 eye-for-an-eye sites doctor
 ```
 
-It prints the domain map, flags any site with no domains — such a site can never
-match anything — and flags a configured default site.
+It prints the domain map, flags any site with no domains (such a site can never
+match anything), and flags a configured default site.

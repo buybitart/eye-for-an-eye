@@ -1,4 +1,4 @@
-# P5 benchmark harness
+# P5 Benchmark Harness
 
 Run from the repository root with CPython 3.12 and the locked capture/test extras. Benchmarks are outside the production package. No new runtime dependency was added.
 

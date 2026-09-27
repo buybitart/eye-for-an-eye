@@ -15,9 +15,9 @@ the firewall.
 
 ---
 
-# Part one — common problems, simple fixes
+# Part One: Common Problems, Simple Fixes
 
-## command not found
+## Command Not Found
 
 ```
 eye-for-an-eye: command not found
@@ -40,9 +40,9 @@ The full path always works:
 ~/.local/share/eye-for-an-eye/venv/bin/eye-for-an-eye status
 ```
 
-## Python 3.12 is not installed
+## Python 3.12 Is Not Installed
 
-Eye for an Eye needs Python 3.12 exactly — not 3.11, not 3.13.
+Eye for an Eye needs Python 3.12 exactly, not 3.11 and not 3.13.
 
 On Ubuntu 24.04:
 
@@ -51,24 +51,24 @@ sudo apt install python3.12 python3.12-venv
 ```
 
 On Debian 12 or 13 the system Python is a different version. Install
-[uv](https://docs.astral.sh/uv/) and run `sh install.sh` again — it finds `uv` by
+[uv](https://docs.astral.sh/uv/) and run `sh install.sh` again. It finds `uv` by
 itself and gets a 3.12 of its own. Or point the installer at one you have:
 
 ```sh
 sh install.sh --python /usr/bin/python3.12
 ```
 
-## It says NEEDS SETUP
+## It Says NEEDS SETUP
 
 The message says which of two things it is.
 
-**"installed but not set up yet"** — there is no settings file:
+**"installed but not set up yet"**: there is no settings file:
 
 ```sh
 eye-for-an-eye setup
 ```
 
-**"does not know where to watch yet"** — there is a settings file but no traffic
+**"does not know where to watch yet"**: there is a settings file but no traffic
 source:
 
 ```sh
@@ -77,13 +77,13 @@ eye-for-an-eye setup --watch website-log --access-log /var/log/nginx/eye-for-an-
 
 Use your real path. `setup` checks it before it accepts it.
 
-## It runs but sees no visitors
+## It Runs but Sees No Visitors
 
 The usual cause is the **log format**, not the path.
 
 Eye for an Eye reads one JSON object per line. A default Nginx `access.log` is not
 in that format: every line is thrown away, the sensor keeps running, and the count
-stays at zero — which looks like nothing happening rather than an error.
+stays at zero. That looks like nothing happening rather than an error.
 
 ```sh
 eye-for-an-eye web log-format
@@ -105,14 +105,14 @@ Other causes: your server has no visitors yet (load a page yourself); the file i
 rotated away (point at the live one); or `start_at_end` is on, which is the
 default, so history from before you started is not replayed.
 
-## It cannot read my website log
+## It Cannot Read My Website Log
 
 ```
 Eye for an Eye is not allowed to read that file.
 ```
 
 The account running Eye for an Eye does not own the log. Add it to the group that
-does — with Nginx on Debian and Ubuntu that is usually `adm`:
+owns the log. With Nginx on Debian and Ubuntu that group is usually `adm`:
 
 ```sh
 ls -l /var/log/nginx/            # see which group owns it
@@ -122,10 +122,10 @@ sudo usermod -aG adm "$USER"     # then log out and back in
 Do **not** `chmod 777` the log and do **not** run Eye for an Eye as root to read
 it. Both give away far more than the problem needs.
 
-Under systemd the reader is the `eye-for-an-eye` account, not you — add that
+Under systemd the reader is the `eye-for-an-eye` account, not you. Add that
 account to the group instead.
 
-## Watching network packets does not work
+## Watching Network Packets Does Not Work
 
 ```
 live analysis requires the Linux capture-helper IPC; use --pcap offline
@@ -146,7 +146,7 @@ eye-for-an-eye analyze-pcap capture.pcap --config <your config>
 
 That needs the optional `scapy` extra.
 
-## It says NOT RUNNING
+## It Says NOT RUNNING
 
 That is an answer, not an error. Nothing is running, so nothing is blocked.
 
@@ -160,7 +160,7 @@ journalctl -u eye-for-an-eye.service -n 50
 The unit validates the configuration before starting, so the journal names the
 problem.
 
-## It refuses a learning file over permissions
+## It Refuses a Learning File Over Permissions
 
 ```
 artifact ownership/write permissions rejected
@@ -176,15 +176,15 @@ chmod 644 <the file it named>
 
 Work with a `umask` of `022`.
 
-## Automatic blocking will not start
+## Automatic Blocking Will Not Start
 
 ```
 enforcement.host_enabled requires at least one protected network
 ```
 
 **A safety rule, and it cannot be skipped.** Eye for an Eye does not know which
-addresses you administer this machine from, so it will not start blocking —
-otherwise it could lock you out of your own server.
+addresses you administer this machine from, so it will not start blocking.
+Without that list, it could lock you out of your own server.
 
 ```sh
 eye-for-an-eye autonomy readiness
@@ -199,7 +199,7 @@ addresses you connect from.
 Before turning it on at all: real-world validation of autonomous blocking is
 **pending**. See [VALIDATION_STATUS.md](VALIDATION_STATUS.md).
 
-## nftables is not available
+## nftables Is Not Available
 
 ```
 nft is not installed
@@ -213,7 +213,7 @@ sudo apt install nftables
 
 Installing `nftables` does not turn blocking on. Nothing does except you.
 
-## Stop says it has not stopped
+## Stop Says It Has Not Stopped
 
 Stopping is cooperative: `stop` leaves a request and the watching process notices
 the next time it looks, every few seconds. Wait a moment, then:
@@ -228,7 +228,7 @@ for an Eye installs no background service, so nothing is left running hidden.
 `stop` never ends any other program. It asks only its own and never acts on a
 process id.
 
-## The Debian package refuses to install
+## The Debian Package Refuses to Install
 
 ```
 eye-for-an-eye depends on python3.12; however: Package python3.12 is not installed.
@@ -236,12 +236,12 @@ eye-for-an-eye depends on python3.12; however: Package python3.12 is not install
 
 The package is refusing rather than installing something that cannot run. On
 Ubuntu 24.04, `sudo apt install python3.12`. On Debian 12 or 13, use the release
-archive and `sh install.sh` instead — see
+archive and `sh install.sh` instead. See
 [INSTALL_LINUX.md](INSTALL_LINUX.md).
 
 Do not force it with `--force-depends`. It will install and then fail to run.
 
-## Permission denied while installing
+## Permission Denied While Installing
 
 The installer names the directory it could not write to. Do **not** re-run the
 whole installer under `sudo` to get past it: install for your own account, or use
@@ -249,9 +249,9 @@ whole installer under `sudo` to get past it: install for your own account, or us
 
 ---
 
-# Part two — administrator detail
+# Part Two: Administrator Detail
 
-## Exit codes
+## Exit Codes
 
 | Code | Meaning | What to do |
 | --- | --- | --- |
@@ -265,7 +265,7 @@ whole installer under `sudo` to get past it: install for your own account, or us
 | 7 | `doctor` found something degraded | Read which check. Often optional data, or a platform limit. |
 | 130 | You interrupted the command | Check the state after the interrupt. |
 
-## Common first problems
+## Common First Problems
 
 **"No configuration found."**
 Run `eye-for-an-eye setup`, or `eye-for-an-eye demo` for a finite local example.
@@ -293,7 +293,7 @@ the service is running, its own ports show as busy. That is expected.
 That is an explicit degraded component. The main sensor can keep working. A
 failure of the main listener rolls back startup and exits.
 
-## API problems
+## API Problems
 
 | Symptom | Check | Action |
 | --- | --- | --- |
@@ -308,7 +308,7 @@ failure of the main listener rolls back startup and exits.
 | 503 storage unavailable | `storage info`, reader timeout, schema | Narrow the time window or filters. SQL is never sent to the client. |
 | `partial = true` in sources or stats | `max_scan_rows`, window size | Counts are a lower bound of a sample. Use a smaller window. |
 
-## Storage problems
+## Storage Problems
 
 | Symptom | Check | Action |
 | --- | --- | --- |
@@ -316,7 +316,7 @@ failure of the main listener rolls back startup and exits.
 | Storage unavailable after a startup I/O failure | `doctor`, owner, path | Fix the cause, then restart. The volatile fallback does not replay the queue. |
 | A migration was rejected | Database identity and version, backup | Keep the database, look at it offline. Do not force `ALTER` or delete. |
 
-## Logging problems
+## Logging Problems
 
 **Fewer log lines than database events.** That is expected. The log has its own
 budget and its own sampling. Check the sampled, suppressed and dropped counters.
@@ -324,19 +324,19 @@ budget and its own sampling. Check the sampled, suppressed and dropped counters.
 **No log file at all.** `logging.file = ""` means output goes to stdout or the
 journal. Do not add a second rotation on top.
 
-## Status problems
+## Status Problems
 
 `status` reads a small file, not HTTP. A snapshot older than 5 seconds, or from
 a stopped service, is not "ready". Run diagnostics as the same user, with the
 same config and the same environment as the service.
 
-## GeoIP or p0f unavailable
+## GeoIP or p0f Unavailable
 
 These are optional local data files that you supply. Nothing is downloaded. Do
 not draw identity conclusions from missing data. File age comes from the file's
 modification time, which is not the same as the data release date.
 
-## Getting more detail
+## Getting More Detail
 
 Add `--debug` for a traceback. Normal output is bounded and redacted.
 
@@ -346,7 +346,7 @@ the operator, not for a public bug report.
 There is no reload on `SIGHUP`. Changing the config or the secret needs a
 restart.
 
-## When you report a problem
+## When You Report a Problem
 
 Include:
 
@@ -358,11 +358,11 @@ Include:
 Never include: persistent keys, bearer tokens, credentials, raw traffic, or your
 whole environment.
 
-## What has and has not been tested
+## What Has and Has Not Been Tested
 
 Verified: Windows localhost sockets, SQLite, a sanitised synthetic corpus, and
-child-process shutdown. On Ubuntu 24.04 x86_64, the whole beginner path —
-install, setup, start, status, stop, uninstall — and installation and removal of
+child-process shutdown. On Ubuntu 24.04 x86_64, the whole beginner path
+(install, setup, start, status, stop, uninstall), and installation and removal of
 the Debian package.
 
 **NOT VERIFIED:** Linux live capture, the namespace firewall, `CAP_NET_RAW`,
@@ -373,7 +373,7 @@ systemd as PID 1. They are not presented as passed.
 Real-world validation of autonomous blocking is pending. See
 [VALIDATION_STATUS.md](VALIDATION_STATUS.md).
 
-## See also
+## See Also
 
 * [Install on Linux](INSTALL_LINUX.md)
 * [Beginner guide](BEGINNER_GUIDE.md)

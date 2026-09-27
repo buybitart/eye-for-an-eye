@@ -65,6 +65,17 @@ def json_log(directory, name='visitors.log'):
     return path
 
 
+def readme_section(body, heading):
+    """The text under `heading`, found without regard to letter case.
+
+    Heading capitalisation is a style rule; what these tests assert about is the
+    commands underneath. Every caller checks that it found something.
+    """
+    found = re.search(re.escape(heading), body, re.IGNORECASE)
+    assert found, f'{heading!r} is not in the README'
+    return body[found.end():]
+
+
 class TestTheInstallerAndTheBeginnerLayerAgreeOnWhereThingsAre(unittest.TestCase):
     """The regression that made three commands wrong at once."""
 
@@ -740,7 +751,7 @@ class TestTheDocumentedLinuxQuickStartRuns(unittest.TestCase):
 
     def test_the_readme_quick_start_is_the_beginner_path_and_needs_no_root(self):
         body = (ROOT / 'README.md').read_text(encoding='utf-8')
-        block = body.split('## Quick start', 1)[1].split('```sh', 1)[1].split('```', 1)[0]
+        block = readme_section(body, '## Quick start').split('```sh', 1)[1].split('```', 1)[0]
         commands = [line.strip() for line in block.splitlines() if line.strip()]
         self.assertIn('sh install.sh', commands)
         self.assertIn('eye-for-an-eye setup', commands)
@@ -756,7 +767,7 @@ class TestTheDocumentedLinuxQuickStartRuns(unittest.TestCase):
         """Checked on the commands, not the prose. The prose is allowed — and
         ought — to say that it changes no firewall rule."""
         body = (ROOT / 'README.md').read_text(encoding='utf-8')
-        section = body.split('## Quick start', 1)[1].split('\n## ', 1)[0]
+        section = readme_section(body, '## Quick start').split('\n## ', 1)[0]
         commands = '\n'.join(re.findall(r'```sh\n(.*?)```', section, re.DOTALL))
         self.assertTrue(commands, 'the Quick start has no shell block')
         for forbidden in ('firewall', 'host_enabled', 'production-autonomous',
@@ -791,7 +802,7 @@ class TestThePlatformTableClaimsOnlyWhatIsImplemented(unittest.TestCase):
 
     def table(self):
         body = (ROOT / 'README.md').read_text(encoding='utf-8')
-        section = body.split('## Which platform', 1)[1].split('\n## ', 1)[0]
+        section = readme_section(body, '## Which platform').split('\n## ', 1)[0]
         rows = {}
         for line in section.splitlines():
             cells = [cell.strip() for cell in line.strip().strip('|').split('|')]

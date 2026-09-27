@@ -4,7 +4,7 @@ This page shows the parts of Eye for an Eye and how data moves between them.
 Read it if you want to know what runs where, and what each part may and may not
 do.
 
-## The pipeline
+## The Pipeline
 
 ```text
 Internet traffic
@@ -48,7 +48,7 @@ Maths risk engine       Local ONNX model      (optional, separate process)
        Local storage (SQLite) + bounded JSONL log
 ```
 
-## The second pipeline: websites
+## The Second Pipeline: Websites
 
 Everything above starts with a packet. Since P10 there is a second intake that
 starts with a line in an Nginx access log, and since P11 a third position that
@@ -97,10 +97,10 @@ Web behaviour is per site. Network-layer evidence is about the *machine* and is
 shared between sites on purpose: a source that scanned ports 22, 80, 443 and
 3306 has told you something that does not stop being true when you look at it
 from another site. A host-wide network block, by the same logic, reaches every
-site on the machine — so a site must be explicitly configured before it may ask
+site on the machine, so a site must be explicitly configured before it may ask
 for one.
 
-## The parts
+## The Parts
 
 ### Capture
 
@@ -120,7 +120,7 @@ without a raw socket.
 The helper can see credentials in captured traffic, so it stays a sensitive
 boundary. See [Privileges](PRIVILEGES.md).
 
-### Event normalisation
+### Event Normalisation
 
 Every input becomes one `NetworkEvent` (schema 3): time in UTC, source and
 destination, transport, event type, classification, confidence, and separated
@@ -129,7 +129,7 @@ destination, transport, event type, classification, confidence, and separated
 Redaction happens here and at every later boundary. Payloads, passwords,
 cookies, tokens and `Authorization` headers never get past it.
 
-### Bounded queue
+### Bounded Queue
 
 Events are serialised, then queued. The default limit is 1024 events or 4 MiB.
 The strategy is **drop-newest**: the producer never waits for the consumer. On
@@ -147,7 +147,7 @@ is never fed back into the engine as new input.
 
 See [Correlation](CORRELATION.md).
 
-### Feature extraction
+### Feature Extraction
 
 The counts become a `FeatureVector`: 18 numbers plus 18 "do we know this value?"
 flags. Each number has a ceiling and a shape, so everything ends up between
@@ -156,14 +156,14 @@ flags. Each number has a ceiling and a shape, so everything ends up between
 There is exactly **one** transformation function. Training and the running
 system both call it. See [Feature schema](FEATURE_SCHEMA.md).
 
-### Maths risk engine
+### Maths Risk Engine
 
 A fixed logistic formula with 10 weights. Always available. Explains itself by
 listing how much each behaviour number contributed.
 
 See [The maths engine](MATH_MODEL.md).
 
-### Local ONNX model
+### Local ONNX Model
 
 Optional. Runs in a **separate process** with a 200 ms timeout, one inference at
 a time, at most 64 waiting. It gets 34 numbers and returns a score and a
@@ -172,14 +172,14 @@ alone.
 
 See [How the AI works](AI.md).
 
-### Decision fusion
+### Decision Fusion
 
 The two scores are joined by weight. The model's weight depends on its
 confidence: at 50/50 confidence its weight is zero, and that weight returns to
 the maths engine. Old risk decays over time, and the higher of "fresh" and
 "decayed" wins.
 
-### Policy guard
+### Policy Guard
 
 The guard can lower an action but never raise one. It refuses a strong action
 when:
@@ -216,21 +216,21 @@ One SQLite writer, WAL mode, with retention by age, count and bytes. Readers use
 separate read-only connections. Two instances must never share one database
 path. See [Storage](STORAGE.md).
 
-### API and metrics
+### API and Metrics
 
 A read-only HTTP API and a Prometheus metrics endpoint, both on `127.0.0.1` by
 default, both on their own threads. If either fails, event intake keeps running.
 
 See [API](API.md) and [Metrics](METRICS.md).
 
-### Dataset and training pipelines
+### Dataset and Training Pipelines
 
 These are **not** part of the running service. They live in `dataset/` and
 `training/` and you run them by hand, offline.
 
 See [Dataset](DATASET.md) and [Controlled self-learning](SELF_LEARNING.md).
 
-## Start and stop
+## Start and Stop
 
 Start: read config → check privileges → open storage → start optional workers →
 open listener or capture.
@@ -243,14 +243,14 @@ whole control group to 12 seconds. If the operating system stalls on disk I/O,
 the flush can still fail. In that case the exit code and health report say so.
 Delivery is never claimed as guaranteed.
 
-## What the architecture does not do
+## What the Architecture Does Not Do
 
 * It never turns a network event into a shell command.
 * It never lets a model file grant firewall rights.
 * It never sends traffic to a cloud service.
 * It never feeds its own decisions back in as training data.
 * It never creates a site from a request. Sites come from configuration.
-* It never gives the model an identity feature — no address, country, ASN,
+* It never gives the model an identity feature: no address, country, ASN,
   provider, hostname, site id, domain or `Host` value.
 * It never promotes a model on its own. There is no `auto_promote` setting
   anywhere in the configuration, because a name that does not exist cannot be
@@ -258,7 +258,7 @@ Delivery is never claimed as guaranteed.
 * It never lets a challenge result become a label. Failing one cannot make a
   source malicious; passing one cannot make it benign.
 
-## See also
+## See Also
 
 * [Threat model](THREAT_MODEL.md)
 * [Service profiles](SERVICE_PROFILES.md)

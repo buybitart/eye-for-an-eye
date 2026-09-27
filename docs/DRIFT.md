@@ -1,4 +1,4 @@
-# Drift detection
+# Drift Detection
 
 Traffic changes with time. A model can become less useful when real traffic is
 very different from its training data.
@@ -9,7 +9,7 @@ Eye for an Eye compares new traffic with the training data. This is called
 Status: **Beta.** Thresholds are provisional and are not yet calibrated against
 a real deployment.
 
-## What drift is not
+## What Drift Is Not
 
 **Drift is not an attack.** It says something about your whole traffic
 population, not about one source.
@@ -20,7 +20,7 @@ drift. None of them is hostile.
 So drift never makes a single source more suspicious. It only lowers how much
 the system trusts the model. See [Model health](#model-health).
 
-## What is compared
+## What Is Compared
 
 Every model ships with a **reference distribution**: a small file that records
 what the training data looked like, feature by feature.
@@ -38,7 +38,7 @@ made against it.
 The baseline is **never** updated from production traffic. If it were, an
 attacker could slowly redefine "normal".
 
-## How production traffic is measured
+## How Production Traffic Is Measured
 
 The sensor keeps counts in the reference's own fixed bins, in three rolling
 windows: 1 hour, 24 hours and 7 days.
@@ -49,7 +49,7 @@ whatever the volume.
 The hot path does one bin lookup per feature. The full comparison is periodic,
 not per packet.
 
-## The method
+## The Method
 
 **Population Stability Index (PSI)** over the reference bins:
 
@@ -80,7 +80,7 @@ configurable.
 After a restart, or in a quiet window, the status is `INSUFFICIENT_DATA`. It is
 never `STABLE`, because that would fabricate confidence.
 
-## Per-feature results
+## Per-feature Results
 
 One global number is not enough. An operator needs to know *what* changed.
 
@@ -107,7 +107,7 @@ eye-for-an-eye drift report --config eye-for-an-eye.toml --json
 
 Both are read-only. They never train, download, promote or change a firewall.
 
-## Model health
+## Model Health
 
 Drift feeds a separate model health state.
 
@@ -140,7 +140,7 @@ drift_drifted_threshold = 0.25
 drift_interval_seconds = 900.0
 ```
 
-## Building a reference distribution
+## Building a Reference Distribution
 
 Offline only, from a validated dataset:
 
@@ -156,7 +156,7 @@ python -m training.export_distribution \
 The command refuses to overwrite an existing file. A reference distribution is
 immutable.
 
-## See also
+## See Also
 
 * [Out-of-distribution detection](OOD.md)
 * [Data quality](DATA_QUALITY.md)

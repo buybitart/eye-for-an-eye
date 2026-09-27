@@ -1,4 +1,4 @@
-# Performance: what was measured
+# Performance: What Was Measured
 
 This page shows the speed numbers that were actually measured, and the four
 code changes that came out of them. Read it if you plan capacity, or if you want
@@ -12,7 +12,7 @@ workloads. They are not a promise about your machine.
 * How it was measured: [Benchmarking](BENCHMARKING.md)
 * Planning numbers: [Capacity](CAPACITY.md)
 
-## The headline numbers
+## The Headline Numbers
 
 | Metric | Before | After | Delta |
 |---|---:|---:|---:|
@@ -26,7 +26,7 @@ workloads. They are not a promise about your machine.
 
 "p95" means: 95 out of 100 runs were at least this fast.
 
-### How to read the batch numbers
+### How to Read the Batch Numbers
 
 The batch test used 100 rows that were built in advance, a separate temporary
 database, and `synchronous=FULL`. `synchronous=FULL` means SQLite waits for the
@@ -43,9 +43,9 @@ Two more warnings:
 * Under a paced workload, a batch of 8 often closes on the timer before eight
   records arrive.
 
-## The four changes
+## The Four Changes
 
-### 1. Cache the redaction key decision
+### 1. Cache the Redaction Key Decision
 
 Baseline profile: 1.33 million generator calls and 1.24 million `lower()` calls.
 Checking the same metadata keys again and again took a real share of
@@ -59,7 +59,7 @@ Result: an isolated later packet run reached 496.38/s, against a baseline median
 of 423.345/s. The trade-off is one small fixed cache. Changing keys cannot grow
 memory without a limit. After the change: 194 tests and 154 subtests passed.
 
-### 2. Make the correlation Sample immutable
+### 2. Make the Correlation Sample Immutable
 
 Baseline `deepcopy`: 401,295 calls, 0.446 s self time and 1.359 s cumulative in
 an instrumented packet run.
@@ -74,7 +74,7 @@ Result: a separate later scanner run reached 1868.34/s; the final median was
 A test checks the field types, the frozen behaviour, and that mutable cache
 containers stay isolated. After the change: 195 tests and 154 subtests passed.
 
-### 3. SQLite batches
+### 3. SQLite Batches
 
 Baseline storage profile: `sqlite execute` 1.116 s self time over 2054 calls. A
 benchmark-only test with transaction sizes 1, 8 and 32 gave 184.7, 1324.8 and
@@ -92,7 +92,7 @@ deadline for a disk that has stopped answering. See the
 checkpoint trade-offs. After the change: 198 tests and 154 subtests passed, plus
 extra tests for failure and backpressure.
 
-### 4. Configurable load shedding
+### 4. Configurable Load Shedding
 
 This one is about controlled degradation. It is **not** a speed claim.
 
@@ -121,7 +121,7 @@ names. The default is `false`.
 A test with 64 slots accepted 48 LOW, then 9 NORMAL, then 7 HIGH. At the hard
 cap even HIGH is refused. After the change: 201 tests and 154 subtests passed.
 
-## What is still slow, and why we left it
+## What Is Still Slow, and Why We Left It
 
 Final profile: `bounded_value` 0.293 s self, regex search 0.231 s, cache size
 accounting 0.198 s, `deepcopy` 0.091 s over 75,807 calls.
@@ -130,7 +130,7 @@ Redaction, validation and the counted byte limits stay. Removing them is not
 treated as an optimisation. There is no zero-copy work, no disabling of the
 garbage collector, and no new runtime dependency.
 
-### The API on 50,000 rows
+### The API on 50,000 Rows
 
 | Query | p95 |
 | --- | ---: |
@@ -147,7 +147,7 @@ that only 20 rows were scanned.
 No index was added. The current result stays inside the query deadline. Choosing
 a different plan would need paired wide, narrow and selective benchmarks first.
 
-### The concurrency model was not changed
+### The Concurrency Model Was Not Changed
 
 It stays: one `SelectorServer`, one analysis and SQLite owner, and bounded
 enrichment workers.
@@ -159,7 +159,7 @@ therefore not needed, and no comparison document is needed either. There are no
 comparison numbers for implementations that do not exist. No kernel tuning was
 applied.
 
-## CPU cost and complexity
+## CPU Cost and Complexity
 
 "O(N)" is the usual notation for how work grows with input size.
 
@@ -179,7 +179,7 @@ Timeouts, the safe UDP receive-only default, schema validation, the confidence
 model and the parser caps all stay in force. No benchmark asked for any of these
 limits to be relaxed.
 
-## See also
+## See Also
 
 * [Benchmarking method](BENCHMARKING.md)
 * [Capacity planning](CAPACITY.md)

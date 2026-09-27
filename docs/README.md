@@ -18,7 +18,7 @@ blocks nothing. The pages that describe blocking say so in their first lines.
 | [WEBSITE_QUICKSTART.md](WEBSITE_QUICKSTART.md) | Protecting a website specifically |
 | [TROUBLESHOOTING.md](TROUBLESHOOTING.md) | When something does not work |
 
-## 2. Install and deploy
+## 2. Install and Deploy
 
 | Page | What it is for |
 | --- | --- |
@@ -40,7 +40,7 @@ blocks nothing. The pages that describe blocking say so in their first lines.
 | [TRUSTED_PROXIES.md](TRUSTED_PROXIES.md) | CDNs and reverse proxies. Read before blocking anything |
 | [MULTI_SITE.md](MULTI_SITE.md) | More than one website |
 
-## 4. Configuration and operations
+## 4. Configuration and Operations
 
 | Page | What it is for |
 | --- | --- |
@@ -54,7 +54,7 @@ blocks nothing. The pages that describe blocking say so in their first lines.
 | [API.md](API.md) · [API_CLIENTS.md](API_CLIENTS.md) | The local read-only API |
 | [CAPACITY.md](CAPACITY.md) · [PERFORMANCE.md](PERFORMANCE.md) · [BACKPRESSURE.md](BACKPRESSURE.md) | Limits, and what happens at them |
 
-## 5. Autonomous Protection — advanced
+## 5. Autonomous Protection: Advanced
 
 Read [VALIDATION_STATUS.md](VALIDATION_STATUS.md) first. Real-world validation of
 autonomous blocking is **pending**.
@@ -71,7 +71,7 @@ autonomous blocking is **pending**.
 | [PROGRESSIVE_DEFENSE.md](PROGRESSIVE_DEFENSE.md) · [CHALLENGE.md](CHALLENGE.md) | Asking before blocking |
 | [REVIEW_QUEUE.md](REVIEW_QUEUE.md) | Human review |
 
-## 6. Security and privacy
+## 6. Security and Privacy
 
 | Page | What it is for |
 | --- | --- |
@@ -82,7 +82,7 @@ autonomous blocking is **pending**.
 | [DECEPTION.md](DECEPTION.md) · [DECEPTION_SAFETY.md](DECEPTION_SAFETY.md) | The finite deception listener and its bounds |
 | [LIMITATIONS.md](LIMITATIONS.md) · [RISKS_AND_LIMITATIONS.md](RISKS_AND_LIMITATIONS.md) | What it cannot do |
 
-## 7. How it decides
+## 7. How It Decides
 
 | Page | What it is for |
 | --- | --- |
@@ -93,7 +93,7 @@ autonomous blocking is **pending**.
 | [CONFIDENCE.md](CONFIDENCE.md) · [ANOMALY_DETECTION.md](ANOMALY_DETECTION.md) · [OOD.md](OOD.md) · [DRIFT.md](DRIFT.md) | Uncertainty, unusualness, and knowing when it is out of its depth |
 | [CORRELATION.md](CORRELATION.md) · [FINGERPRINTING.md](FINGERPRINTING.md) | Linking observations |
 
-## 8. Models and data
+## 8. Models and Data
 
 | Page | What it is for |
 | --- | --- |
@@ -107,7 +107,7 @@ autonomous blocking is **pending**.
 | [DATASET.md](DATASET.md) · [DATA_CARD_v1.md](DATA_CARD_v1.md) · [WEB_DATASET.md](WEB_DATASET.md) · [SITE_DATASETS.md](SITE_DATASETS.md) | The corpora |
 | [DATA_QUALITY.md](DATA_QUALITY.md) · [THIRD_PARTY_DATA.md](THIRD_PARTY_DATA.md) | Quality gates, and data this project did not produce |
 
-## 9. Validation and status
+## 9. Validation and Status
 
 | Page | What it is for |
 | --- | --- |
@@ -117,7 +117,7 @@ autonomous blocking is **pending**.
 | [P0_P12_STATUS.md](P0_P12_STATUS.md) | Where the earlier phases got to |
 | [../reports/](../reports/) | Phase reports. Historical: read [../reports/README.md](../reports/README.md) first |
 
-## 10. Development and release
+## 10. Development and Release
 
 | Page | What it is for |
 | --- | --- |

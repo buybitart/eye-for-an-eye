@@ -1,4 +1,4 @@
-# P1 privilege separation
+# P1 Privilege Separation
 
 "Privilege separation" means splitting a system into small parts, and giving
 each part only the access it truly needs. This page explains how Eye for an
@@ -6,10 +6,10 @@ Eye does that on Linux. Read this page if you deploy the sensor, or if you
 review its security design.
 
 The system uses separate executable roles. The application never grants
-itself higher privileges on its own — an operator sets these up ahead of
+itself higher privileges on its own. An operator sets these up ahead of
 time.
 
-## The three roles
+## The Three Roles
 
 | Role | User / capabilities | What it runs |
 | --- | --- | --- |
@@ -17,8 +17,8 @@ time.
 | Analysis / listener | A non-root Linux user, with zero effective capabilities | The parser, fingerprinting, bounded queues, optional lookup processes, SQLite, and the finite (limited, non-endless) deception logic |
 | Firewall operator | A separate, explicit CLI process, run by a person, with rights to enter a disposable network namespace | Only a fixed command line: `ip netns exec e4e-lab-* … nft`. This is never triggered automatically from a `NetworkEvent` |
 
-`CAP_NET_RAW` is a Linux capability — a small, named piece of root-like power
-— that lets a process build and read raw network packets, without giving it
+`CAP_NET_RAW` is a Linux capability (a small, named piece of root-like power
+) that lets a process build and read raw network packets, without giving it
 full root access.
 
 The capture helper refuses to start if its configuration also asks for
@@ -31,9 +31,9 @@ explicit lab setting. Production templates require it to be `true`. An old
 raw-ICMP experiment is rejected with a clear error message if this setting
 is set to `true`. Local tests on Windows confirm the algorithms and the
 lifecycle logic, but they do not confirm real Linux capability enforcement
-— for that, Linux is required.
+, for that, Linux is required.
 
-## How the two processes talk (IPC)
+## How the Two Processes Talk (IPC)
 
 The capture helper and the analysis process talk over a Unix stream socket.
 Each message starts with a 4-byte length value in network byte order,
@@ -50,7 +50,7 @@ format that can run arbitrary code when loading untrusted data, so it is
 avoided here on purpose. Each side checks the other side's UID (user ID)
 using the Linux `SO_PEERCRED` socket option. The standard Python
 `multiprocessing` "spawn" method is used inside the trusted analysis
-process only for its own known functions — never to accept external pickle
+process only for its own known functions, never to accept external pickle
 data.
 
 The IPC directory must belong to the analysis process's UID, and must not
@@ -62,7 +62,7 @@ symbolic links, and never removes an existing, active listener. A stale
 and an ownership check. Note: trusting a specific allowed UID does not
 protect you if that UID's account is itself compromised.
 
-## Accounts and systemd units
+## Accounts and systemd Units
 
 Systemd unit files live in `deploy/systemd/`. The example accounts are:
 `eye-for-an-eye` with UID 10001, `eye-for-an-eye-capture` with UID 10002,
@@ -75,7 +75,7 @@ feature to pass the deception secret through the path
 `%d/deception.secret`. The capture helper never needs access to this
 secret.
 
-## Systemd sandboxing settings
+## Systemd Sandboxing Settings
 
 These general restrictions apply: `NoNewPrivileges`, `PrivateTmp`,
 `ProtectSystem=strict`, `ProtectHome`, `ProtectKernelTunables`,
@@ -84,7 +84,7 @@ These general restrictions apply: `NoNewPrivileges`, `PrivateTmp`,
 option that removes one class of ability a process would otherwise have.
 
 The analysis process has an empty `CapabilityBoundingSet` and empty
-`AmbientCapabilities` — meaning it can never gain any Linux capability. The
+`AmbientCapabilities`, meaning it can never gain any Linux capability. The
 capture helper gets only `CAP_NET_RAW`. Nobody gets `CAP_NET_ADMIN` (the
 capability needed to change firewall or routing rules).
 
@@ -93,7 +93,7 @@ number of tasks/threads), `MemoryMax=256M` for analysis and `128M` for the
 helper, and `KillMode=control-group` (stopping the whole group of related
 processes together).
 
-## Why each network exception exists
+## Why Each Network Exception Exists
 
 Every allowed exception has a specific reason:
 
@@ -106,7 +106,7 @@ Every allowed exception has a specific reason:
 * `AF_UNIX` (local sockets) is needed for IPC.
 
 The analysis process can only write inside its own `StateDirectory` and
-`RuntimeDirectory` — systemd-managed folders set aside for it. The capture
+`RuntimeDirectory`, systemd-managed folders set aside for it. The capture
 process gets no writable state directory at all.
 
 `PrivateNetwork` is not turned on, because it would cut the assigned
@@ -114,7 +114,7 @@ capture interface, and the listener, off from the network they need to
 watch. The container-based lab environment uses its own separate internal
 network instead.
 
-## What is still unverified
+## What Is Still Unverified
 
 The unit files have been checked to match the privilege profiles generated
 by the code. However, **the actual systemd runtime behavior, and the real
@@ -127,7 +127,7 @@ directives](https://github.com/systemd/systemd/blob/main/man/systemd.exec.xml)
 and the [Linux Unix socket credentials
 page](https://man7.org/linux/man-pages/man7/unix.7.html) for background.
 
-## See also
+## See Also
 
 * [Security deployment](SECURITY_DEPLOYMENT.md)
 * [Firewall](FIREWALL.md)

@@ -1,12 +1,12 @@
-# Firewall manager
+# Firewall Manager
 
 This page describes the P1 firewall manager. It writes nftables rules that send some traffic to a decoy listener, for research and testing. It is for developers and lab operators who plan to use it.
 
 **This works only in an isolated test lab. It does not manage your real firewall.** Read this whole page before you run any of these commands.
 
-**nftables** is the Linux firewall framework this manager uses. A **network namespace** is a private, separate network stack inside one Linux machine — like a small, isolated copy of the network, cut off from the real one.
+**nftables** is the Linux firewall framework this manager uses. A **network namespace** is a private, separate network stack inside one Linux machine, like a small, isolated copy of the network, cut off from the real one.
 
-## The safety line
+## The Safety Line
 
 These rules keep the manager from ever touching a real, production firewall:
 
@@ -28,29 +28,29 @@ The other commands, `apply`, `verify`, and `rollback`, use this same command pat
 
 The example configuration file (`deploy/firewall.lab.toml`) describes one lab network layout. Having this file does **not** give you permission to apply that same layout to a real host.
 
-## What the manager owns
+## What the Manager Owns
 
 The manager owns exactly one nftables table, named `ip eye_for_an_eye`. This table carries a comment showing who owns it, and a digest (a short fingerprint) of the configuration that created it.
 
 * If a table with that same name already belongs to something else, `apply` and `rollback` both refuse to run.
 * The manager never flushes (empties) the whole ruleset.
 * It never changes chains or tables that belong to other software.
-* It does not save or restore the whole host's firewall ruleset — only its own one table.
+* It does not save or restore the whole host's firewall ruleset, only its own one table.
 
 Running `apply` again replaces only the manager's own table, in one single atomic step (an operation that either fully happens or does not happen at all), and refreshes the lease (see below). The policy's meaning stays the same, but its internal rule IDs and lease time may change.
 
-## Before a redirect starts
+## Before a Redirect Starts
 
 Before adding a redirect rule, the manager first makes a TCP readiness check: it tries to connect to the configured decoy listener inside the lab namespace, to make sure it is actually there and ready.
 
-* Management ports, real service ports, and the listener's own port are all protected — they can never overlap with the decoy port set.
+* Management ports, real service ports, and the listener's own port are all protected. They can never overlap with the decoy port set.
 * The manager's own rule chain also has a `return` rule for those protected ports, so traffic to them is left alone.
-* The redirect only ever covers the destination addresses and TCP decoy ports listed in the configuration — nothing else.
+* The redirect only ever covers the destination addresses and TCP decoy ports listed in the configuration. Nothing else.
 * The decoy listener must accept the redirected traffic on the addresses of the network interface it listens on. In the lab test setup, it binds to `0.0.0.0` (meaning "all addresses"), but only inside the isolated namespace.
 
 A successful TCP connection during this check does not prove which real process answered on the other end. That is a known limit of this readiness check.
 
-## The lease
+## The Lease
 
 The redirect rule set has a kernel timeout, called its **lease**. The default lease is 30 seconds. The allowed range is 5 to 300 seconds.
 
@@ -59,27 +59,27 @@ The redirect rule set has a kernel timeout, called its **lease**. The default le
 * While a lease is still alive, existing NAT and connection-tracking entries in the kernel may keep working on their own, even without the manager running.
 * Real service ports and management ports are never included in the decoy port set.
 
-## verify and rollback
+## Verify and Rollback
 
 `verify` is read-only: it never changes anything. It checks the table's structure, its rule chain, its match conditions, its verdict (accept/redirect/etc.), its ports, its expiry time, and whether the listener is ready.
 
 `verify` reports a status of `degraded` when the lease has already expired, when a different, unexpected redirect is found in place, or when the listener fails its check.
 
-If a check fails right after an `apply`, the manager rolls back to **having no redirect table of its own at all**. It does not attempt to restore an older version of its own policy — that feature does not exist.
+If a check fails right after an `apply`, the manager rolls back to **having no redirect table of its own at all**. It does not attempt to restore an older version of its own policy. That feature does not exist.
 
 ## IPv6
 
 IPv6 redirection is deliberately **unsupported**. Any IPv6 firewall address is rejected during configuration validation, and a table created in the `ip` (IPv4) family never touches IPv6 traffic at all.
 
-Offline IPv6 observation (just watching, not redirecting) is covered by separate tests elsewhere in the project. That does not mean IPv6 firewall policy is supported here — it is not.
+Offline IPv6 observation (just watching, not redirecting) is covered by separate tests elsewhere in the project. That does not mean IPv6 firewall policy is supported here. It is not.
 
 ## Tests
 
-The test file `tests/test_p1_firewall.py` covers: the rule-building logic, that running `apply` twice in a row gives the same result (idempotence), rollback behaviour against a fake backend, refusal when the readiness check fails or when a table name collides with another one, protection of reserved ports, resistance to tampering, and behaviour after a lease has expired. These tests use a fake backend — they do not replace evidence gathered from a real Linux system.
+The test file `tests/test_p1_firewall.py` covers: the rule-building logic, that running `apply` twice in a row gives the same result (idempotence), rollback behaviour against a fake backend, refusal when the readiness check fails or when a table name collides with another one, protection of reserved ports, resistance to tampering, and behaviour after a lease has expired. These tests use a fake backend. They do not replace evidence gathered from a real Linux system.
 
 The test file `tests/linux_lab/test_namespace_firewall.py` builds three real network namespaces: a client, a sensor/router, and a service. They are joined only by veth links (a type of virtual network cable between namespaces), with no default route and no interface facing the real host network. This test checks a real SSH-like connection, the redirect itself, running `apply` more than once, crash and lease-expiry behaviour, rollback, and that an unrelated ("foreign") table stays untouched. A second test checks a minimal packet-capture capability. Cleanup only removes the specific, randomly-named (UUID) namespaces and processes that the test itself created.
 
-## What is not verified here
+## What Is Not Verified Here
 
 On the current Windows development machine, real `nft` commands, real namespaces, real redirects, real lease expiry, and real rollback are all **NOT VERIFIED IN CURRENT ENVIRONMENT**.
 
@@ -87,11 +87,11 @@ The full runbook (step-by-step operating instructions) and the opt-in safety gat
 
 The command syntax and the timeout design follow the [official nftables reference](https://netfilter.org/projects/nftables/manpage.html). The exact JSON output format of a specific `nft` version still needs to be checked against a real contract run on Linux.
 
-## See also
+## See Also
 
-* [DEPLOYMENT.md](DEPLOYMENT.md) — the runbook and opt-in gate for using this feature.
-* [PRIVILEGES.md](PRIVILEGES.md) — what system permissions this and other components need.
-* [LAB_TEST_PLAN.md](LAB_TEST_PLAN.md) — the historic test plan that first covered lab-only checks like these.
-* [DECEPTION.md](DECEPTION.md) — the decoy listener this manager redirects traffic toward.
-* [ENFORCEMENT.md](ENFORCEMENT.md) — the separate, decision-driven blocking system (also lab-only).
-* [RISKS_AND_LIMITATIONS.md](RISKS_AND_LIMITATIONS.md) — known limits of this project as a whole.
+* [DEPLOYMENT.md](DEPLOYMENT.md): the runbook and opt-in gate for using this feature.
+* [PRIVILEGES.md](PRIVILEGES.md): what system permissions this and other components need.
+* [LAB_TEST_PLAN.md](LAB_TEST_PLAN.md): the historic test plan that first covered lab-only checks like these.
+* [DECEPTION.md](DECEPTION.md): the decoy listener this manager redirects traffic toward.
+* [ENFORCEMENT.md](ENFORCEMENT.md): the separate, decision-driven blocking system (also lab-only).
+* [RISKS_AND_LIMITATIONS.md](RISKS_AND_LIMITATIONS.md): known limits of this project as a whole.

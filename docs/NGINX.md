@@ -1,4 +1,4 @@
-# Nginx integration
+# Nginx Integration
 
 Eye for an Eye reads a local Nginx access log written in JSON.
 
@@ -8,7 +8,7 @@ nothing.
 
 Status: **Beta.** Nginx is the only implemented reader.
 
-## What it changes
+## What It Changes
 
 Nothing, unless you do it yourself.
 
@@ -16,7 +16,7 @@ Eye for an Eye never edits your Nginx configuration, never reloads Nginx, and
 never writes into `/etc/nginx`. `eye-for-an-eye web log-format` prints text; you
 install it, you run `nginx -t`, you reload.
 
-## Step 1: the log format
+## Step 1: The Log Format
 
 ```bash
 eye-for-an-eye web log-format
@@ -62,18 +62,18 @@ Then, always:
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
-## Why these fields
+## Why These Fields
 
 Every one is used. Nothing is requested "just in case".
 
 | Field | Used for |
 | --- | --- |
 | `time` | ordering and window boundaries |
-| `remote_addr` | the peer that connected — the anchor for client identity |
+| `remote_addr` | the peer that connected. The anchor for client identity |
 | `forwarded_for` | the client, **only** if the peer is a trusted proxy |
 | `method` | method behaviour |
 | `uri` | derived features only; the path itself is not stored |
-| `args` | shape only — how many parameters, how long; never the values |
+| `args` | shape only: how many parameters, how long; never the values |
 | `status` | error ratios |
 | `bytes_sent`, `request_length` | response and request size |
 | `request_time` | timing |
@@ -84,7 +84,7 @@ Every one is used. Nothing is requested "just in case".
 `escape=json` matters. Without it a User-Agent containing a quote breaks the line
 and the request is lost.
 
-## What must not be logged
+## What Must Not Be Logged
 
 ```text
 $http_authorization    $http_cookie    $sent_http_set_cookie
@@ -96,7 +96,7 @@ A line carrying one of these is **dropped whole**, and `web doctor` reports it a
 your access log is currently writing credentials to disk, where backups and log
 shipping will pick them up.
 
-## Step 2: permissions
+## Step 2: Permissions
 
 The web sensor needs to read the log. It must **not** run as root to do it.
 
@@ -108,7 +108,7 @@ sudo setfacl -m u:eye-for-an-eye:r /var/log/nginx/eye-for-an-eye.log
 Use whichever your distribution prefers. The point is least privilege: reading a
 log file is not a reason to give a process the whole machine.
 
-## Step 3: configuration
+## Step 3: Configuration
 
 ```toml
 [web]
@@ -127,7 +127,7 @@ head -c 48 /dev/urandom | base64 | sudo tee /etc/eye-for-an-eye/web.secret
 sudo chmod 600 /etc/eye-for-an-eye/web.secret
 ```
 
-## Step 4: check it
+## Step 4: Check It
 
 ```bash
 eye-for-an-eye web doctor
@@ -138,12 +138,12 @@ credential field is present, whether trusted proxies are configured, whether the
 secret is present and private, and whether enforcement is set up safely. It
 changes nothing.
 
-## Log rotation
+## Log Rotation
 
 Handled, and worth explaining because it is where log readers usually fail
 silently.
 
-Rotation is detected by **inode**, not by name — logrotate's default renames the
+Rotation is detected by **inode**, not by name, logrotate's default renames the
 file the reader is holding open, so a reader watching only the path keeps reading
 a file nobody writes to any more, forever, without an error.
 
@@ -169,7 +169,7 @@ No special logrotate configuration is needed.
 Anything over a bound is truncated or the line is dropped and counted. Nothing
 grows with what a client sends.
 
-## Other web servers
+## Other Web Servers
 
 The event model is generic. Apache and Caddy readers are **not implemented**;
 their status is planned, not experimental, because no code exists for them yet.
@@ -179,6 +179,6 @@ reader.
 
 ## Related
 
-* [REVERSE_PROXY.md](REVERSE_PROXY.md) — read this before setting trusted proxies
-* [WEB_PRIVACY.md](WEB_PRIVACY.md) — what is kept
-* [WEBSITE_QUICKSTART.md](WEBSITE_QUICKSTART.md) — the whole setup in order
+* [REVERSE_PROXY.md](REVERSE_PROXY.md): read this before setting trusted proxies
+* [WEB_PRIVACY.md](WEB_PRIVACY.md): what is kept
+* [WEBSITE_QUICKSTART.md](WEBSITE_QUICKSTART.md): the whole setup in order

@@ -1,4 +1,4 @@
-# Offline research tools
+# Offline Research Tools
 
 Not included in the production wheel. Nothing here reads live traffic, opens a network
 connection, writes runtime configuration, activates a model or uses a system decision as a

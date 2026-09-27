@@ -1,4 +1,4 @@
-# The maths engine
+# The Maths Engine
 
 The maths engine is the first of the two risk engines. It is small, fixed and
 easy to read. You can check it by hand.
@@ -6,7 +6,7 @@ easy to read. You can check it by hand.
 It is called `math-risk-v1`. The code is in
 `eye_for_an_eye/decision/math_risk.py` (33 lines).
 
-## Why a maths engine at all
+## Why a Maths Engine at All
 
 The AI model is optional. Sometimes there is no model file. Sometimes the model
 is unhealthy. Sometimes it is not sure.
@@ -17,7 +17,7 @@ that always works. It never needs a file, a download or a GPU.
 It is also the part you can argue with. Every weight is written in the source
 code, in one place.
 
-## The formula
+## The Formula
 
 ```
 z     = bias + (weight_1 * feature_1) + (weight_2 * feature_2) + ...
@@ -29,7 +29,7 @@ This is a plain logistic function. The score is always between 0 and 1.
 The bias is `-4.0`. That means: with no evidence at all, the score is about
 `0.018`. The system starts by trusting you.
 
-## The weights
+## The Weights
 
 Only 13 of the 18 behaviour numbers have a weight. The others are used by the
 policy rules, not by this formula.
@@ -60,7 +60,7 @@ always true: until `math-risk-v3` the long window carried half the weight
 worth four times less if the source took its time. Taking your time is a choice
 an attacker makes precisely because it used to be cheaper. It is not any more.
 
-## Before the formula: normalisation
+## Before the Formula: Normalisation
 
 Every raw number is first mapped into the range 0 to 1. Each behaviour number
 has a ceiling and a shape (`linear` or `log`). Example:
@@ -74,16 +74,16 @@ is never told "0 connections" when the true answer is "we do not know".
 The transformation lives in `FeatureTransformer.transform`. Training and
 inference use **the same function**. There is no second copy.
 
-## What the engine returns
+## What the Engine Returns
 
-* `score` — a number from 0 to 1.
-* `contributions` — how much each behaviour number added to `z`.
-* `model_version` — `math-risk-v1`.
+* `score`: a number from 0 to 1.
+* `contributions`: how much each behaviour number added to `z`.
+* `model_version`: `math-risk-v1`.
 
 The contributions are why the system can explain itself. A decision can say
 "most of this score came from `ports_60s` and `credentials_60s`".
 
-## The score is not a probability
+## The Score Is Not a Probability
 
 This is important. The score is **not** the chance that the source is bad. It
 is an uncalibrated number. It only says "more" or "less".
@@ -91,7 +91,7 @@ is an uncalibrated number. It only says "more" or "less".
 The code says this too: the result object is documented as
 "explicitly uncalibrated".
 
-## Decay over time
+## Decay Over Time
 
 A source that stops behaving badly gets better again. The old score is halved
 every `decision.half_life_seconds` (default: 60 seconds).
@@ -102,7 +102,7 @@ new_score = old_score * 2^(-elapsed / half_life)
 
 The final risk is the higher of the fresh score and the decayed old score.
 
-## How it joins the AI model
+## How It Joins the AI Model
 
 See [Decision engine](DECISION_ENGINE.md) and [How the AI works](AI.md).
 

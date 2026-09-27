@@ -6,7 +6,7 @@
 
 ---
 
-## Before anything else: the premise
+## Before Anything Else: The Premise
 
 The brief states that P13 reported `P14_AUTO_PROMOTION_READY: YES`.
 
@@ -20,20 +20,20 @@ stage possible to complete honestly:
 
 | | Question | Answer |
 | --- | --- | --- |
-| **Mechanical readiness** | do hashes validate, scopes hold, activation stay atomic, rollback work, restart recover, sites stay isolated, state stay bounded? | **PASS** — 13/13 prerequisites, 44 checks |
-| **Evidence readiness** | has any of this run on real traffic, with trusted labels, under a model that passes its own gate? | **NO** — unchanged |
+| **Mechanical readiness** | do hashes validate, scopes hold, activation stay atomic, rollback work, restart recover, sites stay isolated, state stay bounded? | **PASS**: 13/13 prerequisites, 44 checks |
+| **Evidence readiness** | has any of this run on real traffic, with trusted labels, under a model that passes its own gate? | **NO**: unchanged |
 
 P13's `NO` was the second kind. §0's checklist is entirely the first kind. So the
 governance machinery was built and tested in full, and **ships disabled**, which
-§4, §98 and §143 require regardless. The thing P13 said no to — switching this on
-over production traffic — is not something implementing P14 forces, and nothing
+§4, §98 and §143 require regardless. The thing P13 said no to (switching this on
+over production traffic) is not something implementing P14 forces, and nothing
 in this report authorises it.
 
 Full detail: `reports/P14_BASELINE.md`.
 
 ---
 
-## The required report
+## The Required Report
 
 ```
 P13 readiness:                     PASS (mechanical) / NO (evidence, unchanged)
@@ -45,7 +45,7 @@ Site auto-promotion:               implemented, opt-in by site name
 Sites enabled:                     none
 ACTIVE:                            none (the registry is empty on this install)
 CANDIDATE:                         none
-Candidate eligibility:             not assessable — there is no candidate
+Candidate eligibility:             not assessable, there is no candidate
 Offline gate:                      PASS (implemented and tested; no candidate to run it on)
 Shadow gate:                       PASS (implemented and tested)
 Hard negatives:                    PASS (implemented and tested)
@@ -80,7 +80,7 @@ Clean install default safety:      PASS (installed and verified, not only assert
 
 ---
 
-## What "PASS (implemented and tested)" means here, and does not
+## What "PASS (Implemented and Tested)" Means Here, and Does Not
 
 Every gate above is implemented, has tests that break when the gate is broken,
 and has been exercised against synthetic evidence built to pass and then
@@ -118,7 +118,7 @@ recommendation at the bottom is what it is.
   │       ├─ sufficiency    → NEED_MORE_DATA when unproven│
   │       ├─ benign safety  ← tightest budgets            │
   │       ├─ security quality                             │
-  │       ├─ generalization (OOD, drift — advisory only)  │
+  │       ├─ generalization (OOD, drift, advisory only)   │
   │       └─ resource cost                                │
   │                    ↓                                  │
   │      PromotionAssessmentRecord (immutable, addressed) │
@@ -151,11 +151,11 @@ provides evidence**. It never changes what evidence is allowed to cause.
 
 ---
 
-## Findings and decisions worth recording
+## Findings and Decisions Worth Recording
 
 **1. The gates are multi-dimensional by construction, not by convention.** There
 is no code path from one improved metric to a promotion. `decide()` looks at
-integrity first, then blocking failures, then unproven gates — so a candidate
+integrity first, then blocking failures, then unproven gates; so a candidate
 whose F1 improved while its false blocks doubled is `NOT_ELIGIBLE`, and there is
 a test named after that case.
 
@@ -173,18 +173,18 @@ about a system with no governance engine. Deleting them would have thrown away
 the properties that still hold, so each was narrowed to its surviving half and a
 *stronger* companion test added:
 
-- `test_the_training_and_dataset_packages_cannot_change_the_active_model` — the
+- `test_the_training_and_dataset_packages_cannot_change_the_active_model`: the
   property that always mattered was never "one call site", it was "not from
   training";
-- `test_the_activator_is_the_only_new_promotion_authority` — the set of things
+- `test_the_activator_is_the_only_new_promotion_authority`: the set of things
   that can promote is asserted exactly, so a third one cannot appear quietly.
 
 **4. Four documented claims became false the moment the setting existed**, and
 all four were fixed in the same change that created it: `retraining.py`'s
 docstring, `config.py`'s `LearningConfig` docstring, `learning status`'s
 "there is no setting that turns this on", and `MULTI_SITE_MODELS.md`. P13 found
-three defects of exactly this shape — documentation that had quietly stopped
-matching the code — and this is the first stage where they were caught in the
+three defects of exactly this shape (documentation that had quietly stopped
+matching the code), and this is the first stage where they were caught in the
 same commit rather than an audit later.
 
 `test_site_docs.py` had a test requiring the multi-site page to say "there is no
@@ -194,7 +194,7 @@ defending a lie.
 
 **5. The denial-versus-claim problem recurred a third time**, so it was fixed
 properly. A documentation test asserting `'attack' not in body` fails on the page
-that says *"drift is never evidence of an attack"* — and the tempting fix is to
+that says *"drift is never evidence of an attack"*, and the tempting fix is to
 delete the sentence. `tests/denial.py` now does this once, with the reasoning
 written down, and `test_p14_docs` uses it for the §155 forbidden sentences, which
 `AUTO_PROMOTION.md` quotes in order to reject.
@@ -207,7 +207,7 @@ promoted at least one model by hand.
 
 ---
 
-## Safety mechanisms, and where each lives
+## Safety Mechanisms, and Where Each Lives
 
 | Mechanism | Module | What it prevents |
 | --- | --- | --- |
@@ -250,7 +250,7 @@ microseconds**. That is the number that had to be small, and it is.
 
 Activation excludes the real model load, which is injected as a warmup callable
 so the transaction can be tested without an ONNX file. The 5.6 ms is governance
-overhead *around* a load, not the load itself — the load is the dominant cost in
+overhead *around* a load, not the load itself. The load is the dominant cost in
 production and is bounded separately by `max_model_load_seconds` (30 s).
 
 **Dual inference overhead was not measured**, because the reference-role
@@ -267,7 +267,7 @@ session. Stated rather than estimated.
 
 | File | Cases | Covers |
 | --- | --- | --- |
-| `test_p14_readiness.py` | 45 | §0 — the 13 mechanical prerequisites |
+| `test_p14_readiness.py` | 45 | §0. The 13 mechanical prerequisites |
 | `test_p14_governance.py` | 78 | lifecycle, policy, every eligibility gate |
 | `test_p14_activation.py` | 54 | transaction, journal, crash recovery, guarded stages |
 | `test_p14_rollback.py` | 31 | the three rollback tiers, and the two non-triggers |
@@ -284,29 +284,29 @@ stage advancement failed 3, including the clock-jump case.
 
 ---
 
-## Acceptance criteria
+## Acceptance Criteria
 
 All 46 items in §159 are met. The ones worth calling out because they are easy to
 claim and hard to check:
 
-- **fresh-install default is OFF** — verified by running the real installer to a
+- **fresh-install default is OFF**: verified by running the real installer to a
   temporary prefix and reading the generated configuration, which does not
   contain the section at all;
-- **package upgrade does not enable it** — a pre-P14 configuration file, an empty
+- **package upgrade does not enable it**: a pre-P14 configuration file, an empty
   one, and every shipped example all load with it off; a missing section and a
   section saying `false` are the same behaviour by construction;
-- **trusted-label insufficiency produces NEED_MORE_DATA** — tested with five
+- **trusted-label insufficiency produces NEED_MORE_DATA**: tested with five
   million unlabelled vectors;
-- **OOD does not equal attack / drift does not equal attack** — tested in both
+- **OOD does not equal attack / drift does not equal attack**, tested in both
   the eligibility engine and the rollback monitor, in both directions;
-- **training process cannot promote** — checked by parsing every file in
+- **training process cannot promote**: checked by parsing every file in
   `training/` and `dataset/` for a promotion call or a governance import;
-- **auto-promotion cannot modify firewall policy** — checked by parsing the
+- **auto-promotion cannot modify firewall policy**: checked by parsing the
   governance package's imports.
 
 ---
 
-## Known limitations
+## Known Limitations
 
 **This has never run over production traffic.** Not one promotion, not one
 guarded stage, not one rollback, on a server anybody depends on. Everything above
@@ -325,7 +325,7 @@ measurable in principle and unmeasured in practice.
 `ShadowEvidence` are typed inputs the engine consumes. Populating them from
 `training/evaluate_model.py` and the candidate shadow ledger is a small piece of
 plumbing that is deliberately not done here, because doing it would make the
-system capable of assessing a real candidate — which is a step that should follow
+system capable of assessing a real candidate, which is a step that should follow
 a decision to use this, not precede it.
 
 **`mypy` was not run**, as in P13: it is in the optional `quality` extra and is
@@ -337,7 +337,7 @@ re-run against a guarded model, because there is no model to guard.
 
 ---
 
-## Recommended deployment
+## Recommended Deployment
 
 ```
 AUTO-PROMOTION DISABLED
@@ -362,7 +362,7 @@ Nothing after that second arrow has happened yet.
 
 ---
 
-## Final safety statement
+## Final Safety Statement
 
 ```
 Can a candidate directly control promotion?                      NO
@@ -392,9 +392,9 @@ The file-by-file summary below is the substitute.
 
 ---
 
-## Files changed
+## Files Changed
 
-### New — the governance package (3 212 lines)
+### New: The Governance Package (3 212 Lines)
 
 | File | Lines | What it is |
 | --- | --- | --- |
@@ -411,14 +411,14 @@ The file-by-file summary below is the substitute.
 | `governance/store.py` | 313 | history, audit log, freeze switch |
 | `governance_cli.py` | 394 | status, policy, assess, history, audit, freeze, unfreeze |
 
-### New — tests (2 691 lines) and tooling
+### New: Tests (2 691 Lines) and Tooling
 
 `test_p14_readiness.py` (551), `test_p14_governance.py` (684),
 `test_p14_activation.py` (607), `test_p14_operations.py` (315),
 `test_p14_rollback.py` (282), `test_p14_docs.py` (228), `tests/denial.py` (56),
 `benchmarks/bench_governance.py`.
 
-### New — documentation
+### New: Documentation
 
 `docs/AUTO_PROMOTION.md` (simple English, §154), `docs/MODEL_GOVERNANCE.md`
 (precise), `docs/GUARDED_ACTIVATION.md`, `docs/AUTO_ROLLBACK.md`,

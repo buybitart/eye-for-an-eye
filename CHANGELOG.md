@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.8.0rc2 — Public Beta
+## 0.8.0rc2: Public Beta
 
 Pushing 0.8.0rc1 to a public repository ran this project's continuous integration
 in public for the first time, and two jobs went red. This release is that repair
@@ -54,7 +54,34 @@ that these were real problems.
   agree, so a wheel named rc2 cannot contain a command that prints rc1, and the
   container job cannot build one image tag and run another.
 
-## 0.8.0rc1 — Public Beta
+### Documentation
+
+The public documentation was rewritten for plain English against two style
+sources, [Stylepedia](https://stylepedia.net/style/) and
+[WritingStyleGuide](https://github.com/StyleGuides/WritingStyleGuide). Wording
+only: no technical fact, measurement, command, status word or safety statement
+changed, and every fenced code block is byte-identical apart from two that held
+project-authored text rather than program output.
+
+* **The em dash is gone from text this project wrote.** 1,375 occurrences across
+  120 files became a full stop, a colon, a semicolon, a comma or brackets,
+  whichever the sentence needed, decided one at a time rather than substituted.
+  Eight remain, all inside code blocks that quote exact output: three in the
+  `setup` prompt, two in `web doctor`, and three in commit subjects shown by
+  `git log`. Program output is copied as it prints.
+* **Headings are in title case**, which is the rule the style sources give.
+* **A link in `dataset/README.md` resolved nowhere.** It pointed into the
+  generated `datasets` directory, which the release does not carry, rather than
+  at the data card in `docs/`.
+* **The release title in `docs/GITHUB_RELEASE.md` said RC1** while the tag named
+  two lines below it is `v0.8.0rc2`. An owner following that page would have
+  mislabelled the release.
+* **Two statements about difficulty are now statements about setup.** Calling a
+  task easy tells a reader who struggles that the fault is theirs.
+* `CONTRIBUTING.md` names the two style sources and the two house rules that come
+  from them, so a contributor does not have to infer either.
+
+## 0.8.0rc1: Public Beta
 
 The first release meant to be downloaded and installed by somebody who did not
 write it. The version string has not moved since it was introduced; what changed
@@ -71,7 +98,7 @@ autonomous blocking is still pending. See
   directory with `START_HERE.md` and `install.sh` at the top. The package installs
   under `/usr` on Ubuntu 24.04 and derivatives whose system Python is 3.12, with
   the systemd units present and disabled and no configuration under `/etc`.
-* **`eye-for-an-eye setup` asks what to watch** and checks the answer — that the
+* **`eye-for-an-eye setup` asks what to watch** and checks the answer. That the
   access log exists, can be read, and is in the format the reader parses. Nobody
   edits a configuration file by hand to get started.
 * **A beginner command surface:** `setup`, `start`, `status`, `stop`, `demo`,
@@ -89,7 +116,7 @@ autonomous blocking is still pending. See
 
 * The Linux installer and the beginner commands disagreed about where the
   configuration lives, so a **successful** install was followed by *"a settings
-  file exists — NO"*, and `start` told a Linux user to double-click a Windows
+  file exists. NO"*, and `start` told a Linux user to double-click a Windows
   `.cmd` file.
 * `easy uninstall` reported success on Linux for work it had not done.
 * `status` failed with an errno on every fresh install instead of saying
@@ -104,7 +131,7 @@ autonomous blocking is still pending. See
 * The release builder required exactly three configuration templates and the
   project has had six since the production profiles were added.
 
-### Known limitations
+### Known Limitations
 
 * Real-world validation of autonomous blocking is **pending**.
 * Not tested: live packet capture, `CAP_NET_RAW`, the namespace firewall, the
@@ -119,7 +146,7 @@ written before the version above was prepared for release, and their `Unreleased
 headings refer to the phase that produced them rather than to a pending release.
 Their measurements are not restated or revised here.
 
-## Unreleased (P15.1) — evidence, enforcement, and a units error
+## Unreleased (P15.1): Evidence, Enforcement, and a Units Error
 
 The cycle that measured what P15 had built. The headline is not a feature: on a
 trusted labelled corpus of 709 sources, **the autonomous authority blocked
@@ -128,7 +155,7 @@ nothing at all**, and the cause was an arithmetic mistake nobody had noticed.
 ### Fixed
 
 **An uncalibrated score was being compared against a probability.** The
-cost-sensitive cutoff is `C_FP / (C_FP + C_FN)` — the *probability* of
+cost-sensitive cutoff is `C_FP / (C_FP + C_FN)`. The *probability* of
 maliciousness at which blocking becomes the cheaper error. When calibration was
 unavailable, P15 fell back to comparing `MathRisk`, an uncalibrated score on its
 own scale, against that number. The two are not the same quantity, and the
@@ -137,7 +164,7 @@ comparison was meaningless in both directions.
 The repair is a hard gate, not a rescue: `CALIBRATION_UNAVAILABLE` now refuses
 the block outright, and a test asserts that `math_risk = 1.0` still yields
 `ALLOW`. This makes the system block *less*, which is the correct direction for
-a fix to a measurement error — §45 forbids solving a model problem by lowering a
+a fix to a measurement error, §45 forbids solving a model problem by lowering a
 gate, and it equally forbids solving it by keeping a comparison that does not
 type-check.
 
@@ -147,7 +174,7 @@ type-check.
 `enforcement.host_enabled`. Privilege separated end to end: the decision
 authority holds no firewall handle, `PolicyGuard` can only weaken an action, and
 what crosses the boundary is an `EnforcementRequest` carrying an address, a
-family, a scope, a lifetime, a decision id and reasons — **and no command
+family, a scope, a lifetime, a decision id and reasons, **and no command
 field**. A privileged helper in a separate process validates all of it again
 against its own copy of the configuration before writing. Blocks live in one
 nftables table per installation, marked with an owner comment; a table with the
@@ -156,7 +183,7 @@ carries a kernel timeout, so a sensor that dies never leaves a permanent block
 behind. 61 tests, the kernel half run against a real `nft` on a disposable
 machine. See [docs/HOST_ENFORCEMENT.md](docs/HOST_ENFORCEMENT.md).
 
-**`training/decision_replay.py` and its CLI** — the measurement P15 could not
+**`training/decision_replay.py` and its CLI**: the measurement P15 could not
 make. It replays a trusted labelled corpus through the complete decision path to
 the final `ALLOW` / `TEMP_BLOCK` and reports rare-class metrics for the *action*,
 per window and per source. Three assumptions are stated and all three make the
@@ -176,7 +203,7 @@ private reference material before the first commit. Nothing is pushed anywhere.
 ### Measured
 
 `reports/P15_1_DECISION_EVALUATION.md`: 565 benign and 144 malicious sources,
-7,576 windows, **0 blocks**. Recall 0.000. False blocks per 1000 benign 0.0 —
+7,576 windows, **0 blocks**. Recall 0.000. False blocks per 1000 benign 0.0:
 true, and true because nothing is blocked. Block precision is undefined for the
 same reason. Verdict `USELESS_NO_DETECTION`.
 
@@ -192,25 +219,25 @@ had put in a summary: ROC-AUC **0.517** on the four withheld scenario families.
 Chance. The 0.997 validation figure comes from a split sharing scenario families
 with training, and the report's own limitations section says so.
 
-### Not changed, deliberately
+### Not Changed, Deliberately
 
 The 12-hour block ceiling, the cost profiles and their cutoffs, every gate
 threshold, and the release thresholds in `ReleaseThresholds`. The lab namespace
-path is untouched — the host path is new code beside it, not a relaxation of it.
+path is untouched. The host path is new code beside it, not a relaxation of it.
 No threshold was moved to obtain a pass, and the gates that still fail, fail on
 evidence: **Gate C** (no validated classifier and no validated deterministic
 fallback) and **Gate E** (block precision undefined because there are no blocks).
 
 `AUTONOMOUS_READY` remains **NO**.
 
-## Unreleased (P15) — autonomous decision authority
+## Unreleased (P15): Autonomous Decision Authority
 
 ### Added
 
-**`eye_for_an_eye/autonomy/` — the final ALLOW / TEMP_BLOCK authority.** One
+**`eye_for_an_eye/autonomy/`: the final ALLOW / TEMP_BLOCK authority.** One
 explicit, auditable algorithm, holding no enforcement privilege: it imports
 nothing that could reach a firewall, and a test parses its imports to keep that
-true. Seven modules — `cost` (per-site cost profiles and the cutoff that follows
+true. Seven modules: `cost` (per-site cost profiles and the cutoff that follows
 from them), `evidence` (ten independent signal families, each counted once),
 `uncertainty` (the conservative estimate and expected loss), `record`
 (`AutonomousDecisionRecord`, stable reason codes, the assumption registry),
@@ -218,7 +245,7 @@ from them), `evidence` (ten independent signal families, each counted once),
 `runtime` (readiness gate, automatic degradation and recovery), plus `evaluation`
 (rare-class metrics for the final decision, in pure Python).
 
-**A cost-sensitive cutoff instead of 0.5.** Five profiles — `public_website`
+**A cost-sensitive cutoff instead of 0.5.** Five profiles, `public_website`
 (0.9756), `api` (0.9877), `payment_webhook` (0.9980, and never a network block at
 any probability), `admin` (0.8889), `honeypot` (0.6667). Costs are relative
 weights with `C_FN = 1.0` as the unit; no monetary value is inferred, and no
@@ -227,15 +254,15 @@ policy's content digest, so a decision taken under different numbers stays
 identifiable.
 
 **Three validations that could have been prose and are not.** A `TEMP_BLOCK`
-record with no behavioural reason code raises — "BLOCK because the AI score was
+record with no behavioural reason code raises, "BLOCK because the AI score was
 0.93" cannot be represented in this system. An `ALLOW` with no reason raises. A
 block carrying any restraining code raises, because a refusal means the answer
 was ALLOW.
 
 **Four brakes.** A block budget (10/minute, 500 active), a mass-block breaker
 (2% of recent sources, with shadow decisions counted), a false-positive breaker
-fed only by trusted evaluation — it refuses the system's own decisions outright
-— and a technical breaker for the nine named subsystem faults. Any of them opens
+fed only by trusted evaluation (it refuses the system's own decisions outright
+), and a technical breaker for the nine named subsystem faults. Any of them opens
 `AUTONOMOUS_SAFE_MODE`: no new blocks, everything else continues, existing blocks
 expire.
 
@@ -243,7 +270,7 @@ expire.
 the fault cleared, a cooldown passed, and the readiness gate to pass again. No
 administrator is involved in either direction.
 
-**`eye-for-an-eye autonomy`** — `readiness`, `status`, `policy`, `explain`,
+**`eye-for-an-eye autonomy`**: `readiness`, `status`, `policy`, `explain`,
 `science`, `enable`. `enable` runs the gate and prints the configuration to add;
 it does not edit the file. `science` prints `GROUND_TRUTH_UNAVAILABLE` without a
 trusted labelled evaluation, which is the honest answer and the usual one.
@@ -268,22 +295,22 @@ fourteen), `test_p15_science` (54), `test_p15_runtime` (36), `test_p15_docs` (25
 picked up `domain`, which P12 added to `NEVER_MODEL_INPUT` after the file was
 last written.
 
-### Not changed, deliberately
+### Not Changed, Deliberately
 
 **Enforcement is still lab-only.** Three independent gates keep it there: the
 configuration refuses `enforcement.enabled` outside a lab profile with a named
 namespace, the firewall backend compares the target namespace against
 `/proc/1/ns/net` and refuses the host, and every command runs under
 `ip netns exec`. P15 did not write host-namespace enforcement code, because
-graduating it would have meant calling test coverage deployment evidence — the
+graduating it would have meant calling test coverage deployment evidence. The
 substitution P13 explicitly refused. Autonomous mode on a production host means
 autonomous *decisions*, and the readiness gate says so.
 
-## Unreleased (P14) — scoped safe auto-promotion and model governance
+## Unreleased (P14): Scoped Safe Auto-promotion and Model Governance
 
 ### Added
 
-**`eye_for_an_eye/governance/` — eleven lifecycle states, an explicit transition
+**`eye_for_an_eye/governance/`: eleven lifecycle states, an explicit transition
 table, and an assess-only engine of 45 gates that is separate from the
 activator.** Nothing reaches ACTIVE except through GUARDED_ACTIVE; ROLLED_BACK
 leads only to QUARANTINED; leaving QUARANTINED requires an operator.
@@ -298,7 +325,7 @@ promotion rather than resolving an unreadable file to "nothing was happening".
 guarded activation and automatic rollback; the global switch is a second
 deliberate decision, not a detail of the first.
 
-**`eye-for-an-eye model governance`** — status, policy, assess, history, audit,
+**`eye-for-an-eye model governance`**: status, policy, assess, history, audit,
 freeze, unfreeze. No command promotes anything.
 
 ### Result
@@ -306,7 +333,7 @@ freeze, unfreeze. No command promotes anything.
 Shipped disabled. The recommended deployment posture is `AUTO-PROMOTION
 DISABLED` until an installation has shadow evidence of its own.
 
-## Unreleased (P13) — full-system integration audit
+## Unreleased (P13): Full-system Integration Audit
 
 ### Fixed
 
@@ -324,12 +351,12 @@ site's resolution with no expiry and no invalidation signal, and nothing in the
 codebase called `invalidate()`. Rollback is run from a separate CLI process, so
 a sensor already running went on using the withdrawn model indefinitely while
 the registry, the audit trail and the CLI all reported the rollback as done.
-`resolve()` now checks the pointer files' stat fingerprint — two `stat` calls —
+`resolve()` now checks the pointer files' stat fingerprint (two `stat` calls)
 and rebuilds when they change.
 
 **A model that would not load reported only `ValueError`.** All twenty-odd
-refusals in `onnx_model.py` — corrupt file, hash mismatch, wrong feature schema,
-bad permissions, unsupported operator — were indistinguishable. The module's own
+refusals in `onnx_model.py` (corrupt file, hash mismatch, wrong feature schema,
+bad permissions, unsupported operator) were indistinguishable. The module's own
 fixed strings now travel with the class name; anything raised by onnxruntime,
 json or the OS still reports its class alone, because an arbitrary exception
 message can carry a filesystem path.
@@ -353,7 +380,7 @@ unbounded.** **`web/sensor.py` forgot evicted sources only on `poll()`, never on
 `decision/retraining.py` said "there is no `auto_train` setting in this
 project". There is: `learning.auto_train` and `learning.auto_prepare_dataset`
 both exist, both default to `false`, and **neither is read by any code that
-could act on it**. They are now described as reserved and not honoured — in the
+could act on it**. They are now described as reserved and not honoured, in the
 module, in `config.py`, in `docs/RETRAINING.md` and in `learning status`, which
 no longer prints a bare `OFF` that reads as "wired up, currently off".
 
@@ -376,11 +403,11 @@ configuration-migration drills, a training/runtime parity check that runs from a
 clean checkout, and a matrix check that fails when a new version constant is
 added without documenting it.
 
-### Still a release blocker
+### Still a Release Blocker
 
 There is no LICENSE file. Source you can read is not open source.
 
-## Unreleased (P11) — public release preparation
+## Unreleased (P11): Public Release Preparation
 
 ### Added
 `eye-for-an-eye setup`: one command that writes a safe configuration, creates the persistent
@@ -388,7 +415,7 @@ deception secret when the profile needs one, creates the data directories and th
 database, and prints a short first-run summary. It defaults to Shadow Mode and never touches the
 firewall. `eye-for-an-eye model status`: a short, plain report of the local model. A `website`
 setup profile (`eye_for_an_eye/templates/website.toml`): the passive sensor deployment with the
-settings a web server owner wants — shadow decisions, enforcement off, active probes off,
+settings a web server owner wants: shadow decisions, enforcement off, active probes off,
 local-only API and metrics, seven-day retention. `scripts/install.sh` and `scripts/uninstall.sh`:
 a tested one-command install with `--help`, `--dry-run`, `--local`, `--system`, `--prefix`,
 `--data-dir`, `--profile`, `--wheel` and `--no-setup`, and removal with an explicit `--purge` for
@@ -428,7 +455,7 @@ Two release blockers remain open and are stated in the README, `SECURITY.md` and
 `docs/RELEASE.md`: no LICENSE file has been chosen, and no private security reporting channel
 exists. Automatic blocking remains lab-only: it refuses the host network namespace.
 
-## Unreleased (P10) — dataset-v1: LAB, PCAP and shadow telemetry
+## Unreleased (P10) dataset-v1: LAB, PCAP and Shadow Telemetry
 
 ### Added
 Three-source dataset pipeline behind one production FeatureVector path. `DatasetSample` gains
@@ -448,7 +475,7 @@ queue; manual review recording annotation, confidence and review timestamp. Ship
 ### Changed
 The readiness gate now also requires a PCAP contribution, a leakage report and a test holdout, and
 reports automatic enforcement readiness separately and always as NO. Splits group by the key each
-source needs — scenario run, whole capture, pseudonymous source — and unreviewed shadow telemetry
+source needs (scenario run, whole capture, pseudonymous source), and unreviewed shadow telemetry
 is excluded from every supervised split. Build output is deterministically shuffled so row
 position cannot stand in for a label.
 
@@ -459,12 +486,12 @@ SYN packets point at. Conflicting-label detection ignores unlabelled rows, which
 
 ### Security
 Live lab sessions are refused unless the bind address is loopback and the deception source
-allowlist is narrow and non-global — enforced by production config validation, not only by dataset
+allowlist is narrow and non-global, enforced by production config validation, not only by dataset
 code. Captures are read from disk and never retransmitted. Shadow export keeps the mathematical
 score, model score, fused risk and action as analysis-only metadata and refuses them as label
 sources at three layers; the pseudonymisation secret and the unlabelled pool are git-ignored.
 
-## Unreleased (P9) — dataset generation, collection and validation
+## Unreleased (P9): Dataset Generation, Collection and Validation
 
 ### Added
 Offline `dataset` package: versioned `DatasetSample` and dataset/split manifests, a validator
@@ -494,7 +521,7 @@ payload and no real credential. Shadow export is default-deny and pseudonymous; 
 the unlabelled pool are git-ignored. A decision this system made is refused as a label source
 at three layers.
 
-## Unreleased (P8) — first ONNX risk baseline
+## Unreleased (P8): First ONNX Risk Baseline
 
 ### Added
 Frozen `risk-logreg-v1` model feature contract over feature schema1 (34 fitted of 36
@@ -521,7 +548,7 @@ bytes, credential material or identity column enters the model. The first model
 ships with `quality_gate_passed=false` and `recommended_mode=shadow`; no automatic
 firewall blocking is enabled and no model is promoted.
 
-## 0.8.0-rc.1 / Python package 0.8.0rc1 — unreleased (P7)
+## 0.8.0-rc.1 / Python Package 0.8.0rc1: Unreleased (P7)
 
 Local numeric feature schema1, independent MathRisk, isolated CPU ONNX with
 manifest/hash checks and deadlines, bounded asynchronous inference, fusion and
@@ -532,7 +559,7 @@ Optional ML failure preserves intake; production enforcement remains unapproved.
 Config1/event3/DB2 remain compatible; new decision_record carries decision_version1.
 See docs/P7_COMPLETION_REPORT.md for measured results and limitations.
 
-## 0.7.0-rc.1 / Python package 0.7.0rc1 — unreleased (P6)
+## 0.7.0-rc.1 / Python Package 0.7.0rc1: Unreleased (P6)
 
 ### Added
 Unified run, config init/migrate/effective sources, profiles, local demo, local
@@ -566,6 +593,6 @@ accepted only by transitional entrypoints/read-only diagnostics.
 ### Removed
 None.
 
-## 0.6.0 — P5 baseline
+## 0.6.0: P5 Baseline
 Bounded load shedding, fair reads, batched SQLite, performance workloads and
 measurements. Historical evidence: docs/P5_COMPLETION_REPORT.md.

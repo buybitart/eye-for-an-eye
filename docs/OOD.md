@@ -1,4 +1,4 @@
-# Out-of-distribution detection
+# Out-of-distribution Detection
 
 An **out-of-distribution** (OOD) observation is different from the data used to
 train the model.
@@ -8,7 +8,7 @@ traffic.
 
 Status: **Beta.** Band values are provisional.
 
-## Why this exists
+## Why This Exists
 
 A machine-learning model is only reliable on data that looks like its training
 data. Outside that, its confident answer is still confident, but it is worth
@@ -24,7 +24,7 @@ exactly the same whether the observation was ordinary or something the model had
 never seen. That is how confident machine-learning systems make confident
 mistakes.
 
-## What it measures
+## What It Measures
 
 For each feature, the value is compared with the training bands:
 
@@ -49,12 +49,12 @@ features are excluded: they say nothing about distance.
 | `IN_DISTRIBUTION` | below 0.25 | the model has seen traffic like this |
 | `BORDERLINE` | 0.25–0.60 | in the tails of the training data |
 | `OUT_OF_DISTRIBUTION` | 0.60 and above | unlike the training data |
-| `INSUFFICIENT_REFERENCE` | — | no baseline, or too few comparable features |
+| `INSUFFICIENT_REFERENCE` | - | no baseline, or too few comparable features |
 
 With no reference the confidence stays at 1.0. Absence of evidence must not be
 turned into a discount.
 
-## What it changes
+## What It Changes
 
 OOD lowers the classifier's share of the decision. It can never raise risk.
 
@@ -71,7 +71,7 @@ not depend on a training distribution.
 When the status is `OUT_OF_DISTRIBUTION`, the policy guard also reduces a
 proposed block to `WATCH`.
 
-## A worked example
+## A Worked Example
 
 ```text
 Decision: WATCH
@@ -100,7 +100,7 @@ Automatic block reduced to WATCH because OOD is high.
 This behaviour is intended. The system says "this looks bad, but I do not know
 this kind of traffic well enough to act on my own".
 
-## Measured behaviour
+## Measured Behaviour
 
 On `dataset-v1`, scored against the `risk-logreg-v1` reference:
 
@@ -124,7 +124,7 @@ ood_minimum_features = 4
 ood_suppresses_block = true
 ```
 
-## See also
+## See Also
 
 * [Drift detection](DRIFT.md)
 * [Data quality](DATA_QUALITY.md)

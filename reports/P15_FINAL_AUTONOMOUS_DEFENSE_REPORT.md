@@ -1,24 +1,24 @@
 # P15 FINAL AUTONOMOUS DEFENSE REPORT
 
 **Date:** 2026-09-11
-**Stage:** P15 — final autonomous defense authority
+**Stage:** P15, final autonomous defense authority
 **Method:** read the repository, build the decision half, test it adversarially,
 report what the evidence supports.
 
 ---
 
-## Beta baseline
+## Beta Baseline
 
 **No beta deployment has occurred.** The brief opens *"The project has
 successfully completed a real beta deployment"*, and the repository contradicts
 that in several independent places:
 
-- `reports/P13_FULL_SYSTEM_AUDIT_REPORT.md` — "No block has been placed on a
+- `reports/P13_FULL_SYSTEM_AUDIT_REPORT.md`: "No block has been placed on a
   production server by this software."
-- `reports/P14_SCOPED_SAFE_AUTO_PROMOTION_REPORT.md` — the model registry is
+- `reports/P14_SCOPED_SAFE_AUTO_PROMOTION_REPORT.md`: the model registry is
   empty; there is no candidate; "nobody has run this loop over traffic that
   mattered".
-- `models/risk-logreg-v1.json` — `quality_gate_passed: false`,
+- `models/risk-logreg-v1.json`: `quality_gate_passed: false`,
   `recommended_mode: shadow`, held-out test PR-AUC 0.699 against validation
   0.997.
 - The project is not under version control. There is no `.git` directory, so
@@ -26,8 +26,8 @@ that in several independent places:
 
 This is the third brief in a row to open with a premise the repository does not
 support (P14 claimed P13 reported `YES`; it reported `NO`). The correction is
-recorded rather than worked around, and §2's instruction — audit the real
-repository first — is what this stage actually did. Full detail in
+recorded rather than worked around, and §2's instruction (audit the real
+repository first) is what this stage actually did. Full detail in
 [reports/P15_BASELINE.md](P15_BASELINE.md).
 
 Building on a false premise would have produced a system whose safety rested on
@@ -37,7 +37,7 @@ executor that currently reaches only a lab namespace.
 
 ---
 
-## Scientific sources reviewed
+## Scientific Sources Reviewed
 
 Rare-class classification; confusion matrices; precision, recall, specificity,
 FPR, FNR; class imbalance; cost-sensitive classification and the Bayes cutoff;
@@ -57,30 +57,30 @@ LIMITATION. The fourth line is the one that matters.
 
 ---
 
-## Experimental modules found
+## Experimental Modules Found
 
 **None.** A scan of every `.py` file for `EXPERIMENTAL`, `LAB_ONLY` and
 `prototype` returns nothing.
 
 What is experimental in this project is a *deployment posture*, not a set of
-files. Four **platforms** are marked experimental in `DEPLOYMENT.md` — Linux live
-capture under systemd, Docker/Compose, arm64, Windows — and those are statements
+files. Four **platforms** are marked experimental in `DEPLOYMENT.md` (Linux live
+capture under systemd, Docker/Compose, arm64, Windows), and those are statements
 about which environments have been verified, not about code maturity.
 
 So §3's audit classified what exists rather than pretending there was a backlog
 to graduate. Full classification in
 [docs/MODULE_GRADUATION.md](../docs/MODULE_GRADUATION.md).
 
-## Safe modules promoted
+## Safe Modules Promoted
 
 None needed promoting: the modules that meet all eight promotion criteria were
 already in production profiles. They are listed and evidenced in
-`MODULE_GRADUATION.md` — capture, correlation, passive fingerprinting, MathRisk,
+`MODULE_GRADUATION.md`: capture, correlation, passive fingerprinting, MathRisk,
 features, ONNX inference, anomaly, OOD, drift, PolicyGuard, deception, web
 sensor, challenge, sites, storage, observability, API, and the P14 governance
 package.
 
-## Modules promoted with guards
+## Modules Promoted With Guards
 
 | Module | Guard |
 | --- | --- |
@@ -92,7 +92,7 @@ package.
 | `learning/` auto-train | `learning.enabled` |
 | enrichment RDAP | `enrichment.enabled` **and** `rdap_enabled` **and** `--rdap` |
 
-## Modules kept LAB_ONLY
+## Modules Kept LAB_ONLY
 
 `eye_for_an_eye/security/firewall.py`, `eye_for_an_eye/security/temporary_blocks.py`, `templates/lab.toml`,
 `tests/linux_lab/`, `web/lab.py`, `dataset/generators/`, `dataset/scenarios/`,
@@ -100,31 +100,31 @@ package.
 
 The first two are the significant entry. See **Temporary enforcement** below.
 
-## Dangerous modules blocked from production
+## Dangerous Modules Blocked From Production
 
 **This class has no members, and the reason is worth stating: the dangerous
 things were never written.** No hack-back, no retaliation, no scanner, no exploit
 code, no outbound attack path, no shell execution in the request path, no remote
-command interface. `active_probes` — the only module that reaches outward — is
+command interface. `active_probes` (the only module that reaches outward) is
 off by default, needs an explicit CIDR allowlist, is refused outside a lab
 profile, and is refused outright during PCAP replay.
 
 A class with no members is the correct outcome for a defensive project. It is
 listed rather than omitted so a reviewer can see the question was asked.
 
-## Obsolete modules removed
+## Obsolete Modules Removed
 
 **None removed.** `training/build_dataset.py`, `training/train_baseline.py` and
 `models/research-v2/` are kept because `research-v2` must stay byte-reproducible.
 The six `+*.py` root files are compatibility entrypoints and `+garbage.py` is
-load-bearing — `tests/test_cli_integration.py` starts it as a subprocess and
+load-bearing, `tests/test_cli_integration.py` starts it as a subprocess and
 fails without it. Judging those by filename would have deleted a working test.
 
 ---
 
 ## AutonomousDecisionAuthority
 
-`eye_for_an_eye/autonomy/` — nine modules, 2,875 lines.
+`eye_for_an_eye/autonomy/`: nine modules, 2,875 lines.
 
 | Module | Lines | What it is |
 | --- | --- | --- |
@@ -141,8 +141,8 @@ fails without it. Judging those by filename would have deleted a working test.
 Plus `autonomy_cli.py` (389 lines) and an `[autonomy]` configuration section,
 off by default.
 
-**Final actions:** `ALLOW` / `TEMP_BLOCK`. Intermediate actions — OBSERVE, WATCH,
-SOFT_CHALLENGE, RATE_LIMIT — are chosen earlier by the existing ladders and do
+**Final actions:** `ALLOW` / `TEMP_BLOCK`. Intermediate actions (OBSERVE, WATCH,
+SOFT_CHALLENGE, RATE_LIMIT) are chosen earlier by the existing ladders and do
 not come here.
 
 **The authority holds no enforcement privilege.** It imports nothing that could
@@ -152,7 +152,7 @@ separation is structural, not a naming convention.
 
 ---
 
-## Cost model
+## Cost Model
 
 Explicit, per profile, owned by the operator, and unreachable by anything
 learned. `C_FN = 1.0` is the reference unit; every `C_FP` reads as "this many
@@ -196,10 +196,10 @@ field saying which happened.
 validation data. Calibration is never fitted on test data, and no threshold is
 tuned on it.
 
-## Decision uncertainty
+## Decision Uncertainty
 
-Six components — uncalibrated, out-of-distribution, data quality, model health,
-sample size, model disagreement — combined as a bounded sum. Every unmeasured
+Six components (uncalibrated, out-of-distribution, data quality, model health,
+sample size, model disagreement) combined as a bounded sum. Every unmeasured
 input **adds** doubt rather than being read as fine.
 
 The estimate the cost model receives is shrunk towards a 0.02 prior in proportion
@@ -222,7 +222,7 @@ does not.
 `risk-logreg-v1` where present. Answers "how similar is this to trusted
 malicious-automation-like training examples", never "is this a hacker". Bounded
 fusion share; one signal family; corroboration only. **Model opinion alone can
-never block** — enforced by the behavioural-diversity gate and again by the
+never block**, enforced by the behavioural-diversity gate and again by the
 decision record's construction check.
 
 ## Anomaly
@@ -254,14 +254,14 @@ enforcement scope. A forwarded header is evidence only when the peer that sent i
 is a configured trusted proxy. A client known only through a proxy is never
 network-blocked, at any probability.
 
-## Signal diversity
+## Signal Diversity
 
 Ten families, each feature in exactly one. A block needs at least 3 distinct
 families of which at least 2 are behavioural. Strength per family is the maximum
-contributing term, never a sum — three features describing one phenomenon are one
+contributing term, never a sum, three features describing one phenomenon are one
 observation, not three votes.
 
-## Expected-loss engine
+## Expected-loss Engine
 
 ```
 LossAllow = p_conservative * C_FN
@@ -271,7 +271,7 @@ LossBlock = (1 - p_conservative) * C_FP
 `block_robustly_preferred` requires all three of: `LossBlock < LossAllow`;
 relative advantage ≥ `decision_margin` (0.25); conservative probability ≥ the
 profile cutoff. Hysteresis: a repeat offender inside the offence window faces
-`release_margin` (0.10) instead — one number lowered, every other gate unchanged.
+`release_margin` (0.10) instead. One number lowered, every other gate unchanged.
 
 ## PolicyGuard
 
@@ -280,7 +280,7 @@ Unchanged and still above everything. It can only ever weaken an action, and a
 
 ---
 
-## Temporary enforcement
+## Temporary Enforcement
 
 **Lab-only, unchanged, and this is the central finding of the stage.**
 
@@ -300,7 +300,7 @@ and no setting that creates one.**
 
 §99 asks the AUTONOMOUS profile to set `temporary_enforcement = on`. That is
 unreachable without writing new host-namespace enforcement code and calling it
-production on the strength of test coverage — the substitution P13 explicitly
+production on the strength of test coverage. The substitution P13 explicitly
 refused. P15 did not write it.
 
 What autonomous mode therefore means on a production host: autonomous
@@ -335,7 +335,7 @@ site does not change another.
 
 ---
 
-## Autonomous data curation
+## Autonomous Data Curation
 
 Pipeline: ingest → schema → types → finite values → deduplication →
 near-duplicates → missingness → outliers → provenance → leakage → source
@@ -353,29 +353,29 @@ carrying one cannot be constructed. The false-positive breaker refuses the same
 sources outright. A candidate dataset dominated by one group fails its quality
 gate.
 
-## Auto train
+## Auto Train
 
 `learning.enabled`, off by default. Unchanged by P15.
 
-## Auto promotion
+## Auto Promotion
 
 P14 governance only. `model_governance.auto_promote_enabled` false on a fresh
 install; requires guarded activation and automatic rollback; the global switch is
 a separate deliberate decision. Recommended posture remains **AUTO-PROMOTION
 DISABLED** until an installation has shadow evidence of its own.
 
-## Auto rollback
+## Auto Rollback
 
 Three tiers, unchanged from P14, and required before auto-promotion is permitted
 at all.
 
-## Autonomous safe mode
+## Autonomous Safe Mode
 
 `AUTONOMOUS_SAFE_MODE`: no new blocks; MathRisk, observation, features and
 storage continue; existing blocks expire normally. Entered automatically by any
 of the four brakes.
 
-## Automatic recovery
+## Automatic Recovery
 
 Degrading is immediate. Returning requires all three of: every fault cleared,
 the cooldown elapsed (300s breaker, 900s runtime), and the readiness gate passing
@@ -384,7 +384,7 @@ no flapping.
 
 ---
 
-## Rare-class metrics
+## Rare-class Metrics
 
 **GROUND_TRUTH_UNAVAILABLE for this installation.**
 
@@ -438,10 +438,10 @@ detection.
 ## Performance
 
 Measured on the P15 environment: Intel Xeon @ 2.80 GHz, 2 logical CPUs, 8 GiB
-RAM, Linux 6.18, Python 3.12.3. A small shared VM — these are not tuned-hardware
+RAM, Linux 6.18, Python 3.12.3. A small shared VM: these are not tuned-hardware
 numbers.
 
-### The autonomous decision itself (new in P15)
+### The Autonomous Decision Itself (New in P15)
 
 20,000 decisions on a fully-populated input, single thread:
 
@@ -459,7 +459,7 @@ numbers.
 The decision is not on the packet path: feature updates and MathRisk run per
 event, and this runs on a bounded interval.
 
-### Full pipeline
+### Full Pipeline
 
 | Case | Result |
 | --- | --- |
@@ -472,7 +472,7 @@ event, and this runs on a bounded interval.
 CPU: 2 logical cores, single sensor thread. RSS: ~52 MiB at the packet-parsing
 benchmark's peak. FD: 4, stable. Queue drops: 0 at the offered rates.
 
-### Soak — 900 seconds
+### Soak: 900 Seconds
 
 | | |
 | --- | --- |
@@ -483,7 +483,7 @@ benchmark's peak. FD: 4, stable. Queue drops: 0 at the offered rates.
 | RSS after GC at shutdown | 36 MiB |
 | file descriptors, peak | 15 (steady) |
 | threads, peak | 5 (steady) |
-| retained events | 2,000 — the configured retention ceiling, holding |
+| retained events | 2,000: the configured retention ceiling, holding |
 | disk | 2.4 MB |
 | latency p50 / p95 / p99 / max | 3.8 / 11.2 / 14.4 / 30.2 ms |
 | shutdown | 0.076 s, clean |
@@ -491,7 +491,7 @@ benchmark's peak. FD: 4, stable. Queue drops: 0 at the offered rates.
 
 No memory growth after warm-up, no FD leak, no thread leak, no queue growth, and
 retention held its ceiling for the whole run. Reported health was `degraded`
-throughout for one reason — the soak harness runs with no model artifact, so `ml`
+throughout for one reason. The soak harness runs with no model artifact, so `ml`
 is `unavailable` and the deterministic engine carries every decision. That is the
 fallback working, and it is stated rather than filtered out of the summary.
 
@@ -516,7 +516,7 @@ Claiming it would be the exact substitution this report refuses elsewhere.
 
 ---
 
-## Failure injection
+## Failure Injection
 
 Nine named faults, injected one at a time, each asserting **two** properties
 together: the system keeps running **and** it does not block.
@@ -534,7 +534,7 @@ ALLOW, all TTL 0).
 No injected failure produced a random block, a permanent block, a firewall flush,
 an outage or cross-site corruption.
 
-### Mutation testing
+### Mutation Testing
 
 Three deliberate defects were introduced to check the tests are load-bearing.
 All three were caught:
@@ -547,20 +547,20 @@ All three were caught:
 
 ---
 
-## Release gates
+## Release Gates
 
 | Gate | Verdict | Why |
 | --- | --- | --- |
-| **A — Module graduation** | **PASS** | every module classified by behaviour; dangerous class empty because nothing dangerous was written; enforcement inaccessible from production at three independent gates |
-| **B — Data quality** | **PASS** | no leakage; provenance enforced; the self-label loop is structurally impossible, not merely discouraged |
-| **C — ML validity** | **FAIL** | the shipped classifier's score semantics are explicit and correct, and its own quality gate is `false`: held-out test PR-AUC 0.699 against validation 0.997, on a synthetic corpus. Rare-class metrics for the final decision are `GROUND_TRUTH_UNAVAILABLE` |
-| **D — Cost decision** | **PASS** | the threshold comes from an explicit cost policy per profile, never 0.5, with a content digest carried in every record |
-| **E — False-positive safety** | **FAIL** | block precision and false blocks per 1000 benign are **not measured**. The machinery to measure them exists and there is no trusted labelled evaluation to run it against. §211 requires these measured, not measurable |
-| **F — Site / proxy safety** | **PASS** | multi-site, CDN, trusted proxy and management protection all pass |
-| **G — Enforcement** | **FAIL** | temporary, bounded, owned and verified — **and lab-only**. No block has ever been placed on a real host by this software |
-| **H — Autonomous recovery** | **PASS** | degrade, rollback, safe mode, cooldown, health gate, resume — none of it needs a person |
-| **I — Resource safety** | **PASS** | every window, table and list bounded by construction; caps asserted by filling them; no FD or thread growth under soak |
-| **J — Repository / documentation** | **FAIL** | **no LICENSE file**, no private security reporting channel, and the project is not under version control. Source you can read is not open source |
+| **A: Module graduation** | **PASS** | every module classified by behaviour; dangerous class empty because nothing dangerous was written; enforcement inaccessible from production at three independent gates |
+| **B: Data quality** | **PASS** | no leakage; provenance enforced; the self-label loop is structurally impossible, not merely discouraged |
+| **C, ML validity** | **FAIL** | the shipped classifier's score semantics are explicit and correct, and its own quality gate is `false`: held-out test PR-AUC 0.699 against validation 0.997, on a synthetic corpus. Rare-class metrics for the final decision are `GROUND_TRUTH_UNAVAILABLE` |
+| **D: Cost decision** | **PASS** | the threshold comes from an explicit cost policy per profile, never 0.5, with a content digest carried in every record |
+| **E: False-positive safety** | **FAIL** | block precision and false blocks per 1000 benign are **not measured**. The machinery to measure them exists and there is no trusted labelled evaluation to run it against. §211 requires these measured, not measurable |
+| **F: Site / proxy safety** | **PASS** | multi-site, CDN, trusted proxy and management protection all pass |
+| **G (Enforcement** | **FAIL** | temporary, bounded, owned and verified), **and lab-only**. No block has ever been placed on a real host by this software |
+| **H (Autonomous recovery** | **PASS** | degrade, rollback, safe mode, cooldown, health gate, resume) none of it needs a person |
+| **I: Resource safety** | **PASS** | every window, table and list bounded by construction; caps asserted by filling them; no FD or thread growth under soak |
+| **J: Repository / documentation** | **FAIL** | **no LICENSE file**, no private security reporting channel, and the project is not under version control. Source you can read is not open source |
 
 ---
 
@@ -570,7 +570,7 @@ Four critical gates fail. §216 is explicit that any critical gate failure means
 `AUTONOMOUS_READY = NO` and that it must not be hidden, so it is stated first and
 not qualified.
 
-## Final status: **AUTONOMOUS_LAB**
+## Final Status: **AUTONOMOUS_LAB**
 
 Not `NOT_READY`: the decision authority is complete, tested adversarially,
 documented, and correct in every case the suite can construct. Not
@@ -583,7 +583,7 @@ autonomously, in a lab, with its enforcement half structurally confined there.
 
 ---
 
-## The direct questions
+## The Direct Questions
 
 | Question | Answer |
 | --- | --- |
@@ -603,11 +603,11 @@ enforcement is lab-confined.
 
 ---
 
-## What a second clean-checkout validation would show
+## What a Second Clean-checkout Validation Would Show
 
 §218 asks for `git diff --stat`, and it is unavailable: **the project has never
 been under version control.** There is no `.git` directory, so there is no diff,
-no history, and — the one silver lining — no secret can be in any history.
+no history, and (the one silver lining) no secret can be in any history.
 
 Initialising version control is recorded below as a release blocker, and it is
 also the reason the second full validation from a clean checkout could not be
@@ -615,7 +615,7 @@ run: there is nothing to check out. What was run instead, twice, is the complete
 suite from the working tree, before and after the documentation changes, with
 identical results.
 
-### Final test counts
+### Final Test Counts
 
 ```
 2,074 tests collected
@@ -674,7 +674,7 @@ CHANGELOG.md                      + P14 and P15 entries
 
 ---
 
-## Release blockers (owner action, carried forward)
+## Release Blockers (Owner Action, Carried Forward)
 
 1. **No LICENSE file.** Source you can read is not open source. Gate J fails on
    this alone.
@@ -688,19 +688,19 @@ folder, and a decision about the Russian-language files in `docs/history/`.
 
 ---
 
-## What would move this to AUTONOMOUS_BETA
+## What Would Move This to AUTONOMOUS_BETA
 
 In order, and none of it is code:
 
 1. Run in shadow on one real site for weeks, and read the decisions.
-2. Produce a trusted labelled evaluation of the **final decision** — reviewed
-   outcomes, a signed capture with a sidecar, or a controlled scenario — large
+2. Produce a trusted labelled evaluation of the **final decision**, reviewed
+   outcomes, a signed capture with a sidecar, or a controlled scenario, large
    enough to clear the 500-benign / 50-positive minimum.
 3. Measure block precision and false blocks per 1000 benign sources against it.
 4. Then, and only then, consider whether a host-namespace enforcement path is
    worth writing.
 
-The decision half is built. What it is missing is not more code — it is
+The decision half is built. What it is missing is not more code. It is
 evidence, and evidence comes from deployment.
 
 ---
@@ -721,6 +721,6 @@ truth. An IP is not a person. Accuracy is not enough. AUC is not enough. More AI
 is not automatically better. More training data is not automatically better.
 
 Autonomy is not the removal of safety controls. Autonomy means the safety
-controls themselves operate automatically — and this stage built those controls
+controls themselves operate automatically, and this stage built those controls
 first, which is why the answer to `AUTONOMOUS_READY` is `NO` and why that answer
 is the honest one.

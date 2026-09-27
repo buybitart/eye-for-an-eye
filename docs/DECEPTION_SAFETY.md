@@ -12,7 +12,7 @@ The global limits from an earlier stage stay in place: 256 TCP connections total
 
 An optional, predictable delay ("jitter") is OFF by default. If turned on, it adds 10 to 150 milliseconds. It never extends the idle or total time limits. When a socket is ready to write but delayed, the system does not "busy spin" (loop wastefully checking again and again). Instead it waits, and can cancel that wait, for at most 10 milliseconds per loop. There is no multi-minute hold, and no background worker thread per client.
 
-UDP (a network protocol) stays receive-only — the system never calls `sendto` to answer. If someone sets `udp_responses=true`, the config is rejected. This stage never turns on UDP responses, even in the lab. There is no need to worry about an "amplification ratio" (attackers using a service to make small requests turn into big replies), because the application's response size for UDP is always zero.
+UDP (a network protocol) stays receive-only. The system never calls `sendto` to answer. If someone sets `udp_responses=true`, the config is rejected. This stage never turns on UDP responses, even in the lab. There is no need to worry about an "amplification ratio" (attackers using a service to make small requests turn into big replies), because the application's response size for UDP is always zero.
 
 Real ports and management ports are not allowed for decoy services to bind to. When a redirect is required, the system never falls back to a made-up destination. The Linux IPv4 feature `SO_ORIGINAL_DST` (it recovers the real destination address after a redirect) has been tested with mock (fake, simulated) tests only. Real Linux behavior, IPv6/UDP redirects, and working together with real nftables (Linux's firewall system) are **NOT VERIFIED IN CURRENT ENVIRONMENT**. Required redirects for IPv6 and UDP are clearly not supported.
 
@@ -22,7 +22,7 @@ A "secret pattern" layer scans only a limited prefix (start) or line of data, lo
 
 Raw bytes never go into the telemetry (the collected monitoring data), even when no pattern matches. A data "preview" feature is OFF by default. An optional `safe_preview` setting only shows a known command type (class), plus a fixed marker showing that something was left out. All arguments, URLs, headers, bodies, and client identification strings are excluded. Binary input is never turned into free-form log text. Unknown commands are logged only as UNKNOWN, UNSUPPORTED, or INVALID, without the client's original text.
 
-By default, the USER field is shown as `[redacted]` (hidden). An optional setting can hash the username using HMAC-SHA256 (a keyed hash), in its own separate context, with a secret key that stays the same over time. This hash is a sensitive pseudonym (a stand-in name) — it is not proof of someone's real identity. Password (PASS) content is never hashed and never stored. When a frame is recognized as credential-like, the system does not create a probe digest for it. Other, limited probes may get a short-lived, process-local HMAC value, used only to spot repetition, as described in [CORRELATION.md](CORRELATION.md).
+By default, the USER field is shown as `[redacted]` (hidden). An optional setting can hash the username using HMAC-SHA256 (a keyed hash), in its own separate context, with a secret key that stays the same over time. This hash is a sensitive pseudonym (a stand-in name). It is not proof of someone's real identity. Password (PASS) content is never hashed and never stored. When a frame is recognized as credential-like, the system does not create a probe digest for it. Other, limited probes may get a short-lived, process-local HMAC value, used only to spot repetition, as described in [CORRELATION.md](CORRELATION.md).
 
 ## Incomplete Requests and Memory
 
@@ -38,15 +38,15 @@ uv run --locked --all-extras python -B -m benchmarks.p3_deception --connections 
 
 The test suite for this feature covers: real loopback HTTP, FTP, and SSH conversations; starting a fresh CLI process and restarting it; storing credential events in a temporary SQLite database without their content; parsing fragmented data, invalid lengths, and binary input; cumulative (running-total) bytes, messages, and transitions; 100 idle clients at once; a "reconnect storm" (many fast reconnects); oversized or slow clients; rejecting bad telemetry; a full event queue; a real writer stalling; steady overload and recovery; and shutdown.
 
-A seeded (repeatable) local fuzz test generates 480 limited-size inputs, used only against our own parsers (code that reads data). While handling requests that look malicious, tests forbid the code from touching real networks, files, subprocesses, or DNS — those are all blocked (mocked) during the test. All tests finish in finite time: the loopback test server has a maximum duration, client sockets have deadlines, and threads have join deadlines. A benchmark worker is limited by a parent "watchdog" timer of 40 seconds. On Windows, a TCP EOF (end of data) or an RST (reset) on failure both count as an acceptable way to close a connection.
+A seeded (repeatable) local fuzz test generates 480 limited-size inputs, used only against our own parsers (code that reads data). While handling requests that look malicious, tests forbid the code from touching real networks, files, subprocesses, or DNS. Those are all blocked (mocked) during the test. All tests finish in finite time: the loopback test server has a maximum duration, client sockets have deadlines, and threads have join deadlines. A benchmark worker is limited by a parent "watchdog" timer of 40 seconds. On Windows, a TCP EOF (end of data) or an RST (reset) on failure both count as an acceptable way to close a connection.
 
 The benchmark (performance test) measures: connections per second; full loopback latency at the p50, p95, and p99 percentiles (including time waiting in the queue); actual response bytes sent; dropped items from the queue; connections happening at the same time; the process's CPU use, RSS (real memory use), handle count, and thread count; and shutdown time. Separate `handler_latency` fields measure 100 calls to `ProtocolSession.feed` for HTTP, FTP, and SSH, without counting setup or the telemetry queue. The client and server run inside the same worker process, so the RSS change per connection includes both the client's and the runtime's memory use. SQLite and disk output are turned off during the throughput benchmark run; storage slowdown is tested separately. An early version of this benchmark used a memory-tracing tool called `tracemalloc`, which slowed the idle workload down to its normal deadlines. The final "native RSS" benchmark run does not use `tracemalloc`.
 
 The following have not been confirmed here: a live workload using real traffic redirection, Linux resource and capability tests, running under Docker or systemd, real-world Internet accuracy, and a long-running "soak" (endurance) test. The phase record with those results is not published; see [history/README.md](history/README.md).
 
-## See also
+## See Also
 
-- [DECEPTION.md](DECEPTION.md) — how the deception feature works
-- [ENFORCEMENT.md](ENFORCEMENT.md) — how (and whether) the system takes action
-- [PRIVACY.md](PRIVACY.md) — what data is kept, redacted, or discarded
-- [LIMITATIONS.md](LIMITATIONS.md) — known limits of the project
+- [DECEPTION.md](DECEPTION.md): how the deception feature works
+- [ENFORCEMENT.md](ENFORCEMENT.md): how (and whether) the system takes action
+- [PRIVACY.md](PRIVACY.md): what data is kept, redacted, or discarded
+- [LIMITATIONS.md](LIMITATIONS.md): known limits of the project

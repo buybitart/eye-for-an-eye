@@ -1,9 +1,9 @@
-# Model governance
+# Model Governance
 
 The precise version of [AUTO_PROMOTION.md](AUTO_PROMOTION.md). This page is for
 someone reviewing the design or reading the code.
 
-## The claim
+## The Claim
 
 Automatic promotion here is not a model selecting itself. It is a deterministic
 policy accepting an artifact after a fixed list of named gates, on evidence
@@ -13,7 +13,7 @@ If that claim is false anywhere, the feature is not safe, so the rest of this
 page is the places it could be false and what stops it.
 
 
-## A model package includes its calibrator, or it is not a package
+## A Model Package Includes Its Calibrator, or It Is Not a Package
 
 §87 and §88. A classifier's raw output is a score. What the decision path needs
 is a probability, and the thing that turns one into the other is a separate
@@ -21,8 +21,8 @@ artifact fitted against *that* model's scores.
 
 So a promotable package is five things together: the classifier, its calibrator,
 the feature contract, the reference distribution and the manifest. Promote the
-model alone and the calibrator silently keeps mapping the old model's scores —
-every number it emits wrong in a way that looks entirely reasonable.
+model alone and the calibrator silently keeps mapping the old model's scores.
+Every number it emits wrong in a way that looks entirely reasonable.
 
 The artifact carries `model_version` and `Calibrator.calibrate` refuses a
 mismatch by returning nothing, which the decision path reads as
@@ -34,12 +34,12 @@ the quantity rather than a shortcut. `MathRisk` is deterministic and has no
 weights that can be retrained under its calibrator, so its artifact declares an
 empty `model_version` and `requires_model` says so.
 
-Artifacts are JSON — two floats for a sigmoid, bounded numeric knots for an
-isotonic map — validated on load for finiteness, range, monotonicity and digest.
+Artifacts are JSON (two floats for a sigmoid, bounded numeric knots for an
+isotonic map) validated on load for finiteness, range, monotonicity and digest.
 Nothing unpickles anything. A calibrator is a thing production reads from disk,
 and a file format that can execute is not one to read from disk.
 
-## Four authorities
+## Four Authorities
 
 | Authority | May | May not |
 | --- | --- | --- |
@@ -49,11 +49,11 @@ and a file format that can execute is not one to read from disk.
 | Enforcement (`PolicyGuard`) | decide what evidence may cause | choose which model provides it |
 
 `eye_for_an_eye/governance/` is the third. It cannot import the registry, the
-firewall, `subprocess` or `os` — checked by a test that parses the module rather
+firewall, `subprocess` or `os`, checked by a test that parses the module rather
 than reading its prose, because a promise about imports that nothing verifies is
 a promise about the past.
 
-## The artifact cannot influence its own promotion
+## The Artifact Cannot Influence Its Own Promotion
 
 Three structural facts, in order of how much they carry.
 
@@ -65,7 +65,7 @@ this package, and §87 keeps policy tuning out of this stage entirely.
 **Manifest claims are metadata, not evidence.** A manifest asserting
 `precision = 1.0` establishes nothing. Every quality number the engine reads
 comes from an evaluation report produced independently, and the fields that come
-from the manifest — schema version, scope, declared hash — are claims the engine
+from the manifest (schema version, scope, declared hash) are claims the engine
 *verifies* rather than accepts.
 
 **The engine returns a record and changes nothing.** `assess()` is pure with
@@ -73,16 +73,16 @@ respect to the system. Activation is a separate authority that accepts only a
 record whose every blocking gate passed. A bug in the gates can refuse a good
 model; it cannot promote a bad one.
 
-## Four verdicts, kept distinct
+## Four Verdicts, Kept Distinct
 
 | Verdict | Means | Why it is its own answer |
 | --- | --- | --- |
-| `ELIGIBLE` | every gate passed, and gates needing ground truth had it | — |
+| `ELIGIBLE` | every gate passed, and gates needing ground truth had it | - |
 | `NOT_ELIGIBLE` | a gate failed on the evidence available | a judgement was made |
 | `NEED_MORE_DATA` | no gate failed; a gate needing ground truth lacked it | **the question was not answered.** Collapsing this into NOT_ELIGIBLE teaches an operator to read "we could not tell" as "it regressed"; collapsing it into ELIGIBLE lets unlabelled traffic authorise a promotion |
 | `QUARANTINED` | the artifact is not what it claims to be | not a quality trade-off. A bad hash is not a metric that can be balanced against a good one |
 
-## The order gates are evaluated in
+## The Order Gates Are Evaluated In
 
 This is a safety property, not an implementation detail.
 
@@ -104,9 +104,9 @@ Benign safety is evaluated before security quality and carries the tightest
 budgets in the policy. A candidate that catches more scanners while blocking more
 ordinary visitors is not an improvement, and the visitors it blocks are
 disproportionately people on unusual networks, unusual clients and unusual
-schedules — the ones least able to get a block lifted.
+schedules. The ones least able to get a block lifted.
 
-## Ground truth
+## Ground Truth
 
 Gates that make a claim about quality read `trusted_outcomes` and nothing else.
 Trusted means controlled lab, trusted labelled capture, reviewed shadow, or a
@@ -132,7 +132,7 @@ average hides, and the small site is usually the one with nobody watching it.
 Site identity remains what P12 made it: governance metadata, never a classifier
 feature.
 
-## The lifecycle
+## The Lifecycle
 
 ```
 TRAINED → VALIDATED → SHADOW → ELIGIBLE → PENDING_ACTIVATION → GUARDED_ACTIVE → ACTIVE
@@ -153,7 +153,7 @@ through the code. Three edges carry most of the weight:
 - **leaving `QUARANTINED` requires an operator.** Automatic quarantine is cheap
   and reversible. Automatic release is neither.
 
-## Policy versioning and staleness
+## Policy Versioning and Staleness
 
 The policy carries `model-governance-v1` *and* a SHA-256 digest of its own
 contents. The version names the shape; the digest catches every threshold change,
@@ -161,7 +161,7 @@ including the one somebody forgets to mention.
 
 Every assessment records the digest it was reached under. An assessment whose
 digest does not match the current policy is stale, and a stale assessment
-authorises nothing — the candidate goes back to `SHADOW` and is assessed again.
+authorises nothing. The candidate goes back to `SHADOW` and is assessed again.
 Changing a threshold cannot retroactively promote anything (§29).
 
 ## Bounds
@@ -170,11 +170,11 @@ Changing a threshold cannot retroactively promote anything (§29).
 | --- | --- | --- |
 | Promotion cooldown | 7 days | churn is its own failure mode |
 | Promotions per day | 2 | per installation |
-| Promotions per scope per day | 1 | — |
+| Promotions per scope per day | 1 | - |
 | Concurrent promotions | 1 | activation costs memory and CPU; twenty at once is an outage |
 | Consecutive failures before freeze | 3 | repeated failure means something another attempt will not fix |
 
-## What promotion cannot do
+## What Promotion Cannot Do
 
 It cannot add or remove a firewall rule. It cannot change a PolicyGuard
 threshold, a challenge setting or a rate limit. It cannot delete a dataset, a
@@ -182,7 +182,7 @@ review label, a training job or an evaluation record. It cannot promote without 
 rollback target. It cannot skip the guarded stages. It cannot be reached from the
 read-only API, which exposes no promotion route and cannot import the registry.
 
-## Known limits
+## Known Limits
 
 - **No deployment evidence.** This has never run over production traffic.
 - **The thresholds are not measured.** See
@@ -193,12 +193,12 @@ read-only API, which exposes no promotion route and cannot import the registry.
   review takes time. Technical rollback is fast; quality rollback is not, and
   pretending otherwise would mean rolling back on ambiguous single events.
 
-## See also
+## See Also
 
-- [AUTO_PROMOTION.md](AUTO_PROMOTION.md) — the same thing in simple English
+- [AUTO_PROMOTION.md](AUTO_PROMOTION.md): the same thing in simple English
 - [GUARDED_ACTIVATION.md](GUARDED_ACTIVATION.md)
 - [AUTO_ROLLBACK.md](AUTO_ROLLBACK.md)
 - [MODEL_SAFE_MODE.md](MODEL_SAFE_MODE.md)
 - [PROMOTION_POLICY.md](PROMOTION_POLICY.md)
 - [MODEL_REGISTRY.md](MODEL_REGISTRY.md), [MODEL_PROMOTION.md](MODEL_PROMOTION.md),
-  [MODEL_ROLLBACK.md](MODEL_ROLLBACK.md) — the manual lifecycle, still supported
+  [MODEL_ROLLBACK.md](MODEL_ROLLBACK.md): the manual lifecycle, still supported

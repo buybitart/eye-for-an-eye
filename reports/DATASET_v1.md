@@ -1,4 +1,4 @@
-# Dataset report: dataset-v1.0
+# Dataset Report: dataset-v1.0
 
 > **ENGINEERING DATASET.** Generated locally from synthetic scenarios and parsed by the
 > production packet parser. It is good enough to fit and compare baseline models under an
@@ -23,7 +23,7 @@ is trained in this phase.
 The dataset teaches behaviour, not identity. No address, ASN, provider, country, hostname or
 username exists anywhere in a row, and no decision this system made is a label or a feature.
 
-## 2. Feature schema
+## 2. Feature Schema
 
 One implementation, shared with production: `eye_for_an_eye.decision.features`. Dataset rows
 store the raw FeatureVector; the model tensor is produced by the same `FeatureTransformer` the
@@ -49,9 +49,9 @@ Excluded from the model, with reasons, in `datasets/model_features_v1.json`:
 | `previous_risk` | feedback loop: this is the decayed output of this system, not an observation |
 
 That file also lists 35 columns that may never become model input,
-each with the reason - identity leakage, label leakage, decision feedback or bias.
+each with the reason: identity leakage, label leakage, decision feedback or bias.
 
-## 3. Data sources
+## 3. Data Sources
 
 | source | rows | how it enters the pipeline |
 |---|---|---|
@@ -66,7 +66,7 @@ cover decoy interaction and connect-only behaviour, which the capture path canno
 because those events come from the honeypot listener; they still run through the production
 correlation engine and feature extractor.
 
-## 4. Safety boundary
+## 4. Safety Boundary
 
 | rule | how it is enforced |
 |---|---|
@@ -81,7 +81,7 @@ correlation engine and feature extractor.
 Measured on this build: 158 runs, 17300 packets written to disk,
 0 transmitted.
 
-## 5. Scenario coverage
+## 5. Scenario Coverage
 
 35 scenarios in 27 families over
 153 independent seeded sources.
@@ -129,7 +129,7 @@ Largest single scenario share: **3.6%**
 18.1%. Row balance is not the only balance that
 matters, so the per-scenario cap is applied before splitting.
 
-## 6. Label definitions and quality
+## 6. Label Definitions and Quality
 
 | label | meaning |
 |---|---|
@@ -151,7 +151,7 @@ Label sources: {'controlled_scenario': 1660}. Confidence: {'HIGH': 1660, 'MEDIUM
 it produced it. A shadow decision, a risk score, an action or a firewall state is refused as a
 label source by the sample constructor, by the loader and by the validator.
 
-## 7. Class balance
+## 7. Class Balance
 
 | label | rows | share |
 |---|---|---|
@@ -160,7 +160,7 @@ label source by the sample constructor, by the loader and by the validator.
 
 Scenario kinds: {'benign': 402, 'hard_negative': 385, 'malicious_automation': 716, 'hard_positive': 157}.
 
-## 8. Hard negatives
+## 8. Hard Negatives
 
 Legitimate behaviour that looks hostile. 9 scenarios:
 regular monitoring agents, a high-rate load-balancer health check, TCP-connect health probes,
@@ -168,14 +168,14 @@ administrator diagnostics over 3, 5 and 10 ports, internal service discovery, an
 that reach a decoy port and give up. Without that last one, touching a decoy would predict the
 label perfectly and the model would learn our deployment layout instead of behaviour.
 
-## 9. Hard positives
+## 9. Hard Positives
 
 Hostile behaviour that looks quiet. 4 scenarios: slow
 sequential and randomised scans at 8-11 s per port, burst-and-pause reconnaissance, and
 credential attempts at one every ten seconds. These exist so a model cannot learn
 "high rate means malicious".
 
-## 10. Feature distributions
+## 10. Feature Distributions
 
 | feature | missing | min | max | mean | median | std | p05 | p95 | benign mean | positive mean |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -223,7 +223,7 @@ Availability masks:
 and of this generator: counts, port breadth, destinations, persistence, burst and mean
 inter-arrival are observable whenever any event exists. They are marked, not dropped.
 
-## 11. Duplicate checks
+## 11. Duplicate Checks
 
 | check | result |
 |---|---|
@@ -239,14 +239,14 @@ inter-arrival are observable whenever any event exists. They are marked, not dro
 A conflicting label is a critical finding and stops a build. An unlabelled row cannot conflict
 with anything, because it asserts nothing.
 
-## 12. Leakage checks
+## 12. Leakage Checks
 
 Findings from `python -m dataset leakage`:
 
 - ports used by only one label: 10, 20, 24, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 10
 - payload lengths exclusive to one label: 10, 17, 36
 
-### Single-feature separation
+### Single-feature Separation
 
 No feature reaches the suspicion threshold (AUC >= 0.99 or |correlation| >= 0.95).
 
@@ -267,9 +267,9 @@ No feature reaches the suspicion threshold (AUC >= 0.99 or |correlation| >= 0.95
 
 `repetition_60s` is the strongest single signal and it points the "wrong" way: benign monitoring
 repeats one identical request while scanners vary their probes. That is partly real and partly a
-property of this generator, and it is a coverage gap, not a shortcut - see section 15.
+property of this generator, and it is a coverage gap, not a shortcut; see section 15.
 
-### Port leakage
+### Port Leakage
 
 | measure | value |
 |---|---|
@@ -286,7 +286,7 @@ single-port rule still only reaches
 model: **feature schema 1 has no port-identity column**, only counts of distinct ports. A future
 schema that adds port identity must revisit this check before trusting it.
 
-### Timing leakage
+### Timing Leakage
 
 | run-level timing statistic | AUC | benign median (s) | positive median (s) |
 |---|---|---|---|
@@ -301,7 +301,7 @@ Mean inter-arrival ranges overlap by
 classes deliberately cover fast and slow behaviour: benign includes a sub-second health checker,
 positive includes scans at one port every ten seconds.
 
-### Generator fingerprint
+### Generator Fingerprint
 
 | artefact | result |
 |---|---|
@@ -313,10 +313,10 @@ positive includes scans at one port every ten seconds.
 
 An earlier build failed this check: three contact shapes and six payload lengths were exclusive
 to one label, because only scanners produced unanswered SYNs and only benign traffic retried. The
-generators were changed, not the report - benign clients now meet filtered ports and scanners now
+generators were changed, not the report: benign clients now meet filtered ports and scanners now
 retry. Three payload lengths remain exclusive, and payload length is not a feature in schema 1.
 
-## 13. Split policy
+## 13. Split Policy
 
 whole source sequences stay in one split; listed scenario families are withheld entirely from training; remaining families are bucketed by source group so every split keeps representative benign and positive data
 
@@ -372,7 +372,7 @@ Group separation is a raised exception, not a warning: `dataset.split.assert_no_
 SHA-256 per split file, so which rows were evaluated can be proved later; tuning against this
 test set requires a new dataset version, not an edit.
 
-## 14. Reproducibility and provenance
+## 14. Reproducibility and Provenance
 
 | field | value |
 |---|---|
@@ -386,7 +386,7 @@ test set requires a new dataset version, not an edit.
 
 Raw captures carry a SHA-256 each and the build refuses to run if one changed since ingestion.
 
-## 15. Known gaps
+## 15. Known Gaps
 
 - Everything is synthetic. No real capture, no real environment, no adversary adapting to us.
 - One sensor, one lab layout, a small protocol vocabulary (HTTP, SSH, FTP, a Redis-shaped probe
@@ -445,7 +445,7 @@ READY_FOR_BASELINE_TRAINING is not production readiness: a dataset can be good e
 - The dataset cannot express authorisation. An authorised scan and an unauthorised scan look the
   same to a behavioural sensor; that distinction belongs to the policy allowlist.
 
-## 19. Recommended next action
+## 19. Recommended Next Action
 
 Train the Logistic Regression baseline on this dataset under the frozen feature contract and the
 committed split, then a Gradient Boosting candidate on the identical split and metrics. Do not

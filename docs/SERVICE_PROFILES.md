@@ -2,9 +2,9 @@
 
 This page explains the "service profiles" used by the deception feature. A service profile is a fake network service, like a fake SSH or FTP server, that the system shows to a visitor. Read this page if you set up or check the deception (honeypot) feature. (P2 and P3 are earlier and later development stages of this project.)
 
-## What is a service profile?
+## What Is a Service Profile?
 
-A `ServiceProfile` is a fixed data record. In Python, this is called a "frozen dataclass" — its values cannot change after creation. Each profile has:
+A `ServiceProfile` is a fixed data record. In Python, this is called a "frozen dataclass". Its values cannot change after creation. Each profile has:
 
 - `profile_id` and `version`
 - `transport` (for example TCP)
@@ -13,12 +13,12 @@ A `ServiceProfile` is a fixed data record. In Python, this is called a "frozen d
 - `handler` (the code that runs the fake service)
 - `max_request_bytes` and `max_response_bytes` (size limits)
 - `idle_timeout` and `total_timeout` (time limits)
-- `capabilities` (a `frozenset` — a fixed list of items that cannot be changed)
+- `capabilities` (a `frozenset`: a fixed list of items that cannot be changed)
 - extra fields: `banner`, `max_messages`, `max_transitions`
 
-All profiles together form a "catalogue". The catalogue is a `tuple` — a fixed, ordered list. Its values do not change after the system loads it. The handler code cannot change what comes in from the network.
+All profiles together form a "catalogue". The catalogue is a `tuple`: a fixed, ordered list. Its values do not change after the system loads it. The handler code cannot change what comes in from the network.
 
-## Catalogue v2 profiles
+## Catalogue v2 Profiles
 
 | Catalogue v2 profile | Family / hint | Request / response total | Idle / total | Commands / transitions |
 | --- | --- | --- | --- | --- |
@@ -32,7 +32,7 @@ The global request, response, and time limits in the system config can only make
 
 If a full response does not fit in what is left of the budget, the system does not send it. Instead, the handler closes the session. It never cuts a message in the middle to make it fit.
 
-## How a profile is chosen (stable selection)
+## How a Profile Is Chosen (Stable Selection)
 
 The system picks a profile using a hash function called HMAC-SHA256. A hash function turns input data into a short, fixed-size code, called a "digest". The input to this hash is:
 
@@ -47,9 +47,9 @@ The address family byte tells the system how long the address is, so there is no
 
 The digest picks one entry from a fixed, ordered list of candidate profiles. The port policy setting can narrow this list down to profiles from one address family. An explicit port override (a manual setting in the deployment config) is a separate choice made by the operator. The source IP address, meaning the visitor's own address, does not affect the choice. The same destination will always show the same profile, no matter which client connects.
 
-The secret key for the hash comes from a mounted raw file (32 to 4096 bytes long) or from a hex-encoded environment variable. This secret is never included in the source code, and the setup process never creates one for you. The `config show` command hides both the secret value and its file path. There is no automatic fallback and no automatic secret generation. A public test value, `bytes(range(32))`, appears only in tests and in one limited benchmark — never in a real deployment.
+The secret key for the hash comes from a mounted raw file (32 to 4096 bytes long) or from a hex-encoded environment variable. This secret is never included in the source code, and the setup process never creates one for you. The `config show` command hides both the secret value and its file path. There is no automatic fallback and no automatic secret generation. A public test value, `bytes(range(32))`, appears only in tests and in one limited benchmark, never in a real deployment.
 
-## Changing profiles (migration and rotation)
+## Changing Profiles (Migration and Rotation)
 
 Version P2 of the project used an older mapping system, without a separate catalogue field. Version P3 deliberately introduces catalogue v2, with a new data format. When you upgrade, old endpoint-to-profile mappings may change.
 
@@ -63,11 +63,11 @@ P3 refuses any catalogue version it does not know, or that is too old. It never 
 
 Any later change to the order of profiles, the banners, the capabilities, or their meaning needs a review, a new profile or catalogue version, and a new stability test. Never change the content of a catalogue version that has already been published. To roll back, restore the old package, catalogue, port overrides, and secret all together.
 
-Rotating (changing) the secret is a separate operator action. It can change which profile is chosen for each endpoint, and it changes the pseudonym — a fake, repeatable ID — used for usernames. As long as the secret, the catalogue, and the endpoint configuration do not change, repeated scans and new processes will always choose the same profile and banner. Tests check the binary data format, the unchangeable fields, canonical IPv6 addresses, choosing a profile in a fresh process, and restarting the real service through the CLI (command-line interface).
+Rotating (changing) the secret is a separate operator action. It can change which profile is chosen for each endpoint, and it changes the pseudonym (a fake, repeatable ID) used for usernames. As long as the secret, the catalogue, and the endpoint configuration do not change, repeated scans and new processes will always choose the same profile and banner. Tests check the binary data format, the unchangeable fields, canonical IPv6 addresses, choosing a profile in a fresh process, and restarting the real service through the CLI (command-line interface).
 
 The product names and version hints shown by these fake services are just a synthetic (made-up) surface. They do not promise any specific CVE (a public ID number for a known security vulnerability). TLS, SMTP, Redis, and MySQL are not part of this catalogue.
 
-## See also
+## See Also
 
 - [Protocol scope](PROTOCOL_EMULATION.md)
 - [Deception overview](DECEPTION.md)

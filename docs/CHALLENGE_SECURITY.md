@@ -1,20 +1,20 @@
-# Challenge security
+# Challenge Security
 
 Threats to the challenge subsystem, what is done about each, and what is left
 over. The last column is the important one: every mitigation here has a limit,
 and a security document that does not say where the limits are is not much use.
 
-## Token design
+## Token Design
 
 | | |
 | --- | --- |
 | Scheme | `challenge-v1` |
 | Signature | HMAC-SHA256, from Python's `hmac` and `hashlib` |
 | Key derivation | HKDF-SHA256 (RFC 5869), per site, from one local master secret |
-| Payload | version, issued at, expires at, level — 10 bytes, fixed layout |
+| Payload | version, issued at, expires at, level; 10 bytes, fixed layout |
 | Nonce | 12 random bytes |
 | Encoding | base64url |
-| Comparison | `hmac.compare_digest` — constant time |
+| Comparison | `hmac.compare_digest`: constant time |
 | Default lifetime | 15 minutes (maximum 60 minutes) |
 | Clock skew allowed | 60 seconds |
 
@@ -24,11 +24,11 @@ valid MAC, or it is refused.
 
 ## Threats
 
-### Token replay
+### Token Replay
 
 **Impact.** A stolen token lets somebody skip a challenge.
 
-**Mitigation.** Short lifetime, site scope, and — this is the point — the token
+**Mitigation.** Short lifetime, site scope, and (this is the point) the token
 grants nothing. It is not authentication. It does not log anyone in, does not
 carry a session, and does not bypass any authorisation the application does. The
 most a stolen token buys is not being asked a question the thief could have
@@ -39,7 +39,7 @@ token shared between clients works for all of them. This is accepted: binding
 tokens tightly to an address breaks mobile users, NAT and IPv6 privacy
 addresses, and the thing being protected is not worth that cost.
 
-### Cookie theft
+### Cookie Theft
 
 **Impact.** Same as replay.
 
@@ -48,11 +48,11 @@ HTTPS. `SameSite=Lax`. Short `Max-Age`.
 
 **Remaining.** A client with malware on it has bigger problems than this cookie.
 
-### Challenge flood
+### Challenge Flood
 
 **Impact.** An attacker triggers challenges to exhaust CPU or memory.
 
-**Mitigation.** Tokens are stateless — signing one stores nothing. The context
+**Mitigation.** Tokens are stateless: signing one stores nothing. The context
 table is bounded (10,000 by default) with TTL and LRU eviction. There is a
 per-client hourly budget, a per-second whole-site budget, and a minimum time
 between challenges to one client. Signing costs about 11 microseconds and the
@@ -60,10 +60,10 @@ response is 838 bytes.
 
 **Remaining.** A flood still costs something. When the global budget is spent,
 challenges stop being issued and the system falls back to watching and rate
-limiting — the site stays up, but the challenge signal is unavailable while the
+limiting. The site stays up, but the challenge signal is unavailable while the
 flood lasts.
 
-### Challenge loop
+### Challenge Loop
 
 **Impact.** A client that cannot keep cookies is asked forever, and never
 reaches the site. This is an outage for that user.
@@ -77,9 +77,9 @@ before the system stops. Those requests are extra work for that user. The LAB
 `challenge_loop_bot` fixture exists to keep this bounded, and it is one of the
 first things to check after changing budget settings.
 
-### Open redirect
+### Open Redirect
 
-**Impact.** The challenge page sends clients wherever an attacker says — a
+**Impact.** The challenge page sends clients wherever an attacker says. A
 phishing tool hosted on the site it defends.
 
 **Mitigation.** The return target must be a local path. Absolute URLs,
@@ -91,7 +91,7 @@ rejected target becomes `/`. The path is length-bounded.
 was going when the target is rejected. That is a small loss and the trade is
 deliberate.
 
-### Cross-site scripting on the challenge page
+### Cross-site Scripting on the Challenge Page
 
 **Impact.** An XSS hole in the security tool.
 
@@ -103,7 +103,7 @@ the page. The page is static with no JavaScript, and carries
 **Remaining.** None known for the page itself. The header value is still
 attacker-influenced, which is why it is validated and encoded.
 
-### Proxy spoofing
+### Proxy Spoofing
 
 **Impact.** A client sends `X-Forwarded-For` to impersonate another address, or
 to make the system act against a third party.
@@ -123,27 +123,27 @@ whole site goes off the air. This is the worst thing this software could do.
 
 **Mitigation.** Any client resolved through a proxy is `network_enforceable =
 False` and can never reach TEMP_BLOCK. A challenge *can* still be sent, because
-it travels over HTTP to the one client that asked for it — it is safe exactly
+it travels over HTTP to the one client that asked for it. It is safe exactly
 where a network block is not.
 
 **Remaining.** Rate limiting a proxied client is applied by client identity, not
 by address. If your proxy does not pass a usable client address, all its clients
 look like one client, and the system will say so rather than guess.
 
-### Shared addresses and false positives
+### Shared Addresses and False Positives
 
 **Impact.** An office, a university or a mobile carrier NAT looks like one very
 busy client, and ordinary people get challenged.
 
 **Mitigation.** Challenges are proportionate and cheap, and the review queue
-gives extra priority to exactly this shape — an ordinary-looking client that has
+gives extra priority to exactly this shape. An ordinary-looking client that has
 been challenged repeatedly without passing (see [§44 handling in
 `review_priority`](../eye_for_an_eye/challenge/service.py)).
 
 **Remaining.** Real. This is the main reason to run in shadow mode first and
 look at the numbers.
 
-### CDN caching a challenge
+### CDN Caching a Challenge
 
 **Impact.** A shared cache stores one client's challenge and serves it to
 everyone. The site breaks for all users.
@@ -155,7 +155,7 @@ everyone. The site breaks for all users.
 your CDN is configured to cache aggressively regardless of origin headers, do
 not enable active challenges until that is fixed.
 
-### Secret leakage
+### Secret Leakage
 
 **Impact.** Anyone with the secret can mint tokens.
 
@@ -169,7 +169,7 @@ Per-site keys are derived with HKDF, so one site's key does not reveal another's
 Rotation is supported: set `previous_secret_file` and tokens signed with the old
 key keep working until they expire.
 
-### Model feedback loop
+### Model Feedback Loop
 
 **Impact.** The model decides a client is suspicious → a challenge is shown →
 "was challenged" becomes a feature → the model learns to reproduce its own
@@ -186,13 +186,13 @@ still downstream of a decision the system made. Any future model that uses them
 needs a temporal design and a leakage check. Until then they are policy features
 only, and `auto_promote` remains `false`.
 
-### Availability failure
+### Availability Failure
 
 **Impact.** The challenge subsystem breaks and takes the website with it. This
 would be a worse outage than the attack it was watching for.
 
 **Mitigation.** Every entry point catches its own failures, counts them, and
-returns "do not challenge" — which means the request proceeds normally. A
+returns "do not challenge", which means the request proceeds normally. A
 misconfiguration produces a disabled service that explains itself, not a crash.
 The gateway's `handle` cannot raise. This is asserted by tests that break each
 entry point deliberately.
@@ -205,12 +205,12 @@ the last error.
 
 Rejecting a malformed token costs about 1.4 microseconds; verifying a
 well-formed one costs about 12. That difference is observable, and it reveals
-whether a token was the right shape — not whether a signature was correct. The
+whether a token was the right shape, not whether a signature was correct. The
 signature comparison itself is constant time. Rejecting garbage cheaply is
 deliberate: a verifier that costs more to refuse than to accept is a
 denial-of-service amplifier.
 
-## What is not implemented, on purpose
+## What Is Not Implemented, on Purpose
 
 - No CAPTCHA, and no dependency on any CAPTCHA provider.
 - No browser fingerprinting: no canvas, no WebGL, no audio, no font probing.

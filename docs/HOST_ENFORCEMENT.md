@@ -1,4 +1,4 @@
-# Host enforcement
+# Host Enforcement
 
 Temporary defensive blocks on the machine Eye for an Eye is protecting.
 
@@ -7,7 +7,7 @@ on is the single most consequential setting in the configuration file: it is the
 one that lets this software deny somebody access to a real service without being
 asked.
 
-## What it does
+## What It Does
 
 Places a bounded, temporary, inbound source block in **one nftables table this
 project owns**, and nothing else.
@@ -24,7 +24,7 @@ project owns**, and nothing else.
 Policy accept matters: the chain drops what is in the set and gets out of the
 way. It cannot become a default-deny firewall by accident.
 
-## What it will never do
+## What It Will Never Do
 
 - Flush a ruleset. There is no `flush` in the enforcement code, and a test scans
   every module for one.
@@ -40,7 +40,7 @@ way. It cannot become a default-deny firewall by accident.
 - Reach outward. There is no hack-back, no scanning and no outbound action of any
   kind in this project.
 
-## The privilege boundary
+## The Privilege Boundary
 
 ```
 AutonomousDecisionAuthority          unprivileged, holds no firewall handle
@@ -63,7 +63,7 @@ long, why, under which decision*. It does not say what to run. A privileged
 helper that accepted a command from an unprivileged process would be a remote
 shell with extra steps.
 
-An unknown field is **refused, not ignored** — a field the helper does not
+An unknown field is **refused, not ignored**: a field the helper does not
 understand is either newer than it, or an attempt to smuggle one in.
 
 The helper validates protection against its own copy of the configuration,
@@ -71,7 +71,7 @@ immediately before writing, even though PolicyGuard already refused protected
 sources upstream. The interesting failure is not "the guard was wrong"; it is
 "the guard ran five minutes ago and the configuration changed".
 
-## Turning it on
+## Turning It On
 
 ```toml
 [decision]
@@ -85,11 +85,11 @@ trusted_proxies = ["10.0.0.0/8"]
 
 Configuration validation refuses the combination if:
 
-- there is no protected network — *"a host that can be locked out of itself is
+- there is no protected network. *"a host that can be locked out of itself is
   not one this may act on"*;
-- `enforcement.enabled` (the lab namespace path) is also set — pick one;
+- `enforcement.enabled` (the lab namespace path) is also set: pick one;
 - the decision engine is off;
-- the deployment profile is `lab` — that profile uses the namespace path.
+- the deployment profile is `lab`: that profile uses the namespace path.
 
 Then check:
 
@@ -100,7 +100,7 @@ eye-for-an-eye autonomy readiness
 The `enforcement_available` check reports whether this machine can actually use
 the path: Linux, `nft` installed, protected networks configured.
 
-## Operating it
+## Operating It
 
 ```
 python -m eye_for_an_eye.security.firewall_helper --config <file> status
@@ -113,7 +113,7 @@ python -m eye_for_an_eye.security.firewall_helper --config <file> cleanup
 `nft -c`, and writes nothing. A dry run that only printed a string would tell you
 what the code intended, not what the kernel would accept.
 
-## Apply, then verify
+## Apply, Then Verify
 
 A block is not a block because `nft` exited zero. After every write the backend
 re-reads the set from the kernel and confirms the element is present with a
@@ -127,13 +127,13 @@ address, which completes before the block and times out during it. "The element
 is in the set" and "the packet does not arrive" are different claims, and only
 the second one is a firewall.
 
-## Crash safety
+## Crash Safety
 
 Every element carries a **kernel timeout**. If the sensor dies and never comes
 back, the kernel expires the blocks on schedule with nobody's help.
 
 The table name is stable per installation, so a restarted sensor can find its own
-work again — `reconcile` adopts the table if the owner comment matches, reports
+work again, `reconcile` adopts the table if the owner comment matches, reports
 every live element with the expiry the kernel is already counting down, and
 flags any element without a bounded timeout.
 
@@ -141,7 +141,7 @@ The name is stable here and per-process in the lab backend, and the difference i
 deliberate: a lab table must never be inherited, and a host table must never be
 orphaned.
 
-## What is tested, and where
+## What Is Tested, and Where
 
 `tests/test_p15_1_enforcement.py`, 61 tests. The structural half runs anywhere.
 The kernel half needs Linux, `nft` and root, and skips loudly otherwise; it was
@@ -170,7 +170,7 @@ need `iproute2`, and say so when it is missing.
 | dry run writes nothing | ruleset compared before and after |
 | missing `nft`, invalid rule, failed verification, table removed underneath | each reported; ruleset intact after every one |
 
-## What is *not* tested
+## What Is *Not* Tested
 
 Coexistence with **firewalld** and with **Docker's** live rules on a host that
 actually runs them. The isolation property is tested against a neighbour table
@@ -179,7 +179,7 @@ evidence. Do not read the table above as a compatibility claim for those two.
 
 Multi-hour operation, and any host that is not this container.
 
-## Site scope
+## Site Scope
 
 There is none, and pretending otherwise would be the dangerous kind of
 convenience. A host packet filter sees addresses. A website behind a CDN or a
@@ -187,14 +187,14 @@ reverse proxy is a client of somebody else's infrastructure, and the address in
 the request belongs to the proxy carrying everyone else.
 
 So `HOST_NETWORK` is the only enforcement scope that exists, and a decision whose
-`enforcement_scope` is anything else — or whose `network_enforceable` is false —
+`enforcement_scope` is anything else (or whose `network_enforceable` is false)
 cannot produce a request at all. For those, use the web layer: challenge, rate
 limit, or ALLOW and keep watching.
 
-## See also
+## See Also
 
 - [AUTONOMOUS_MODE.md](AUTONOMOUS_MODE.md)
 - [AUTONOMOUS_SAFETY_INVARIANTS.md](AUTONOMOUS_SAFETY_INVARIANTS.md)
-- [ENFORCEMENT.md](ENFORCEMENT.md) — the P7 lab namespace path
+- [ENFORCEMENT.md](ENFORCEMENT.md): the P7 lab namespace path
 - [TRUSTED_PROXIES.md](TRUSTED_PROXIES.md)
 - [../reports/P15_1_FINAL_REPORT.md](../reports/P15_1_FINAL_REPORT.md)

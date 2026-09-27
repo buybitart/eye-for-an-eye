@@ -1,4 +1,4 @@
-# Start here
+# Start Here
 
 Eye for an Eye watches a website or a server.
 
@@ -12,7 +12,7 @@ Blocking is off. You have to turn it on yourself, later, on purpose.
 
 This is the main way to use Eye for an Eye.
 
-### 1. Check the download
+### 1. Check the Download
 
 ```sh
 sha256sum -c SHA256SUMS
@@ -30,7 +30,7 @@ Wait. It can take a few minutes.
 
 Look for the words **Installation complete**.
 
-### 3. Choose what to watch
+### 3. Choose What to Watch
 
 ```sh
 eye-for-an-eye setup
@@ -62,7 +62,7 @@ You should see:
   Automatic blocking: OFF
 ```
 
-### 6. Try it without a website
+### 6. Try It Without a Website
 
 ```sh
 eye-for-an-eye easy demo
@@ -78,7 +78,7 @@ eye-for-an-eye stop
 
 You should see **Stopped**. It can take a few seconds.
 
-### 8. Remove it
+### 8. Remove It
 
 ```sh
 sh uninstall.sh
@@ -103,13 +103,13 @@ packets and it cannot block. Linux does more.
 
 ---
 
-## If it says NEEDS SETUP
+## If It Says NEEDS SETUP
 
 That means it does not know **where** to watch yet.
 
 Pick one:
 
-* **A website log.** Easiest. Works on Windows and Linux.
+* **A website log.** Works on Windows and Linux. It needs no extra program.
 * **A network sensor.** Linux only. Needs an extra helper program.
 
 Run `eye-for-an-eye setup` and it will ask.
@@ -118,7 +118,7 @@ The next page shows you how: **[Beginner guide](docs/BEGINNER_GUIDE.md)**
 
 ---
 
-## If something goes wrong
+## If Something Goes Wrong
 
 Run the check:
 
@@ -136,21 +136,21 @@ It has no passwords in it and no visitor traffic.
 
 ---
 
-## One warning, said plainly
+## One Warning, Said Plainly
 
 Later you may read about **Automatic Protection**. That is different.
 
-Automatic Protection can change your computer's firewall and can stop real
+Automatic Protection can change your computer's firewall. It can stop real
 people from reaching your website. It will not start until you have told it
-which addresses it must never block — otherwise it could lock you out of your
-own machine. That is a safety rule and it cannot be skipped.
+which addresses it must never block. Without that list, it could lock you out
+of your own machine. That is a safety rule, and you cannot skip it.
 
 It is Linux only. Nothing in the steps above can turn it on.
 
 ---
 
-Next: **[Beginner guide](docs/BEGINNER_GUIDE.md)** — the same steps, with more
-help at each one.
+Next: **[Beginner guide](docs/BEGINNER_GUIDE.md)**. It has the same steps, with
+more help at each one.
 
 Installing in detail: **[Install on Linux](docs/INSTALL_LINUX.md)**
 

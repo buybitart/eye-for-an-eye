@@ -1,6 +1,6 @@
-# Model report: risk-logreg-v1
+# Model Report: risk-logreg-v1
 
-> **ENGINEERING BASELINE ONLY - NOT VALIDATED FOR PRODUCTION ENFORCEMENT.**
+> **ENGINEERING BASELINE ONLY. NOT VALIDATED FOR PRODUCTION ENFORCEMENT.**
 >
 > The corpus is locally generated synthetic behaviour. Every number below describes that corpus and
 > nothing else. None of it estimates deployment accuracy, prevalence or risk.
@@ -27,7 +27,7 @@ Build a reproducible training, evaluation and export pipeline, and a first local
 
 `malicious_automation_like` means automation-like behaviour observed by this sensor. It is not a claim that a person attacked anything, that an attack succeeded, or that the source is hostile.
 
-### Dataset limitations
+### Dataset Limitations
 
 - synthetic sequences cannot represent real traffic distributions, noise or adversarial adaptation
 - test prevalence is a generator artefact and cannot estimate deployment prevalence
@@ -41,7 +41,7 @@ Validator warnings:
 - constant columns carry no evidence in this corpus: available_connections_10s, available_connections_60s, available_connections_900s, available_ports_60s, available_ports_900s, available_destinations_60s, available_sequential_60s, available_persistence_900s, available_burst_10s, available_interarrival_mean_60s, available_deception_60s
 - documented ceiling clipping above 5% of rows: persistence_900s
 
-## 3. Feature schema and model contract
+## 3. Feature Schema and Model Contract
 
 | field | value |
 |---|---|
@@ -63,7 +63,7 @@ No identity column reaches the model: no address, numeric address, ASN, provider
 
 Zero-weight verification in the exported graph: `previous_risk` = 0.0, `available_previous_risk` = 0.0.
 
-## 4. Split method and leakage checks
+## 4. Split Method and Leakage Checks
 
 Whole source sequences are the split unit. A row-level random split would place prefix windows of the same simulated source in both train and test and inflate every metric. Four scenario families are additionally held out entirely for test, to measure behaviour never seen while fitting.
 
@@ -84,7 +84,7 @@ Whole source sequences are the split unit. A row-level random split would place 
 
 Group separation is a failing test, not a warning: `training.split.assert_group_separation` raises `LeakageError` and `tests/test_p8_training_split.py` asserts it.
 
-## 5. Hyperparameters and selection
+## 5. Hyperparameters and Selection
 
 | field | value |
 |---|---|
@@ -110,7 +110,7 @@ Group separation is a failing test, not a warning: `training.split.assert_group_
 
 Class balance is close to even in this corpus, so `class_weight="balanced"` changed little. No resampling and no SMOTE was applied; the comparison was made on validation, not assumed.
 
-## 6. Locked test metrics
+## 6. Locked Test Metrics
 
 Computed once, after selection, from scores produced by the production ONNX adapter.
 
@@ -130,14 +130,14 @@ Computed once, after selection, from scores produced by the production ONNX adap
 
 Accuracy is reported because it was asked for, not because it is informative: the corpus is near balanced by construction, which flatters it.
 
-### Confusion matrix at 0.50
+### Confusion Matrix at 0.50
 
 |  | predicted benign_like | predicted malicious_automation_like |
 |---|---|---|
 | **actual benign_like** | 390 | 116 |
 | **actual malicious_automation_like** | 27 | 461 |
 
-### Generalisation to unseen scenario families
+### Generalisation to Unseen Scenario Families
 
 | subset | rows | PR-AUC | ROC-AUC | FPR @0.90 | recall @0.90 | families |
 |---|---|---|---|---|---|---|
@@ -146,7 +146,7 @@ Accuracy is reported because it was asked for, not because it is informative: th
 
 This is the most important table in the report. Within families the model already saw, separation is near perfect; on families it never saw, it is close to unusable. Validation cannot detect this, because validation shares families with train.
 
-## 7. Threshold evaluation
+## 7. Threshold Evaluation
 
 The model returns a score. It does not select an action. `DecisionFusion` and `PolicyGuard` decide, and a WATCH threshold may be far lower than a TEMP_BLOCK threshold.
 
@@ -164,7 +164,7 @@ The model returns a score. It does not select an action. `DecisionFusion` and `P
 
 Raising the threshold barely moves the false positive rate: the false positives are saturated near 1.0, so they survive every threshold in the table. At 0.90, 97 of 506 benign rows are flagged and 0.990 of them come from `owner_vulnerability_scanner`; excluding that one family the rate would be 0.0024. That counterfactual is descriptive only.
 
-## 8. Score distribution
+## 8. Score Distribution
 
 | class | count | min | median | mean | p90 | p95 | p99 | max |
 |---|---|---|---|---|---|---|---|---|
@@ -211,7 +211,7 @@ Intercept -1.8801.
 | `persistence_900s` | -1.986 | 1.986 | towards_benign_like |
 | `interarrival_cv_60s` | 1.353 | 1.353 | towards_malicious_automation_like |
 
-### Coefficient sanity review
+### Coefficient Sanity Review
 
 - `anomaly_60s`, `ports_900s`, `ports_60s`, `sequential_60s` and `credentials_60s` pushing towards the positive class is behaviourally plausible: port breadth, sequential ordering, protocol mismatch and repeated credential prompts are what automated probing looks like to this sensor.
 - `families_60s` carries a large **negative** coefficient while its marginal correlation with the label is positive. A sign flip against the marginal direction means correlated columns are redistributing weight, not that protocol diversity indicates benign traffic. Individual coefficients here are not standalone evidence.
@@ -219,7 +219,7 @@ Intercept -1.8801.
 - `deception_60s` is engine-influenced: the sensor decides whether to answer, so it partly measures our own behaviour. The ablation below shows it is not load bearing.
 - Strong separation on seen families does not make the coefficients trustworthy. The unseen-family result in section 6 is the counter-evidence.
 
-## 11. Feature ablation
+## 11. Feature Ablation
 
 | variant | features | val PR-AUC | val ROC-AUC | val FPR @0.50 |
 |---|---|---|---|---|
@@ -229,7 +229,7 @@ Intercept -1.8801.
 
 Behaviour columns alone carry almost all of the separation, and removing the engine-influenced deception counter changes little. Feature schema 1 has no fingerprint-derived column, so the fingerprint-domination question does not arise for v1; if such a column is ever added, this ablation is where it must be checked before the column is trusted.
 
-## 12. False positive analysis
+## 12. False Positive Analysis
 
 At threshold 0.50: 116 false positives; at 0.90: 97.
 
@@ -252,7 +252,7 @@ Strongest examples, features only and never payload:
 
 `owner_vulnerability_scanner` is the dominant false positive and it is not a modelling defect. An authorised scan and an unauthorised scan produce the same behaviour; the difference is authorisation, which is an identity and policy fact. The correct control is the `PolicyGuard` allowlist, not a behavioural model. `service_discovery`, `deployment_probe` and `admin_diagnostic` fail the same way at lower intensity.
 
-## 13. False negative analysis
+## 13. False Negative Analysis
 
 At threshold 0.50: 27 false negatives; at 0.90: 82.
 
@@ -270,7 +270,7 @@ At threshold 0.50: 27 false negatives; at 0.90: 82.
 
 The misses are exactly the quiet cases: small port sets, long gaps between probes, low-rate credential attempts, and repeated-probe bots whose rate resembles a monitoring agent. Moving the threshold to 0.90 makes this substantially worse while barely improving the false positive rate.
 
-## 14. Per-scenario behaviour on test
+## 14. Per-scenario Behaviour on Test
 
 | scenario family | label | rows | flagged @0.50 | median score | max score |
 |---|---|---|---|---|---|
@@ -305,7 +305,7 @@ The misses are exactly the quiet cases: small port sets, long gaps between probe
 | `software_updater` | 0 | 14 | 0.21 | 0.000 | 0.846 |
 | `web_browser` | 0 | 20 | 0.00 | 0.027 | 0.073 |
 
-## 15. ONNX export and equivalence
+## 15. ONNX Export and Equivalence
 
 | field | value |
 |---|---|
@@ -327,7 +327,7 @@ The misses are exactly the quiet cases: small port sets, long gaps between probe
 
 Equality is not assumed to be bit exact: fitting runs in float64 and the runtime graph in float32, so the difference is measured on every held-out row and the export fails if it exceeds tolerance. The excluded columns are exported with coefficient exactly zero, which keeps the frozen [1, 36] runtime contract while the fitted model never saw them. The adapter also rejects a wrong feature count, a wrong schema version, a wrong tensor shape, non-finite input and a hash that does not match the manifest.
 
-## 16. Inference benchmark
+## 16. Inference Benchmark
 
 | measurement | value |
 |---|---|
@@ -344,7 +344,7 @@ Equality is not assumed to be bit exact: fitting runs in float64 and the runtime
 
 offline measurement only; production keeps the strict [1,36] contract and one in-flight request per source. Inference is per source per decision window, never per packet. No performance target is asserted from a single measurement run on one machine.
 
-## 17. Shadow replay through fusion and policy
+## 17. Shadow Replay Through Fusion and Policy
 
 Enforcement disabled, decision mode shadow, no firewall interaction and no packet transmitted.
 
@@ -355,7 +355,7 @@ Enforcement disabled, decision mode shadow, no firewall interaction and no packe
 
 The mathematical baseline alone would block nothing on this corpus. Adding the model score to fusion moves sources past the block threshold, and they are the authorised scanner family, so shadow block precision is 0. On this evidence the model must not gain enforcement authority.
 
-### Disagreements kept for investigation
+### Disagreements Kept for Investigation
 
 
 **math_low_ml_high**
@@ -373,7 +373,7 @@ The mathematical baseline alone would block nothing on this corpus. Adding the m
 
 The model is consistently more aggressive than the mathematical baseline, mostly on true positives, which is where its value would be. `PolicyGuard` holds almost all of it at WATCH or OBSERVE through the data-quality, minimum-sample and math-confirmation gates. Cases in the other direction (math high, model low) are worth investigating whenever they appear.
 
-## 18. Offline PCAP replay
+## 18. Offline PCAP Replay
 
 Captures are read from disk through the existing offline analysis path and never retransmitted; enrichment, active probes, firewall and enforcement are refused by that path. The corpus labels belong to the correlation label space, not the model label space, so they are reported beside the decisions and never scored against them.
 
@@ -384,7 +384,7 @@ Captures are read from disk through the existing offline analysis path and never
 
 The corpus is two tiny deterministic synthetic captures, so this is an integration result and not accuracy evidence. What it does show is that the whole chain runs: packets to deterministic parser to correlation to FeatureVector to ONNX score to fusion to policy, with no enforcement and no transmitted traffic.
 
-## 19. Quality gate
+## 19. Quality Gate
 
 Status **PROVISIONAL**. These thresholds are conservative starting candidates proposed for review. No measured deployment data supports them yet, and they must not be presented as established production targets.
 
@@ -398,7 +398,7 @@ Status **PROVISIONAL**. These thresholds are conservative starting candidates pr
 
 Reference block threshold used for the gate: 0.9. The gate failing is the expected and correct outcome for a first baseline on synthetic data. The artifact is still exported, because the pipeline, the frozen contract and the parity checks are the deliverable; the manifest records `quality_gate_passed=false` and `recommended_mode=shadow`.
 
-## 20. Known limitations
+## 20. Known Limitations
 
 - synthetic corpus generated locally; not a representative security dataset
 - test prevalence is an artefact of the generator and cannot estimate deployment prevalence
@@ -424,7 +424,7 @@ Before limited enforcement could even be discussed, all of the following would h
 6. ONNX parity and manifest verification on the promoted artifact;
 7. shadow replay in that environment supporting the offline result;
 
-## 22. Next experiment
+## 22. Next Experiment
 
 Do not replace this baseline yet. The next step is a gradient boosting candidate trained and evaluated on the **exact same** dataset version, split, feature contract, metrics and threshold table, so the comparison is fair. Expect it to fit the seen families better; the question worth answering is whether it does anything for the unseen families, which is where this baseline fails.
 

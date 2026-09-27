@@ -6,7 +6,7 @@ where it comes from, and what the rules are.
 The full detail is in [the data card](DATA_CARD_v1.md) and
 [the dataset report](../reports/DATASET_v1.md). This page is the short version.
 
-## The hard safety rule
+## The Hard Safety Rule
 
 Traffic for the dataset is produced **only** in these places:
 
@@ -29,7 +29,7 @@ This is enforced in code. `dataset/safety.py` refuses any target that is not
 loopback or an address you explicitly listed as a lab address. It also refuses
 documentation ranges and globally routable addresses.
 
-## The three sources
+## The Three Sources
 
 Real ground truth and real packets are two different things. One dataset alone
 cannot give you both, so the project uses three sources and never pretends they
@@ -50,7 +50,7 @@ Two rules follow from this table:
   truth. A shadow row that arrives with a supervised label is rejected by the
   validator.
 
-## One pipeline
+## One Pipeline
 
 All three sources go through **the same production code**: the same packet
 parser, the same correlation engine, the same `FeatureVector`. There is no
@@ -59,7 +59,7 @@ second, training-only feature path.
 This matters more than it sounds. If training used a different transformation
 from the running system, every measured number would be a lie.
 
-## Splitting the data
+## Splitting the Data
 
 The split is **by group**, never by row.
 
@@ -74,20 +74,20 @@ stops that.
 The test set is **frozen**. It is written once and reused, so a later model
 cannot be tuned against it by accident.
 
-## Leakage checks
+## Leakage Checks
 
 After each build, the pipeline asks whether the model could cheat:
 
-* **Port leakage** — could it win by memorising a port number?
-* **Timing leakage** — do the generators have a timing signature?
-* **Generator fingerprint** — can you tell which script wrote a row?
-* **Source-type leakage** — can you tell LAB from PCAP from SHADOW?
-* **Single-feature leakage** — does one feature alone separate the classes?
+* **Port leakage**: could it win by memorising a port number?
+* **Timing leakage**: do the generators have a timing signature?
+* **Generator fingerprint**: can you tell which script wrote a row?
+* **Source-type leakage**: can you tell LAB from PCAP from SHADOW?
+* **Single-feature leakage**: does one feature alone separate the classes?
 
 Results go into `datasets/manifests/dataset-v1-leakage.json`. When a check
 fails, the fix is to repair the generator, not to soften the report.
 
-## What a dataset row contains
+## What a Dataset Row Contains
 
 A row has behaviour numbers, a label, a label source, a group key and
 provenance. It does **not** contain payloads, credentials, cookies, tokens,
@@ -118,7 +118,7 @@ python -m dataset.cli export-shadow
 python -m dataset.cli review-queue
 ```
 
-## What is in the repository and what is not
+## What Is in the Repository and What Is Not
 
 | Path | In the repository? | Why |
 | --- | --- | --- |
@@ -128,7 +128,7 @@ python -m dataset.cli review-queue
 | `datasets/unlabeled/` | **never** | It is observation data from a live system. |
 | `*.dataset-secret` | **never** | It is a secret. |
 
-## See also
+## See Also
 
 * [Controlled self-learning](SELF_LEARNING.md)
 * [Feature schema](FEATURE_SCHEMA.md)

@@ -1,16 +1,16 @@
-# The autonomous decision
+# The Autonomous Decision
 
 One algorithm, in an order anybody can audit. This page is that order.
 
-## The question it answers
+## The Question It Answers
 
-ALLOW or TEMP_BLOCK. Nothing softer — OBSERVE, WATCH, SOFT_CHALLENGE, RATE_LIMIT
+ALLOW or TEMP_BLOCK. Nothing softer: OBSERVE, WATCH, SOFT_CHALLENGE, RATE_LIMIT
 are chosen earlier, by the ladders in the network and web sensors, and they do
 not come here. This is the last decision, the one with a firewall rule at the end
 of it, and it is the only one this module makes.
 
 
-## Every number the decision used, named in the record
+## Every Number the Decision Used, Named in the Record
 
 §89: the score conversion is not hidden. A record carries `math_risk`,
 `model_score`, `calibrated_probability`, `conservative_probability`,
@@ -20,14 +20,14 @@ cost policy digest.
 
 `bound_source` is the one to read first. `calibration_wilson` means the decision
 rested on a Wilson lower bound over the calibrator's own fitting sample.
-`shrinkage` means it rested on the P15 heuristic estimate — and an estimate from
+`shrinkage` means it rested on the P15 heuristic estimate, and an estimate from
 that path cannot produce a block, because `calibrated_estimate` gates above it.
 
 Two numbers rather than one, because a reader who wants to know how much the
 P15.2 repair changed a given decision should be able to see it in the record
 instead of re-deriving it.
 
-## The chain
+## The Chain
 
 ```
 FeatureVector
@@ -64,7 +64,7 @@ of the evidence, one signal family, and one corroborating reason code. It is
 never the whole case for a block, and a decision record that tried to be one is
 refused at construction.
 
-## The order, and why
+## The Order, and Why
 
 ```
 protected or management?           -> ALLOW
@@ -76,12 +76,12 @@ does the cost model prefer a block,
 otherwise                          -> ALLOW
 ```
 
-The cheap, certain refusals come first — not for speed, for honesty. Asking
+The cheap, certain refusals come first, not for speed, for honesty. Asking
 "what does the model think?" about a management address or a CDN edge is asking a
 question whose answer must not matter, and a system that computes it anyway will
 eventually find a way to use it.
 
-## Every gate
+## Every Gate
 
 | Gate | Refused with | Why |
 | --- | --- | --- |
@@ -113,7 +113,7 @@ Gates do not return early. Every reason not to block is collected, so an ALLOW
 answers "why not?" completely rather than naming whichever gate was checked
 first.
 
-## Signal families
+## Signal Families
 
 Ten families, and a feature belongs to exactly one:
 
@@ -126,14 +126,14 @@ model *thinks*, which is a different kind of statement.
 
 A family contributes at most once no matter how many features describe it.
 `connections_60s`, `requests_60s` and `burst_10s` all say "a lot of traffic
-arrived" — that is one observation seen three ways, and counting it three times
+arrived". That is one observation seen three ways, and counting it three times
 is how a system talks itself into confidence it has not earned. Strength per
 family is the **maximum** contributing term, never the sum.
 
 A block needs at least 3 distinct families, of which at least 2 must be
 behavioural.
 
-## ALLOW is not "benign"
+## ALLOW Is Not "Benign"
 
 ALLOW means: *this source is not currently eligible for an autonomous temporary
 block.* It is not a verdict of innocence, it does not whitelist anything, and it
@@ -143,9 +143,9 @@ available, and the next window is judged on its own evidence.
 Equally, TEMP_BLOCK is not proof of anything. A blocked source is not ground
 truth, and no part of the learning pipeline may treat it as one.
 
-## The decision record
+## The Decision Record
 
-Every decision — both actions — produces an `AutonomousDecisionRecord` carrying
+Every decision (both actions) produces an `AutonomousDecisionRecord` carrying
 the scope and site, a pseudonymous source identifier, the feature schema version,
 MathRisk and its top contributions, web risk, the model version and whether its
 output was a calibrated probability or a score, anomaly and OOD scores, drift
@@ -190,7 +190,7 @@ does not flap in and out of enforcement on adjacent windows. It lowers one numbe
 and nothing else: every other gate applies at full strength, so a repeat offender
 with weak evidence is still allowed.
 
-## Block duration
+## Block Duration
 
 Escalating and capped: 300s, 1800s, 7200s, 43200s, and never beyond 43200s
 whatever the offence count. Offence history decays out of the window on its own.
@@ -202,7 +202,7 @@ The decision is not on the packet path. Feature updates and MathRisk are cheap
 and run per event; ONNX inference, anomaly scoring, OOD and this authority run
 on a bounded interval. Drift, training and clustering never run per event.
 
-## See also
+## See Also
 
 - [COST_SENSITIVE_POLICY.md](COST_SENSITIVE_POLICY.md)
 - [DECISION_UNCERTAINTY.md](DECISION_UNCERTAINTY.md)

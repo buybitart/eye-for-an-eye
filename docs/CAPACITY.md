@@ -1,10 +1,10 @@
-# Capacity and internal targets
+# Capacity and Internal Targets
 
 This page lists how much load was actually measured, and what was **not**
 measured. Read it before you plan a deployment size. Every number here comes
 from one Windows laptop, so treat it as a starting point, not a promise.
 
-## The measuring machine
+## The Measuring Machine
 
 Intel i5-1135G7, 4 physical / 8 logical cores, about 15.7 GiB RAM.
 
@@ -12,7 +12,7 @@ Installed RAM is not the same as the memory the sensor uses. The workloads were
 not pinned to 1, 2 or 4 vCPUs. So you cannot scale these numbers up or down by
 cores or by GiB. That kind of straight-line guess is not supported here.
 
-## What was measured
+## What Was Measured
 
 | Placement / workload | What was established |
 |---|---|
@@ -25,7 +25,7 @@ cores or by GiB. That kind of straight-line guess is not supported here.
 | 2 vCPU / 4 GiB | Not measured |
 | 4 vCPU / 8 GiB | Not measured; this laptop is not the same as a VM of that size |
 
-## A starting working point
+## A Starting Working Point
 
 On a similar host, **60 base events per second** is a working point confirmed by
 a short soak, with margin against the individual stages. It is not the upper
@@ -35,7 +35,7 @@ Write batching of 8 events with a 10 ms delay makes sense for write-heavy load.
 The default stays at **1**. Batching means some events wait in memory, so you
 have to decide how much pending data you can afford to lose.
 
-## One input is not one row
+## One Input Is Not One Row
 
 Each incoming packet or event can create several stored records.
 
@@ -82,7 +82,7 @@ generator sockets live in the same process, and the allocator keeps its arenas,
 so that delta is not the clean cost of one server connection. The practical
 limit checked here is **128**. Levels of 500 and 1000 were not run.
 
-### The 60-second soak
+### The 60-second Soak
 
 * Last 21 samples: RSS 40.8–43.2 MB, queue 0 on the per-second snapshots, 5
   threads while running, storage holding 2000 rows.
@@ -93,7 +93,7 @@ limit checked here is **128**. Levels of 500 and 1000 were not run.
 The difference of one handle between the two scenarios is fine: the soak has a
 second endpoint. A cold count of 157–159 is not a steady baseline.
 
-## Targets for the next run of the same workload
+## Targets for the Next Run of the Same Workload
 
 | Internal target | Basis and limit |
 |---|---|
@@ -104,7 +104,7 @@ second endpoint. A cold count of 157–159 is not a steady baseline.
 | No queue or storage drops at 60 base events/s | Done for 60 s; a 15–59 minute deployment soak is still needed |
 | Listener shutdown <= 2 s, runtime <= configured 10 s | Checked with 128 active sockets (~0.03 s) and the mixed soak (~0.17 s); a stuck kernel IO is not a realtime guarantee |
 
-## Estimating a burst
+## Estimating a Burst
 
 With a backlog of Q, an arrival rate of λ and a measured drain rate of μ, the
 queue fills in about `Q / (λ − μ)` seconds when λ is bigger than μ.
@@ -113,12 +113,12 @@ Count both queue budgets (events and bytes) and the record expansion, not just
 the number of slots. The opt-in LOW/NORMAL reserve kicks in before the hard cap,
 so watch the counters and the admission failures.
 
-## Still unverified
+## Still Unverified
 
 Long soak runs, live capture, Linux network namespaces and small VM profiles
 are all separate checks. None of them is covered by the numbers above.
 
-## See also
+## See Also
 
 * [Benchmarks: how to repeat them](BENCHMARKING.md)
 * [Performance](PERFORMANCE.md)

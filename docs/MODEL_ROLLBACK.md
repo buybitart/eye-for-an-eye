@@ -1,10 +1,10 @@
-# Model rollback
+# Model Rollback
 
 Rollback restores the model that was active before the last promotion.
 
 Status: **Beta.**
 
-## Why this exists
+## Why This Exists
 
 Every model that is good enough to promote is still a model that can be wrong in
 a way nobody predicted. The question is not whether that will happen. It is how
@@ -13,7 +13,7 @@ long it takes to undo.
 Rollback is one command and one atomic write, so the answer is: seconds, and it
 does not depend on a backup existing.
 
-## How it works
+## How It Works
 
 Promotion never deletes anything. The previous active version stays on disk and
 is recorded as the rollback target. Rolling back swaps the two pointers.
@@ -26,7 +26,7 @@ Without `--yes` the command refuses and prints which version it would restore.
 
 Restart the service for the change to take effect.
 
-## What you can roll back to
+## What You Can Roll Back To
 
 The **previous active** version, and only that one.
 
@@ -37,7 +37,7 @@ versions at that moment is a decision you do not want to be making.
 To move to an older version than that, promote it by name instead. That is a
 normal promotion and goes through the normal gate.
 
-## When to roll back
+## When to Roll Back
 
 Roll back first, investigate afterwards. The signals worth acting on:
 
@@ -49,7 +49,7 @@ Roll back first, investigate afterwards. The signals worth acting on:
 None of these prove the new model is wrong. They are all good enough reasons to
 go back to the one you understand while you find out.
 
-## What rollback does not do
+## What Rollback Does Not Do
 
 * It does not unblock sources that are already blocked. Existing blocks expire on
   their own schedule; use the firewall commands if you need them gone now.
@@ -59,20 +59,20 @@ go back to the one you understand while you find out.
 * It does not disable the mathematical engine, which was never affected by the
   model change in the first place.
 
-## The audit trail
+## The Audit Trail
 
 Every rollback is written into the history in `registry.json` with its reason and
 the version it replaced. Months later this is what explains why an older model is
 running.
 
-## If there is nothing to roll back to
+## If There Is Nothing to Roll Back To
 
 The command refuses. A registry with one promotion in its history has no previous
 active version. This is normal on a first deployment.
 
 ## Related
 
-* [MODEL_PROMOTION.md](MODEL_PROMOTION.md) — how a version became active
-* [MODEL_REGISTRY.md](MODEL_REGISTRY.md) — how versions and roles are stored
-* [TROUBLESHOOTING.md](TROUBLESHOOTING.md) — wider operational problems
-* [DRIFT.md](DRIFT.md) — model health signals
+* [MODEL_PROMOTION.md](MODEL_PROMOTION.md): how a version became active
+* [MODEL_REGISTRY.md](MODEL_REGISTRY.md): how versions and roles are stored
+* [TROUBLESHOOTING.md](TROUBLESHOOTING.md): wider operational problems
+* [DRIFT.md](DRIFT.md): model health signals

@@ -1,7 +1,7 @@
 # P15.2 DECISION RELIABILITY CLOSURE REPORT
 
 **Date:** 2026-09-12
-**Cycle:** P15.2 — decision calibration, generalization and false-positive closure
+**Cycle:** P15.2, decision calibration, generalization and false-positive closure
 **Predecessor:** [P15_1_FINAL_REPORT.md](P15_1_FINAL_REPORT.md), unedited
 
 P15.1 ended with a defender that blocked nothing at all. P15.2 found two reasons
@@ -15,18 +15,18 @@ observed zero is not proven zero.
 
 **It does not generalise.** On the four scenario families no fitted component has
 ever seen, recall is **0.000**. Nothing false was blocked there either, so this
-is a limit on usefulness rather than on safety — but it is a limit, it is the
+is a limit on usefulness rather than on safety, but it is a limit, it is the
 thing §5 made a first-class problem, and no policy written before the test says
 it is acceptable.
 
 So Gate E passes and Gate C does not.
 
 **Baseline commit:** `0dc93ba` (P15.1 handover note)
-**Freeze commit:** `ef7aa3f` — the locked test had not been scored by anything in it
+**Freeze commit:** `ef7aa3f`. The locked test had not been scored by anything in it
 
 ---
 
-## Trusted dataset
+## Trusted Dataset
 
 Four corpora from one scenario matrix, separated by a seed salt that enters every
 scenario seed and the source-address shuffle. No scenario seed and no run index
@@ -45,7 +45,7 @@ before anything was fitted.
 
 **Sources (locked test):** benign **565**, malicious **144**, windows **7,568**
 before exclusions and **7,421** scored.
-**Scenario families:** 27 — 13 benign (6 of them hard negatives) and 14 malicious.
+**Scenario families:** 27, 13 benign (6 of them hard negatives) and 14 malicious.
 
 Excluded from the locked test: 4 rows whose feature vector appears under both
 labels, and **143** rows bit-identical to a window in a corpus something was
@@ -56,7 +56,7 @@ made the test easier in exactly the direction that flatters a memorising model.
 manifest was recorded, and it was not scored, inspected or replayed until after
 `ef7aa3f`.
 
-**Aggregation:** **max over a source's windows.** Not chosen for the metric —
+**Aggregation:** **max over a source's windows.** Not chosen for the metric,
 chosen because it is what the runtime does. Windows arrive one at a time, each is
 decided on its own, and a source is blocked the moment any window crosses. A mean
 would describe a system that waits for the whole session and then decides on the
@@ -65,14 +65,14 @@ Detection time is measured from the first window that crossed, so nothing later
 is consulted (§57).
 
 **Prevalence:** 0.203 malicious by source in this corpus. That is not a public
-website's prevalence and the report does not claim it transfers — see *Cost and
+website's prevalence and the report does not claim it transfers. See *Cost and
 prevalence* below.
 
 ---
 
 ## ROOT-CAUSE ANALYSIS
 
-### P15.1 units bug
+### P15.1 Units Bug
 
 The cost-sensitive cutoff is `C_FP / (C_FP + C_FN)`: the *probability* of
 maliciousness at which blocking becomes the cheaper error. The value compared
@@ -86,9 +86,9 @@ substitution unrepresentable: `eye_for_an_eye/decision/scores.py` gives every
 number on the path a type carrying its semantics, and `require_probability`
 accepts only `CalibratedProbability`. It refuses a bare `float` as firmly as it
 refuses a `RiskScore`, because the bug was never somebody passing the wrong
-wrapper — it was a float arriving from a fallback branch with nothing to mark it.
+wrapper. It was a float arriving from a fallback branch with nothing to mark it.
 
-### Decision-ranking degradation cause
+### Decision-ranking Degradation Cause
 
 Measured by ablation on the development corpus, one transformation at a time:
 
@@ -115,11 +115,11 @@ how many packets happened to be in the window.
 
 **Why that was wrong.** A Wilson correction bounds a proportion estimated from
 `n` observations. The proportion here is P(malicious | evidence); its sample size
-is the number of *calibration examples* supporting the estimate — thousands. The
-code used `observations`, the packets in the window — tens. The interval was two
+is the number of *calibration examples* supporting the estimate (thousands. The
+code used `observations`, the packets in the window) tens. The interval was two
 orders of magnitude too wide.
 
-### A second cause, which calibration alone would not have fixed
+### A Second Cause, Which Calibration Alone Would Not Have Fixed
 
 The shrinkage and the cost cutoffs were chosen independently and are
 arithmetically incompatible. At a probability of **exactly 1.0**:
@@ -131,16 +131,16 @@ arithmetically incompatible. At a probability of **exactly 1.0**:
 | 0.05 | 0.951 | admin, honeypot |
 | 0.15 | 0.853 | honeypot |
 | 0.30 | 0.706 | honeypot |
-| **0.60** — the value the gates permit | **0.412** | **nothing** |
+| **0.60**: the value the gates permit | **0.412** | **nothing** |
 
 A realistic mature window on this corpus, with calibration available, carries
-total uncertainty 0.115 and reaches **0.854** at p = 1.0 — below `public_website`
+total uncertainty 0.115 and reaches **0.854** at p = 1.0, below `public_website`
 at 0.9756 and `api` at 0.9877. No evidence, however strong, could clear both the
 uncertainty gate and the cost cutoff. This is written down separately from the
 units error because folding the two together would make the second invisible.
 
 **The repair.** A validated calibrator carries its own Wilson lower bound over
-its own fitting sample — `conservative_knots`, equal-count score bands, made
+its own fitting sample: `conservative_knots`, equal-count score bands, made
 non-decreasing by a running maximum. The cost comparison uses that bound. The
 legacy shrinkage still governs every uncalibrated decision, and an uncalibrated
 decision cannot block at all because `calibrated_estimate` gates above the
@@ -148,7 +148,7 @@ arithmetic. Nothing was weakened: a better-founded bound was added to a path tha
 previously had none. Every record carries both numbers and a `bound_source`
 field.
 
-### Classifier generalization problem
+### Classifier Generalization Problem
 
 P15.1 reported the shipped classifier at ROC-AUC **0.517** on withheld scenario
 families and read it as "the classifier does not generalise at all". That number
@@ -157,8 +157,8 @@ evaluated on `synthetic-behavior-v3`, whose 30 scenario names (`backup_client`,
 `cdn_origin_fetch`, `reverse_proxy`, `software_updater`, …) do not appear in
 today's generator registry at all.
 
-Scored against the calibration corpus — an entirely different corpus built by a
-later generator — the same artifact reaches **0.914 per source** (0.833 per
+Scored against the calibration corpus (an entirely different corpus built by a
+later generator) the same artifact reaches **0.914 per source** (0.833 per
 window). Both numbers are true. P15.1 quoted only the discouraging one, and this
 report corrects that.
 
@@ -167,30 +167,30 @@ shipped model. Refitting the same family on the development corpus:
 
 | Candidate | seen window / source | **unseen window / source** |
 | --- | --- | --- |
-| A — logistic regression, refit (C = 0.1, grouped CV 0.894) | 0.992 / 0.996 | **0.098 / 0.480** |
-| A2 — gradient boosting, bounded | 0.998 / 1.000 | **0.323 / 0.521** |
-| B — `MathRisk`, deterministic | 0.774 / 0.798 | 0.748 / 0.926 |
-| C — `MathRisk` + classifier fusion | 0.879 / 0.918 | 0.907 / 1.000 |
+| A: logistic regression, refit (C = 0.1, grouped CV 0.894) | 0.992 / 0.996 | **0.098 / 0.480** |
+| A2: gradient boosting, bounded | 0.998 / 1.000 | **0.323 / 0.521** |
+| B: `MathRisk`, deterministic | 0.774 / 0.798 | 0.748 / 0.926 |
+| C: `MathRisk` + classifier fusion | 0.879 / 0.918 | 0.907 / 1.000 |
 | shipped classifier | 0.817 / 0.898 | 0.912 / 0.999 |
-| reference — P15.1 decision variable | 0.699 / 0.845 | **0.304 / 0.424** |
+| reference: P15.1 decision variable | 0.699 / 0.845 | **0.304 / 0.424** |
 
-Candidate A scores **0.098** on unseen families — materially *anti-correlated*,
+Candidate A scores **0.098** on unseen families: materially *anti-correlated*,
 ranking unseen malicious below unseen benign. A2 has the same disease in a
 different model family, which answers §27's question: it is the data, not the
 model family. Retraining on this corpus produces scenario memorisation, and the
 evidence for that is strong enough that no retrained model was promoted.
 
 Note also the reference row: the P15.1 decision variable itself scores 0.424 per
-source on unseen families — worse than chance.
+source on unseen families, worse than chance.
 
-### Leakage found
+### Leakage Found
 
 **YES**, and it was excluded rather than tolerated.
 
 * 143 locked-test rows were bit-identical to a window in a corpus something was
   fitted on. Dropped.
 * 4 locked-test rows carry a feature vector that appears under both labels.
-  Dropped — ground truth does not exist at that resolution.
+  Dropped: ground truth does not exist at that resolution.
 * Group separation verified: no source group appears in two splits of any
   corpus, and no scenario seed or run index is shared between corpora.
 * Provenance exclusion re-verified: the model feature list is the production
@@ -213,11 +213,11 @@ level, all families:
 | `MathRisk` (B) | 0.821 | 0.819 |
 | shipped classifier | 0.914 | 0.840 |
 | current old fusion (P15.1 decision variable) | 0.769 | 0.691 |
-| A — logistic refit | 0.919 | 0.885 |
-| A2 — gradient boosting | 0.934 | 0.819 |
-| C — `MathRisk` + classifier | 0.928 | 0.855 |
+| A: logistic refit | 0.919 | 0.885 |
+| A2: gradient boosting | 0.934 | 0.819 |
+| C: `MathRisk` + classifier | 0.928 | 0.855 |
 
-**Selected architecture: B — calibrated `MathRisk`, isotonic.**
+**Selected architecture: B, calibrated `MathRisk`, isotonic.**
 
 **Why**, against §64's criteria rather than by best PR-AUC:
 
@@ -243,7 +243,7 @@ level, all families:
 
 §71 and §72 anticipate this exactly: no supervised candidate generalises well
 enough to be forced into production, a calibrated deterministic model does the
-job, and ML stays auxiliary. `MathRisk` itself is unchanged — §17 — and
+job, and ML stays auxiliary. `MathRisk` itself is unchanged (§17), and
 `P(malicious | MathRisk)` is a different value with a different name.
 
 The cost is recall: the classifier route reached 0.303 on the development
@@ -265,7 +265,7 @@ of 0.9756, refusing confident detections by a hair of interval width. The answer
 to an interval that is too wide is more examples, not a lower cutoff. The locked
 test was not consulted before that decision.
 **Quality holdout:** the development corpus's validation and test buckets, 3,432
-windows — fitted on by nothing.
+windows, fitted on by nothing.
 
 | | Brier (holdout) | ECE (holdout) | Brier (in-fold) | ECE (in-fold) |
 | --- | --- | --- | --- | --- |
@@ -304,27 +304,27 @@ Locked test, source level:
 | **seen families** | 414 | 120 | **0.183** | 0.0 | 1.000 |
 | **unseen families** | 151 | 24 | **0.000** | 0.0 | undefined |
 
-**Worst positive scenario:** `credential-low-rate` (unseen) — 6 sources, 0
+**Worst positive scenario:** `credential-low-rate` (unseen), 6 sources, 0
 blocked. Its maximum calibrated probability is **1.000** and its maximum
 conservative bound is **0.9724**, against a cutoff of 0.9756. The system ranks it
 correctly and the interval refuses it by 0.0032.
 
-**Worst benign scenario:** `hard-negative-monitoring` — 26 sources, 946 windows,
+**Worst benign scenario:** `hard-negative-monitoring`, 26 sources, 946 windows,
 0 blocked, maximum bound 0.107. There is no benign family under strain anywhere.
 
 **Hard negatives** (six families, 229 sources, all benign, all scored): 0 blocked.
 The two that come closest are `hard-negative-admin` (unseen, 105 sources) and
-`hard-negative-deception`, both at a maximum bound of **0.9443** — below the
+`hard-negative-deception`, both at a maximum bound of **0.9443**, below the
 cutoff with real margin, on the unseen side included.
 
 **Hard positives:** `deception-enumeration` 8/8, `recon-multi-stage` 8/8,
-`credential-automation` 6/6 — all at 100% of sources. `scan-slow` 0/8,
+`credential-automation` 6/6; all at 100% of sources. `scan-slow` 0/8,
 `credential-low-rate` 0/6, `scan-burst` 0/10, `probe-repeated` 0/8,
 `probe-truncated` 0/8, `scan-horizontal` 0/12.
 
 `scan-horizontal`, `probe-repeated` and `probe-truncated` top out at a bound of
 0.102–0.143: `MathRisk` genuinely cannot see them. The rest reach 0.9724 or
-0.9949 and are refused by a gate, not by the probability — see below.
+0.9949 and are refused by a gate, not by the probability. See below.
 
 ---
 
@@ -356,7 +356,7 @@ Locked test, `dataset-test-v1`, scored once.
 0 × C_FP. The realised false-allow cost is 122 × C_FN = 122 units against a
 theoretical floor of 0 and an allow-everything baseline of 144.
 
-**Bootstrap intervals** — 2,000 resamples, resampling unit **source group**, never
+**Bootstrap intervals**: 2,000 resamples, resampling unit **source group**, never
 windows (§47), because forty windows of one scanner are one piece of evidence:
 
 | | 2.5% | 97.5% |
@@ -377,7 +377,7 @@ after a median of **2 windows** and **29.3 seconds** of observation (min 1 windo
 used. **0 benign sources were blocked at any point**, which is also §58's answer:
 long-running legitimate automation did not accumulate its way into a block.
 
-**NON_DEGENERATE_DECISION_GATE: PASS** — 22 blocks, 22 correct, 0 false, recall
+**NON_DEGENERATE_DECISION_GATE: PASS**, 22 blocks, 22 correct, 0 false, recall
 0.153. Neither trivial system could have reached this: allow-all fails on
 `true_blocks == 0` before the false-block ceiling is consulted, and block-all
 fails on `false_positive_rate >= 1`.
@@ -421,7 +421,7 @@ feeds it existed.
 
 **Decision margin:** unchanged. Its effect is visible in the gate table below as
 `MARGIN_NOT_MET`, which appears on no window that cleared the cutoff on the
-locked test — the margin is not what is limiting recall.
+locked test. The margin is not what is limiting recall.
 
 **Gate effects (§51, §52)**, counted over the 392 windows whose bound cleared the
 cutoff, which is the only population a gate can be said to have stopped:
@@ -441,7 +441,7 @@ holds independently of this corpus: "the maths agreed with itself" is not three
 independent witnesses, and this corpus is not the Internet.
 
 `scan-connect`, `scan-randomized` and `scan-sequential` all reach a bound of
-0.9949 — above the cutoff — and are blocked on no source. The diversity gate is
+0.9949 (above the cutoff), and are blocked on no source. The diversity gate is
 why.
 
 **DataQuality-gate effect:** no window that cleared the cutoff was refused for
@@ -453,7 +453,7 @@ distribution. 94.8% of development windows scored `IN_DISTRIBUTION` and the rest
 model authority; it never raises malicious probability (§22), and a test asserts
 that higher OOD cannot make blocking easier.
 
-**Prevalence sensitivity (§38, §39)** — analysis only, no label altered, no
+**Prevalence sensitivity (§38, §39)**: analysis only, no label altered, no
 artifact refitted. Applying a prior correction on the odds scale to the holdout:
 
 | assumed prevalence | median probability | windows ≥ 0.9756 |
@@ -467,7 +467,7 @@ The top of the range survives a hundred-fold reduction in assumed prevalence:
 125 windows still clear the `public_website` cutoff at 0.2% prevalence. The
 median collapses, as it should. **The calibrated probability is calibrated for
 the prevalence it was fitted at and this report does not claim it is universally
-valid** — but the detections it produces are not an artifact of a convenient base
+valid**, but the detections it produces are not an artifact of a convenient base
 rate.
 
 ---
@@ -476,11 +476,11 @@ rate.
 
 **Active model (probability authority):** none. `MathRiskEngine`, `math-risk-v1`,
 deterministic, no learned weights.
-**Calibrator:** `models/mathrisk-cal-v1-isotonic.json` — isotonic, source
+**Calibrator:** `models/mathrisk-cal-v1-isotonic.json`, isotonic, source
 `math_risk`, `model_version` empty (model-independent by construction), 15,097
 samples / 3,580 positive, 1,434 knots, 44 conservative knots, 60,113 bytes.
 **Hash:** `9b18fee8b6245617278feb305d083d29bd0f48e74adf741a67fd53b7d6fcf2a6`
-**Feature schema:** 1 — 18 behaviour features and 18 availability masks.
+**Feature schema:** 1, 18 behaviour features and 18 availability masks.
 **Distribution reference:** `models/risk-logreg-v1-distribution.json`, used for
 the OOD gate only; it cannot raise a probability.
 **Model manifest:** `risk-logreg-v1` remains the shipped classifier, in shadow.
@@ -488,7 +488,7 @@ Its manifest is unchanged: `quality_gate_status: PROVISIONAL`,
 `quality_gate_passed: false`, `recommended_mode: shadow`,
 `recommended_shadow_only: true`, `threshold_authority: DecisionFusion and
 PolicyGuard`.
-**ONNX parity:** `NOT_RUN` for the classifier — 8 tests skip because the corpus
+**ONNX parity:** `NOT_RUN` for the classifier, 8 tests skip because the corpus
 they compare against is not committed. Unchanged since P15, and it no longer
 gates the decision, because the classifier holds no probability authority.
 **Quality gate (classifier): FAIL**, and it was not promoted.
@@ -507,14 +507,14 @@ Re-run as root against a real kernel, `nft` v1.0.9, after every decision-layer
 change.
 
 **Real-kernel enforcement tests: 61 passed**, plus 48 security-invariant tests in
-the same run — **109 passed, 51,587 subtests, 0 failed**. `nft list ruleset` is
+the same run: **109 passed, 51,587 subtests, 0 failed**. `nft list ruleset` is
 empty afterwards; no veth or namespace left behind.
 
-**veth real connection test: PASS** — a real TCP connection completes, stops when
+**veth real connection test: PASS**. A real TCP connection completes, stops when
 the block goes on, and completes again when it comes off.
-**TTL: PASS** — 12-hour ceiling unchanged, kernel timeout on every element.
+**TTL: PASS**, 12-hour ceiling unchanged, kernel timeout on every element.
 **Management safety: PASS.**
-**Proxy/CDN safety: PASS** — `HOST_NETWORK` remains the only scope, and a record
+**Proxy/CDN safety: PASS**, `HOST_NETWORK` remains the only scope, and a record
 that is not network-enforceable still cannot produce a request.
 **Mass-block breaker: PASS.**
 
@@ -523,7 +523,7 @@ No enforcement code was redesigned. §75 and §76 satisfied.
 One measurement change worth naming: the replay now advances the authority's
 clock by 60 s per window. The block budget is a rate limit, and a replay that
 puts thousands of windows through it in a few seconds of wall clock spends it on
-the tenth block — `BLOCK_BUDGET_EXHAUSTED` appeared on 745 of 863 malicious
+the tenth block, `BLOCK_BUDGET_EXHAUSTED` appeared on 745 of 863 malicious
 windows in the development holdout. That measured the harness rather than the
 system. The budget is not disabled, and it appears in the gate table when it
 binds.
@@ -534,22 +534,22 @@ binds.
 
 | Gate | Verdict | Evidence |
 | --- | --- | --- |
-| **A — Module graduation** | **PASS** | the new modules classified: `decision/scores` and `decision/calibration` are SAFE_TO_PRODUCTIONIZE (they hold no privilege and take no action), `training/` remains offline measurement. The dangerous class is still empty and the enforcement classifications are untouched |
-| **B — Data quality** | **PASS** | four group-aware corpora, no source in two splits, 143 duplicate rows excluded from the locked test, provenance exclusion re-verified, the self-label loop still structurally impossible. 19 replay-harness tests plus 63 new ones |
-| **C — ML validity** | **FAIL** | probability semantics correct, calibration valid, parity exact, no leakage, quality gate applied — and **unseen-scenario recall is 0.000**. §70's last condition is that hard scenario results are acceptable *under explicit policy*, and no policy written before the test says zero detection on novel behaviour is acceptable. Writing one now is what §66 and §74 forbid |
-| **D — Cost decision** | **PASS** | the cutoff is still derived from an explicit per-profile cost policy, never 0.5, with a content digest in every record — and it is now applied to the quantity it was always defined over |
-| **E — False-positive safety** | **PASS** | §73's five conditions, all met: block precision **measured** at 1.000; false blocks per 1000 benign **measured** at 0.0 with a rule-of-three upper bound of 5.31; detection non-degenerate (22 true blocks, `NON_DEGENERATE`); hard negatives tested (6 families, 229 sources, 0 blocked); uncertainty reported by source-group bootstrap |
-| **F — Site / proxy safety** | **PASS** | unchanged and re-asserted. A per-profile breakdown could not be produced — `site_group` is `None` throughout the corpora — and that is stated rather than approximated |
-| **G — Enforcement** | **PASS** | 109 real-kernel tests, ruleset clean, no redesign |
-| **H — Autonomous recovery** | **PASS** | unchanged; degrade, safe mode, cooldown, health gate and resume all still pass |
-| **I — Resource safety** | **PASS** | the calibrator adds a 60 KB read-only table and no state at all: p95 0.009 ms, peak RSS 40.3 MiB for 3,000 windows. Nothing unbounded was introduced (§118) |
-| **J — Repository / documentation** | **PASS** | five science pages updated with a precise account of both root causes; a P15-era doc test that pinned a caveat which had stopped applying to the whole page was rewritten to pin both halves rather than the page reverted |
+| **A, Module graduation** | **PASS** | the new modules classified: `decision/scores` and `decision/calibration` are SAFE_TO_PRODUCTIONIZE (they hold no privilege and take no action), `training/` remains offline measurement. The dangerous class is still empty and the enforcement classifications are untouched |
+| **B: Data quality** | **PASS** | four group-aware corpora, no source in two splits, 143 duplicate rows excluded from the locked test, provenance exclusion re-verified, the self-label loop still structurally impossible. 19 replay-harness tests plus 63 new ones |
+| **C (ML validity** | **FAIL** | probability semantics correct, calibration valid, parity exact, no leakage, quality gate applied), and **unseen-scenario recall is 0.000**. §70's last condition is that hard scenario results are acceptable *under explicit policy*, and no policy written before the test says zero detection on novel behaviour is acceptable. Writing one now is what §66 and §74 forbid |
+| **D: Cost decision** | **PASS** | the cutoff is still derived from an explicit per-profile cost policy, never 0.5, with a content digest in every record; and it is now applied to the quantity it was always defined over |
+| **E, False-positive safety** | **PASS** | §73's five conditions, all met: block precision **measured** at 1.000; false blocks per 1000 benign **measured** at 0.0 with a rule-of-three upper bound of 5.31; detection non-degenerate (22 true blocks, `NON_DEGENERATE`); hard negatives tested (6 families, 229 sources, 0 blocked); uncertainty reported by source-group bootstrap |
+| **F: Site / proxy safety** | **PASS** | unchanged and re-asserted. A per-profile breakdown could not be produced, `site_group` is `None` throughout the corpora, and that is stated rather than approximated |
+| **G: Enforcement** | **PASS** | 109 real-kernel tests, ruleset clean, no redesign |
+| **H: Autonomous recovery** | **PASS** | unchanged; degrade, safe mode, cooldown, health gate and resume all still pass |
+| **I, Resource safety** | **PASS** | the calibrator adds a 60 KB read-only table and no state at all: p95 0.009 ms, peak RSS 40.3 MiB for 3,000 windows. Nothing unbounded was introduced (§118) |
+| **J: Repository / documentation** | **PASS** | five science pages updated with a precise account of both root causes; a P15-era doc test that pinned a caveat which had stopped applying to the whole page was rewritten to pin both halves rather than the page reverted |
 
 ### AUTONOMOUS_READY
 
 **NO.** §121 permits no exceptions, and Gate C fails.
 
-### Final status
+### Final Status
 
 **AUTONOMOUS_LAB.**
 
@@ -559,7 +559,7 @@ Not `AUTONOMOUS_PRODUCTION_CANDIDATE`: Gate C fails.
 The status is unchanged from P15.1 and the system underneath it is not. P15.1's
 defender could not block anything for any reason. This one blocks 22 of 144
 malicious sources with perfect precision, zero false blocks on 565 benign
-sources, and a median detection time of 29 seconds — and it cannot yet be shown
+sources, and a median detection time of 29 seconds, and it cannot yet be shown
 to do anything at all about behaviour it has not seen before.
 
 ### P16_PROD_ASSEMBLY_READY
@@ -568,11 +568,11 @@ to do anything at all about behaviour it has not seen before.
 
 ---
 
-## Remaining blockers
+## Remaining Blockers
 
 1. **Unseen-scenario recall is 0.000.** The blocker. Three of the four withheld
-   families rank at the top of the range — `credential-low-rate` reaches a
-   calibrated probability of 1.000 — and are refused by an interval 0.0032 too
+   families rank at the top of the range (`credential-low-rate` reaches a
+   calibrated probability of 1.000), and are refused by an interval 0.0032 too
    wide, or by the diversity gate. The fix is more calibration evidence in the
    upper bands and more *behavioural* evidence in those families, not a lower
    cutoff.
@@ -580,7 +580,7 @@ to do anything at all about behaviour it has not seen before.
    prevented 0 false positives** on this corpus. It was kept, correctly. Whether
    requiring two behavioural families is the right bar is a question for
    deployment evidence, and this corpus cannot answer it.
-3. **`MathRisk` cannot see three malicious families at all** — `scan-horizontal`,
+3. **`MathRisk` cannot see three malicious families at all**: `scan-horizontal`,
    `probe-repeated`, `probe-truncated` top out at a bound of 0.102–0.143. A
    deterministic engine has a ceiling, and this is it.
 4. **Per-site and per-profile results could not be produced.** `site_group` is
@@ -608,15 +608,15 @@ to do anything at all about behaviour it has not seen before.
 Plus, as root against a real kernel: **109 passed, 0 failed, 51,587 subtests**
 (`test_p15_1_enforcement.py` + `test_p15_invariants.py`).
 
-New in P15.2: `tests/test_p15_2_scores.py` (31 tests — the units contract, the
+New in P15.2: `tests/test_p15_2_scores.py` (31 tests. The units contract, the
 artifact loader, monotonicity, the Wilson sample size, numeric safety) and
-`tests/test_p15_2_decision.py` (32 tests — the calibrated bound, every restraint,
+`tests/test_p15_2_decision.py` (32 tests: the calibrated bound, every restraint,
 the cost cutoff, the non-degeneracy gate, and the numbers that were not allowed
 to move).
 
 One of those tests found a real defect before it shipped: `min(1.0, nan)` returns
 1.0 in Python, so a NaN score was being clamped into total certainty of
-maliciousness — the worst possible value. The calibrator now refuses a non-finite
+maliciousness. The worst possible value. The calibrator now refuses a non-finite
 score, and `calibrate()` turns the refusal into `CALIBRATION_UNAVAILABLE` rather
 than an exception.
 
@@ -633,7 +633,7 @@ than an exception.
 | decision authority | 0.2214 ms | 0.3191 ms | 0.4421 ms | 0.5696 ms |
 
 **decision p95:** 0.319 ms
-**calibration p95:** 0.009 ms — about half of `MathRisk` and 3% of the decision
+**calibration p95:** 0.009 ms, about half of `MathRisk` and 3% of the decision
 itself, which is what §117 asks calibration to be
 **CPU:** 1.19 s user+sys for 3,000 windows
 **RSS:** 40.3 MiB peak
@@ -702,9 +702,9 @@ The listing was taken after this report was committed.
  29 files changed, 16870 insertions(+), 33 deletions(-)
 ```
 
-### The exact evaluation commands
+### The Exact Evaluation Commands
 
-Corpora — the recipe is committed, the traffic is not:
+Corpora. The recipe is committed, the traffic is not:
 
 ```
 python -m dataset generate --matrix dataset/scenarios/matrix-eval-v1.toml \
@@ -747,11 +747,11 @@ Raw output: `reports/P15_2_LOCKED_TEST.json`,
 
 ---
 
-## See also
+## See Also
 
-- [P15_1_FINAL_REPORT.md](P15_1_FINAL_REPORT.md) — unedited
-- [P15_2_LOCKED_TEST.json](P15_2_LOCKED_TEST.json) — every number above
-- [P15_2_EVIDENCE_FREEZE.json](P15_2_EVIDENCE_FREEZE.json) — the corpora as frozen
-- [../docs/DECISION_UNCERTAINTY.md](../docs/DECISION_UNCERTAINTY.md) — the two bounds
-- [../docs/COST_SENSITIVE_POLICY.md](../docs/COST_SENSITIVE_POLICY.md) — the cutoff, and twice not being given a probability
-- [../docs/MODEL_GOVERNANCE.md](../docs/MODEL_GOVERNANCE.md) — a package includes its calibrator
+- [P15_1_FINAL_REPORT.md](P15_1_FINAL_REPORT.md): unedited
+- [P15_2_LOCKED_TEST.json](P15_2_LOCKED_TEST.json): every number above
+- [P15_2_EVIDENCE_FREEZE.json](P15_2_EVIDENCE_FREEZE.json): the corpora as frozen
+- [../docs/DECISION_UNCERTAINTY.md](../docs/DECISION_UNCERTAINTY.md): the two bounds
+- [../docs/COST_SENSITIVE_POLICY.md](../docs/COST_SENSITIVE_POLICY.md): the cutoff, and twice not being given a probability
+- [../docs/MODEL_GOVERNANCE.md](../docs/MODEL_GOVERNANCE.md): a package includes its calibrator

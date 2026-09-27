@@ -1,4 +1,4 @@
-# Bounded protocol emulation
+# Bounded Protocol Emulation
 
 "Protocol emulation" means pretending to be a real network service, like a
 web server or an FTP server, without really being one. "Bounded" means every
@@ -49,7 +49,7 @@ stored.
 The framing follows [RFC 9112](https://www.rfc-editor.org/rfc/rfc9112.html).
 The method, `HEAD`, and 204 behavior follow
 [RFC 9110](https://www.rfc-editor.org/rfc/rfc9110.html). This is a limited
-decoy (a fake target meant to attract and study attackers) — it is not a
+decoy (a fake target meant to attract and study attackers). It is not a
 full implementation of the HTTP standard.
 
 ## FTP
@@ -62,14 +62,14 @@ closes the connection.
 The username is immediately turned into either a redacted marker or an
 HMAC value (a way to turn data into a short code using a secret key, so the
 original value cannot be recovered from it). The password sent with `PASS`
-is never stored. Login always fails — there is no logged-in state at all.
+is never stored. Login always fails: there is no logged-in state at all.
 
 The line parser requires CRLF line endings (the standard network line
 ending), printable ASCII text, and at most 512 bytes per line. It correctly
 handles TCP data arriving in small pieces, and several commands arriving in
 one chunk, as long as the total stays within the message budget.
 
-Unknown commands — including `PORT`, `PASV`, `SITE`, `RETR`, and `STOR` —
+Unknown commands (including `PORT`, `PASV`, `SITE`, `RETR`, and `STOR`)
 all get a fixed rejection reply. No filesystem access and no data
 connection are ever created. `PWD` never lies about a successful login, and
 `FEAT` never advertises a file-transfer feature that does not exist.
@@ -103,19 +103,19 @@ software name string, and the binary handshake data, are never stored. The
 identification line's framing and length rules follow [RFC 4253, section
 4.2](https://datatracker.ietf.org/doc/html/rfc4253#section-4.2).
 
-## Protocols left out on purpose
+## Protocols Left Out on Purpose
 
 SMTP (email), a Redis-like protocol, and MySQL are not implemented. Phase
 P3 is limited to the three finite handlers described above. There is no
 SMTP relay, no mail or MX record lookup, no Redis storage, scripting, or
 replication, and no MySQL SQL or plugin support. UDP-based decoy profiles
-are also absent — an empty UDP datagram (a single UDP packet) never
+are also absent. An empty UDP datagram (a single UDP packet) never
 triggers a response.
 
 Adding any new protocol to this catalogue needs its own separate protocol
 and safety review, plus its own bounded tests.
 
-## See also
+## See Also
 
 * [Deception](DECEPTION.md)
 * [Deception safety](DECEPTION_SAFETY.md)

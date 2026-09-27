@@ -1,9 +1,9 @@
-# Security policy
+# Security Policy
 
 Eye for an Eye is **defensive** software. It watches traffic and can, in a test
 lab, block a source for a short time. It never attacks anyone.
 
-## How to report a security problem
+## How to Report a Security Problem
 
 **Use GitHub Private Vulnerability Reporting.** On the repository page, open the
 **Security** tab and choose **Report a vulnerability**. The report stays visible
@@ -19,7 +19,7 @@ Nothing here invents an email address, a PGP key or a hosted security form. The
 channel is a GitHub feature, and it exists exactly as long as the repository
 does.
 
-**Status: `OWNER_ACTION_REQUIRED` — not enabled yet.** Private Vulnerability
+**Status: `OWNER_ACTION_REQUIRED`. Not enabled yet.** Private Vulnerability
 Reporting is a per-repository setting, enabled by the owner under *Settings → Code
 security and analysis → Private vulnerability reporting*. Until it is switched on,
 this section describes a workflow rather than an available one, and saying
@@ -36,7 +36,7 @@ Until that setting is on:
 
 This repository does not promise a response time.
 
-## What to put in a report
+## What to Put in a Report
 
 * The version and the schema versions.
 * A sanitised way to reproduce the problem.
@@ -46,7 +46,7 @@ This repository does not promise a response time.
 Use a throw-away offline or loopback lab. **Never scan a third party to produce
 a report.**
 
-## What is in scope
+## What Is in Scope
 
 * Packet and protocol parsing.
 * Resource limits and denial-of-service resistance.
@@ -64,7 +64,7 @@ releases.
 See [Security review scope](docs/SECURITY_REVIEW_SCOPE.md) for the detailed map
 an auditor would use.
 
-## Rules for testing this software
+## Rules for Testing This Software
 
 * Test only against your own machines.
 * Use loopback, an isolated Docker network or a Linux network namespace.
@@ -75,7 +75,7 @@ an auditor would use.
 The dataset tools enforce this in code: a target that is not loopback or an
 explicitly listed lab address is rejected.
 
-## Security work done so far
+## Security Work Done So Far
 
 * Internal security review of the source tree, by the project author.
 * Static analysis with Bandit. Reviewed findings are pinned by exact code hash
@@ -86,7 +86,7 @@ explicitly listed lab address is rejected.
 **There has been no external independent security audit.** Do not read the list
 above as one.
 
-## Known security boundaries
+## Known Security Boundaries
 
 * The capture helper can see credentials in traffic. It holds `CAP_NET_RAW` and
   nothing else, and it never opens the database.
@@ -96,7 +96,7 @@ above as one.
 * The API and metrics endpoints are local only by default. Putting them on a
   public address is your decision and needs authentication and TLS.
 
-## See also
+## See Also
 
 * [Threat model](docs/THREAT_MODEL.md)
 * [Security deployment boundary](docs/SECURITY_DEPLOYMENT.md)

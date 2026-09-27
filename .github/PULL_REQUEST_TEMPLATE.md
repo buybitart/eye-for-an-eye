@@ -1,4 +1,4 @@
-## What this changes
+## What This Changes
 
 <!-- What behaviour differs after this, and why. -->
 

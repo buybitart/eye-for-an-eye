@@ -1,4 +1,4 @@
-# Autonomous safety invariants
+# Autonomous Safety Invariants
 
 Fourteen properties that must stay true, and where each one is enforced.
 
@@ -6,7 +6,7 @@ These are not features. They are the things somebody breaks later by adding one
 convenient function, so each is written as a test that fails the build rather
 than the deployment. They live in `tests/test_p15_invariants.py`.
 
-## The fourteen
+## The Fourteen
 
 | # | Invariant | Enforced by |
 | --- | --- | --- |
@@ -25,7 +25,7 @@ than the deployment. They live in `tests/test_p15_invariants.py`.
 | 13 | Unbounded remote state is impossible | every window, table and list is capped by construction; the caps are asserted by filling them |
 | 14 | Hack-back cannot be enabled in production | there is no retaliation code to enable, and no setting whose name could turn one on |
 
-## Invariant 14 deserves a paragraph
+## Invariant 14 Deserves a Paragraph
 
 It is asserted structurally rather than behaviourally, and that is the honest
 form. There is no hack-back, no retaliation, no scanner, no exploit code, no
@@ -37,11 +37,11 @@ That is weaker than a runtime refusal and stronger than a policy document.
 **You cannot switch off a capability that was never written**, and a class with
 no members is the correct outcome for a defensive project.
 
-The one module that ever reaches outward — `active_probes` — is off by default,
+The one module that ever reaches outward (`active_probes`) is off by default,
 requires an explicit CIDR allowlist, is refused outside a lab profile, and is
 refused outright when a PCAP is being replayed.
 
-## Adaptive parameters versus safety limits
+## Adaptive Parameters Versus Safety Limits
 
 The system adapts within bounded ranges. It does not adapt the bounds.
 
@@ -59,7 +59,7 @@ ceilings live in operator configuration; no code path from `learning/`,
 `training/` or `governance/` writes to any of them. A component that could adjust
 the price of its own mistakes would be grading its own work.
 
-## No LLM, and no reinforcement learning, in the decision path
+## No LLM, and No Reinforcement Learning, in the Decision Path
 
 **No LLM decides ALLOW or BLOCK.** Network data is never sent to one. An LLM may
 help a person write documentation or read a report offline; it has zero
@@ -71,9 +71,9 @@ Epsilon-greedy, Thompson sampling, UCB, Q-learning and deep RL all deliberately
 balance exploration against exploitation. Blocking a real visitor is not a safe
 exploration action, and `TEMP_BLOCK` is never an arm. If such a thing is ever
 built here it stays lab-only against an offline simulator, over a non-destructive
-action set — observe, watch, challenge — and it never reaches a firewall.
+action set (observe, watch, challenge), and it never reaches a firewall.
 
-## Self-generated labels
+## Self-generated Labels
 
 Still prohibited, all of them:
 
@@ -90,12 +90,12 @@ A strong heuristic is still a heuristic. It does not become ground truth by bein
 good.
 
 The runtime operates autonomously without new labels. Unlabelled production data
-feeds drift, OOD, anomaly baselines, distribution monitoring and feature health —
+feeds drift, OOD, anomaly baselines, distribution monitoring and feature health,
 none of which need a label. Supervised retraining needs trustworthy labels, and
 if none arrive for six months the system keeps running on the model it has. Model
 age alone is not a reason to replace anything.
 
-## See also
+## See Also
 
 - [AUTONOMOUS_DECISION.md](AUTONOMOUS_DECISION.md)
 - [AUTONOMOUS_FAILURE_RECOVERY.md](AUTONOMOUS_FAILURE_RECOVERY.md)

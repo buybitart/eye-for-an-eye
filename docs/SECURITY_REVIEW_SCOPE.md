@@ -1,4 +1,4 @@
-# Security review scope
+# Security Review Scope
 
 This page is written for an independent security auditor. It says what the
 system is, where the trust boundaries are, and what to attack first.
@@ -20,7 +20,7 @@ Measured on 2026-09-11.
 | `scripts/` | about 400 |
 | `tests/` | about 17 400 lines, 1 552 tests (1 522 pass, 30 skip) |
 
-The service roughly tripled between P9 and P12 — the web sensor, the challenge
+The service roughly tripled between P9 and P12. The web sensor, the challenge
 and multi-site profiles are most of the growth, and all three are attacker-facing
 in a way the earlier code was not. Priorities 11, 12 and 13 below are new for
 that reason, and an auditor with limited time should read them before some of
@@ -34,7 +34,7 @@ in the source archive, or the isolated-Linux namespace lab, which needs
 user:** as root, the artifact reader correctly refuses model files owned by
 another user and several P7 tests fail for that reason alone.
 
-## Trust boundaries
+## Trust Boundaries
 
 ```text
 [ hostile network ]
@@ -52,7 +52,7 @@ another user and several P7 tests fail for that reason alone.
 [ analysis process ] -- redaction --> [ SQLite / JSONL / read-only API ]  <-- boundary 5
 ```
 
-## Priority 1: the packet parsing path
+## Priority 1: The Packet Parsing Path
 
 The highest-value target. Attacker-controlled bytes reach parsing code.
 
@@ -67,7 +67,7 @@ proportional to attacker input.
 
 Note: the helper runs with `CAP_NET_RAW` and can see credentials in traffic.
 
-## Priority 2: the IPC boundary
+## Priority 2: The IPC Boundary
 
 * Peer-UID checking on the Unix socket.
 * Length and version validation of each message.
@@ -75,7 +75,7 @@ Note: the helper runs with `CAP_NET_RAW` and can see credentials in traffic.
   UID.
 * Behaviour when the socket path is pre-created or symlinked.
 
-## Priority 3: the enforcement path
+## Priority 3: The Enforcement Path
 
 * `eye_for_an_eye/security/firewall.py`, `temporary_blocks.py`
 * `eye_for_an_eye/decision/policy.py` (`PolicyGuard.protected`)
@@ -89,7 +89,7 @@ process dies.
 Confirm the negative: no shell, no string interpolation of network data into a
 command, no global flush, no modification of a table the process does not own.
 
-## Priority 4: the model boundary
+## Priority 4: The Model Boundary
 
 * `eye_for_an_eye/decision/onnx_model.py` (`read_artifacts`, `_read`)
 * `eye_for_an_eye/decision/worker.py`
@@ -99,7 +99,7 @@ and the load; symlink and network-path handling; the size cap; what a hostile
 ONNX file can do to ONNX Runtime; process isolation and timeout enforcement;
 whether a model result can ever bypass `minimum_math_risk`.
 
-## Priority 5: redaction
+## Priority 5: Redaction
 
 * `eye_for_an_eye/security/redaction.py`
 
@@ -109,7 +109,7 @@ a token or an `Authorization` header into the database or a log line.
 
 Check the regular expressions for catastrophic backtracking on attacker input.
 
-## Priority 6: the read-only API
+## Priority 6: The Read-only API
 
 * `eye_for_an_eye/api/server.py`, `api/models.py`
 * `eye_for_an_eye/storage/reader.py`
@@ -118,7 +118,7 @@ Look for: authentication bypass; Host and Origin handling behind a proxy; query
 budget bypass; cursor handling and the 300-second redaction cursor; whether SQL
 or paths can leak to a client; resource use of a hostile query.
 
-## Priority 7: deception
+## Priority 7: Deception
 
 * `eye_for_an_eye/deception/engine.py`, `protocols.py`, `policy.py`
 * `eye_for_an_eye/network/listeners.py`
@@ -128,7 +128,7 @@ outbound connection. Then look for: state growth per connection; byte and
 message limits; source allowlist bypass; the HMAC profile selection and what
 leaking the secret allows; whether a decoy can be made to bind a protected port.
 
-## Priority 8: storage
+## Priority 8: Storage
 
 * `eye_for_an_eye/storage/sqlite.py`, `lifecycle.py`
 
@@ -136,7 +136,7 @@ Look for: writer lease handling with two instances; migration safety; retention
 enforcement under pressure; behaviour when the disk fills; whether the volatile
 fallback can leak unredacted data.
 
-## Priority 9: the installer and packaging
+## Priority 9: The Installer and Packaging
 
 * `scripts/install.sh`, `scripts/uninstall.sh`
 * `pyproject.toml`, `MANIFEST.in`, `uv.lock`, `requirements/runtime.txt`
@@ -150,15 +150,15 @@ uninstaller can delete something it did not create.
 Confirm the negatives: no firewall change, no service enabled or started, no
 port exposed, no root needed in the default path.
 
-## Priority 10: the offline pipelines
+## Priority 10: The Offline Pipelines
 
-* `dataset/safety.py` — the target validation that must never allow a public
+* `dataset/safety.py`: the target validation that must never allow a public
   address.
 * `dataset/collectors/`, `training/`
 
 These do not run in production, but a compromise here poisons a future model.
 
-## Priority 11: the request-time gateway and the challenge (P11)
+## Priority 11: The Request-time Gateway and the Challenge (P11)
 
 **This is the only code in the project that sits in front of a live request.**
 Everything else observes after the fact. It is therefore the only place where a
@@ -176,12 +176,12 @@ Try to falsify:
 * that the signing secret cannot reach JavaScript, HTML, a cookie or browser
   storage;
 * that a token minted for site A does not verify for site B;
-* that token parsing is strict — canonical unpadded base64url only, with no
+* that token parsing is strict, canonical unpadded base64url only, with no
   accepted alternative encoding of the same token (the fuzzing suite found three
   malleability bugs here, so this is not hypothetical);
 * that a challenge outcome cannot become a label, and cannot reach TEMP_BLOCK.
 
-## Priority 12: `Host` resolution and site isolation (P12)
+## Priority 12: `Host` Resolution and Site Isolation (P12)
 
 Read: `eye_for_an_eye/sites/identity.py`, `eye_for_an_eye/sites/engine.py`,
 `eye_for_an_eye/sites/profile.py`, `eye_for_an_eye/sites/state.py`.
@@ -190,7 +190,7 @@ Try to falsify:
 
 * that no request can create a site;
 * that an unmatched `Host` lands in a shadow-mode bucket with no powers;
-* that site identity — site id, domain, `Host`, profile type — never reaches the
+* that site identity (site id, domain, `Host`, profile type) never reaches the
   model as a feature;
 * that one site's web counters cannot be read from another site;
 * that a flood against one site cannot evict a quiet site's state;
@@ -198,7 +198,7 @@ Try to falsify:
 
 Note the limit the design accepts rather than solves: sites share one process.
 
-## Priority 13: the access-log parser (P10)
+## Priority 13: The Access-log Parser (P10)
 
 Read: `eye_for_an_eye/web/nginx.py`, `eye_for_an_eye/web/event.py`,
 `eye_for_an_eye/web/identity.py`.
@@ -207,14 +207,14 @@ Every field here is attacker-chosen. Try to falsify that the parser is bounded
 in time and memory for any line, that a forwarded header from an untrusted peer
 is ignored, and that a proxied client is never network-enforceable.
 
-## Out of scope
+## Out of Scope
 
 * Cryptographic review of a protocol design. There is no custom protocol.
 * Web application vulnerabilities. There is no web application, only a read-only
   local JSON API.
 * Anything needing a Windows production deployment. Windows is development only.
 
-## Environments needed
+## Environments Needed
 
 Most of the interesting surface needs Linux with elevated rights in a throw-away
 environment:
@@ -228,7 +228,7 @@ sudo env E4E_RUN_NAMESPACE_LAB=1 /path/venv/bin/python -B \
 firewall, `CAP_NET_RAW`, original destination lookup, systemd hardening,
 container health probes.
 
-## What the project claims, for an auditor to falsify
+## What the Project Claims, for an Auditor to Falsify
 
 1. No network traffic leaves the machine by default.
 2. No payload, password, cookie, token or `Authorization` header is ever stored
@@ -250,12 +250,12 @@ container health probes.
 Each is intended to be checkable by reading the code.
 
 **Claims 9 to 12 are new since the last revision of this page**, and cover the
-web sensor, the challenge and multi-site profiles — which between them are most
+web sensor, the challenge and multi-site profiles, which between them are most
 of the code written since P9 and nearly all of the attacker-facing surface. An
 earlier revision of this document described a P0-P9 system and would have led an
 auditor to review none of it.
 
-## See also
+## See Also
 
 * [Threat model](THREAT_MODEL.md)
 * [Architecture](ARCHITECTURE.md)

@@ -5,7 +5,7 @@ replace the model it is using. A person does that.
 
 Status: **Beta.** All threshold values are provisional.
 
-## The short version
+## The Short Version
 
 ```text
 Eye for an Eye can collect new local security data.
@@ -15,7 +15,7 @@ The new model first runs in Shadow Mode.
 It does not replace the active model automatically.
 ```
 
-## What "retraining" means here
+## What "Retraining" Means Here
 
 It does not mean this:
 
@@ -39,7 +39,7 @@ The difference is where the traffic stops having influence. Traffic can put a
 window in front of a person. It cannot become a label, and it cannot rewrite the
 active model.
 
-## Three separate authorities
+## Three Separate Authorities
 
 | Authority | What it may do | Who has it |
 | --- | --- | --- |
@@ -49,7 +49,7 @@ active model.
 
 These are kept apart on purpose. Merging them is the same as having none.
 
-## Where labels come from
+## Where Labels Come From
 
 Allowed as ground truth:
 
@@ -70,7 +70,7 @@ These may sit beside a row as context for a reviewer. They are never the label
 and never a model input. The dataset code refuses them: a row whose label source
 is a decision this system made is rejected before it reaches training.
 
-## When retraining is suggested
+## When Retraining Is Suggested
 
 `eye-for-an-eye learning status` reads a few numbers and gives one of five
 answers.
@@ -150,7 +150,7 @@ training_max_memory_mb = 2048
 training_max_parallel_jobs = 1
 ```
 
-### `auto_prepare_dataset` and `auto_train` are reserved, not switches
+### `auto_prepare_dataset` and `auto_train` Are Reserved, Not Switches
 
 Both names exist in `LearningConfig`, both default to `false`, and **no code path
 reads either one to start anything**. `learning status` prints the configured
@@ -169,7 +169,7 @@ setting at all: a name that does not exist cannot be set by accident.
 `auto_promote` is not in this list, and not anywhere else. There is no setting
 that makes a candidate become the active model.
 
-## Why promotion stays manual
+## Why Promotion Stays Manual
 
 Because everything upstream of it can be wrong.
 
@@ -181,7 +181,7 @@ Because everything upstream of it can be wrong.
 None of these is unlikely. Together they mean the last step should cost somebody
 thirty seconds of attention.
 
-## Known limits
+## Known Limits
 
 * The provisional thresholds throughout this document are starting points. No
   measured deployment data supports them yet.
@@ -194,7 +194,7 @@ thirty seconds of attention.
 
 ## Related
 
-* [SELF_LEARNING.md](SELF_LEARNING.md) — what this project does and does not learn
-* [REVIEW_QUEUE.md](REVIEW_QUEUE.md) — where labels come from
-* [TRAINING_JOBS.md](TRAINING_JOBS.md) — how a training run is bounded
-* [MODEL_PROMOTION.md](MODEL_PROMOTION.md) — the manual last step
+* [SELF_LEARNING.md](SELF_LEARNING.md): what this project does and does not learn
+* [REVIEW_QUEUE.md](REVIEW_QUEUE.md): where labels come from
+* [TRAINING_JOBS.md](TRAINING_JOBS.md): how a training run is bounded
+* [MODEL_PROMOTION.md](MODEL_PROMOTION.md): the manual last step

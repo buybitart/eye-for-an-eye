@@ -1,33 +1,33 @@
-# Site profiles
+# Site Profiles
 
 A profile is a starting configuration. You pick the one that describes your
 site, and sensible settings follow.
 
 Profiles are **not** labels. `admin` does not mean "dangerous" and `api` does
 not mean "trusted". They are never a training label and never an input to a
-model — see [SITE_DATASETS.md](SITE_DATASETS.md) for why that matters.
+model. See [SITE_DATASETS.md](SITE_DATASETS.md) for why that matters.
 
-## The four shapes
+## The Four Shapes
 
-**WEBSITE** — a normal site people visit with a browser. Pages, static files,
+**WEBSITE**: a normal site people visit with a browser. Pages, static files,
 sessions, crawlers. Many different paths is ordinary here. Browser challenges
 work, so they are available.
 
-**API** — machine clients. High request rates, very few endpoints, JSON, usually
+**API**: machine clients. High request rates, very few endpoints, JSON, usually
 no cookies. A browser challenge cannot be answered by a client that does not run
 one, so it is off; suspicious API clients are watched and rate limited instead.
 
-**ADMIN** — small, quiet, sensitive. A handful of known paths and a login. Path
+**ADMIN**: small, quiet, sensitive. A handful of known paths and a login. Path
 breadth and authentication failures mean much more here than on a public site,
 so the thresholds sit lower.
 
-**MIXED** — a site that is several of these at once. Deliberately the least
+**MIXED**: a site that is several of these at once. Deliberately the least
 opinionated: when a site is many things, tight thresholds are wrong for part
 of it.
 
-**CUSTOM** — nothing assumed. You set what you want.
+**CUSTOM**: nothing assumed. You set what you want.
 
-## What each one starts with
+## What Each One Starts With
 
 | | website | api | admin | mixed |
 | --- | --- | --- | --- | --- |
@@ -35,7 +35,7 @@ of it.
 | Expected distinct paths | 40 | 12 | 10 | 60 |
 | Expected error ratio | 10% | 5% | 2% | 12% |
 | Watch threshold | 0.40 | 0.40 | 0.30 | 0.40 |
-| Challenge threshold | 0.45 | — | 0.38 | 0.45 |
+| Challenge threshold | 0.45 | - | 0.38 | 0.45 |
 | Rate limit threshold | 0.70 | 0.70 | 0.60 | 0.70 |
 | Block threshold | 0.88 | 0.88 | 0.85 | 0.88 |
 | Browser challenge | yes | no | yes | yes |
@@ -47,7 +47,7 @@ once you have looked at your own numbers.
 Every profile starts in **shadow mode**, with rate limiting off and host-wide
 network blocking not allowed. Adding a site never switches anything on.
 
-## Choosing and changing
+## Choosing and Changing
 
 ```toml
 [sites.profiles.api]
@@ -69,13 +69,13 @@ A misspelled setting is **refused**, not ignored. Silently dropping
 `watch_treshold` would leave you believing you had tightened a site when you
 had not, and nothing in the running system would contradict you.
 
-## What a site cannot change
+## What a Site Cannot Change
 
 A site override adjusts that site's own behaviour. It cannot reach past the
 global safety limits: memory bounds, protected networks, firewall ownership,
 process limits, or automatic model promotion.
 
-This is structural rather than checked — those things are not fields on a site
+This is structural rather than checked. Those things are not fields on a site
 profile, so there is nothing to override. Naming one in a site's table is an
 error.
 
@@ -85,7 +85,7 @@ GlobalSafetyPolicy  →  SitePolicy  →  Decision
 
 A badly configured site must not make the whole sensor unsafe.
 
-## The profile type is yours to set
+## The Profile Type Is Yours to Set
 
 The system does not change a site's profile because its traffic changed. An API
 that starts serving HTML is still whatever you configured; only the behaviour

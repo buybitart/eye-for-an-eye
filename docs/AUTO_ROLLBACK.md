@@ -1,8 +1,8 @@
-# Automatic rollback
+# Automatic Rollback
 
 When a promoted model is withdrawn without being asked, and when it is not.
 
-## Three tiers, and they are not interchangeable
+## Three Tiers, and They Are Not Interchangeable
 
 | Tier | Example | Speed | Evidence needed |
 | --- | --- | --- | --- |
@@ -22,7 +22,7 @@ and review takes time. A system that withdrew a model on one ambiguous unlabelle
 request would change its model with the weather, and would be wrong far more
 often than it was right.
 
-## Technical rollback
+## Technical Rollback
 
 Any of these withdraws the model:
 
@@ -35,7 +35,7 @@ Any of these withdraws the model:
 The last one has a window on purpose. A model is not withdrawn for a bad first
 minute.
 
-## Resource rollback
+## Resource Rollback
 
 Website availability outranks model experimentation. If the new model makes the
 site slow, the site is worse off than it would be with no model at all.
@@ -43,13 +43,13 @@ site slow, the site is worse off than it would be with no model at all.
 - p95 inference latency more than 2× the previous model's, sustained for 10
   minutes;
 - resident memory more than 2× the previous model's, sustained;
-- any dropped sensor events — the clearest possible signal that the model is
+- any dropped sensor events: the clearest possible signal that the model is
   costing more than it is worth.
 
 The sustained-period requirement means a garbage collection pause does not
 withdraw a perfectly good model.
 
-## Quality rollback
+## Quality Rollback
 
 Needs at least 20 reviewed outcomes before it can act at all. Then:
 
@@ -60,7 +60,7 @@ Below the minimum, the monitor reports that it does not have enough reviewed
 evidence. It does not guess, and it does not use unlabelled traffic as a
 substitute.
 
-## What does **not** trigger a rollback
+## What Does **Not** Trigger a Rollback
 
 **A high out-of-distribution rate.** It says the model recognises less of what it
 is currently seeing. The model it would be rolled back to is older and has seen
@@ -76,7 +76,7 @@ guess at, so a surge freezes advancement and asks for a person.
 
 All three pause the staircase and get reported. None of them withdraws anything.
 
-## What rollback does not touch
+## What Rollback Does Not Touch
 
 Rollback changes which model answers. It does not:
 
@@ -88,7 +88,7 @@ Rollback changes which model answers. It does not:
 The report says so explicitly, because those are the two things an operator most
 needs to know at the moment they read it.
 
-## After a rollback
+## After a Rollback
 
 The withdrawn version is **quarantined**. It does not get to try again on the
 next assessment cycle, and releasing it requires an explicit operator action.
@@ -97,16 +97,16 @@ That edge exists to prevent an obvious oscillation: promote, regress, roll back,
 re-assess, promote the same artifact again, forever. A withdrawn candidate needs
 a new evaluation or a new version.
 
-## If rollback itself fails
+## If Rollback Itself Fails
 
 The system enters [model safe mode](MODEL_SAFE_MODE.md): all promotion stops,
 candidate authority stops, and a critical health state is raised. The
 mathematical engine and PolicyGuard are unaffected, because neither ever depended
 on any of this.
 
-## See also
+## See Also
 
 - [AUTO_PROMOTION.md](AUTO_PROMOTION.md)
 - [GUARDED_ACTIVATION.md](GUARDED_ACTIVATION.md)
 - [MODEL_SAFE_MODE.md](MODEL_SAFE_MODE.md)
-- [MODEL_ROLLBACK.md](MODEL_ROLLBACK.md) — rolling back by hand, always available
+- [MODEL_ROLLBACK.md](MODEL_ROLLBACK.md): rolling back by hand, always available

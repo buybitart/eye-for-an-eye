@@ -1,4 +1,4 @@
-# Anomaly detection
+# Anomaly Detection
 
 An **anomaly** is unusual behaviour.
 
@@ -7,7 +7,7 @@ signal among several.
 
 Status: **Beta.** Shadow Mode only.
 
-## What it is not
+## What It Is Not
 
 A new backup job is anomalous. A new monitoring probe is anomalous. A new
 deployment is anomalous. None of them is an attack.
@@ -17,7 +17,7 @@ not a rule someone could switch off. It is arithmetic: the anomaly signal carrie
 a weight of 0.10, and the block threshold is 0.88. Maximum anomaly with no other
 evidence produces a risk of about 0.12, which is `OBSERVE`.
 
-## The model
+## The Model
 
 | Fact | Value |
 | --- | --- |
@@ -34,7 +34,7 @@ An Isolation Forest was chosen over an autoencoder because the input is a small
 tabular vector, it runs on a CPU in milliseconds, the artifact is inspectable,
 and it needs no training framework at run time.
 
-## What it was trained on
+## What It Was Trained On
 
 **Trusted benign behaviour only.** This matters more than the algorithm.
 
@@ -46,7 +46,7 @@ what it says: *unlike normal traffic we validated*.
 Four source groups are held out of training for evaluation, so the model is not
 scored on rows it memorised.
 
-## The score
+## The Score
 
 The raw Isolation Forest output is a `decision_function` value where higher means
 more normal. That is not an anomaly score, and it is not exposed as one.
@@ -61,7 +61,7 @@ anomaly_score = clamp01((high - raw) / (high - low))
 population. The result is `0` for common behaviour and `1` for behaviour far
 outside the baseline. Both the raw value and the normalised score are reported.
 
-## Measured behaviour
+## Measured Behaviour
 
 On `dataset-v1`:
 
@@ -79,7 +79,7 @@ The shadow population scores highest of all. Shadow traffic is real observation
 the model never trained on, so it is genuinely unusual relative to a lab
 baseline. This is a statement about the training data, not about the traffic.
 
-## Threshold analysis
+## Threshold Analysis
 
 Choosing a threshold trades review volume against coverage. It does **not**
 produce a firewall rule.
@@ -94,7 +94,7 @@ produce a firewall rule.
 At every setting the benign rate is high relative to the scanner rate. This is a
 dial for selecting samples to review, nothing more.
 
-## When it fails
+## When It Fails
 
 The sensor keeps working. A missing, corrupt or failing anomaly model is a
 supported state, not an error:
@@ -109,7 +109,7 @@ supervised classifier and the policy guard.
 
 The model is never trained at startup. Only a validated artifact is loaded.
 
-## Safety of the artifact
+## Safety of the Artifact
 
 Loaded through the same hardened reader as the classifier: a local regular file,
 no symlink, no network path, not group- or world-writable, size capped, and its
@@ -121,7 +121,7 @@ not in an isolated child process. Its input is a float vector the sensor built
 itself rather than attacker bytes, and it is bounded by a time budget and a
 failure breaker. The classifier keeps its stronger isolation.
 
-## Training it yourself
+## Training It Yourself
 
 ```sh
 python -m training.train_anomaly \
@@ -153,7 +153,7 @@ anomaly_weight = 0.10
 With no artifact configured, fusion arithmetic is identical to before this
 component existed.
 
-## See also
+## See Also
 
 * [Out-of-distribution detection](OOD.md)
 * [Drift detection](DRIFT.md)

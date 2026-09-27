@@ -26,7 +26,7 @@ SUPPORTED here does not mean the project is cleared for public release, and it d
 | Compose lab (Docker Compose) | Runs as UID 10001, with no Linux capabilities, a read-only root filesystem, and an internal-only subnet. No ports are published to the host. | See [DOCKER.md](DOCKER.md). Keep the volume and secret files. To update, switch to a new, checked image digest. |
 | Docker live sensor | Not supported by the current image. | Use the systemd helper instead. A host-network variant is not provided. |
 
-The runtime config sets the mode: sensor, honeypot, or lab. "Lab" means a short, finite loopback experiment (10 seconds, in the starter config). The Compose setup runs the honeypot on a clearly allowed, private subnet. No profile ever applies firewall rules automatically. The core egress (outgoing traffic) policy is `disabled` by default, which blocks RDAP lookups and active probes. This is a rule enforced by the application itself — it is not an operating-system sandbox that would also block arbitrary future code.
+The runtime config sets the mode: sensor, honeypot, or lab. "Lab" means a short, finite loopback experiment (10 seconds, in the starter config). The Compose setup runs the honeypot on a clearly allowed, private subnet. No profile ever applies firewall rules automatically. The core egress (outgoing traffic) policy is `disabled` by default, which blocks RDAP lookups and active probes. This is a rule enforced by the application itself. It is not an operating-system sandbox that would also block arbitrary future code.
 
 ## Recommended Order of Steps
 
@@ -42,10 +42,10 @@ The runtime config sets the mode: sensor, honeypot, or lab. "Lab" means a short,
 
 Do not move an old database into production without first reviewing a migration plan.
 
-## See also
+## See Also
 
-- [DOCKER.md](DOCKER.md) — running the project in Docker
-- [SYSTEMD.md](SYSTEMD.md) — running the project as a systemd service
-- [UPGRADE.md](UPGRADE.md) — how to upgrade a running deployment
-- [RELEASE.md](RELEASE.md) — release gates and checks
-- [INSTALL.md](INSTALL.md) — install steps
+- [DOCKER.md](DOCKER.md): running the project in Docker
+- [SYSTEMD.md](SYSTEMD.md): running the project as a systemd service
+- [UPGRADE.md](UPGRADE.md): how to upgrade a running deployment
+- [RELEASE.md](RELEASE.md): release gates and checks
+- [INSTALL.md](INSTALL.md): install steps

@@ -1,4 +1,4 @@
-# Data quality
+# Data Quality
 
 Before asking "is this dangerous?", the system asks "do I have enough evidence?"
 
@@ -7,7 +7,7 @@ complete and reliable the current observation is.
 
 Status: **Stable** (the score), **Beta** (the P8 status and reason reporting).
 
-## What it looks at
+## What It Looks At
 
 | Input | Weight | Why |
 | --- | --- | --- |
@@ -21,7 +21,7 @@ all, the score is reduced anyway: an unmeasured gap is not the same as no gap.
 
 A capped window is limited to 0.49, because a truncated view cannot be complete.
 
-## Independent signal families
+## Independent Signal Families
 
 One repeated signal must not look like ten independent ones. Evidence is grouped
 into families:
@@ -34,7 +34,7 @@ into families:
 A strong action needs a configurable minimum number of **independent** families,
 not a high count of one thing.
 
-## What it controls
+## What It Controls
 
 Low data quality prevents strong automatic action. This is a hard gate in the
 policy guard, not a suggestion.
@@ -48,7 +48,7 @@ Result:        WATCH, not TEMP_BLOCK
 The refusal is recorded as a reason on the decision, so an operator can see
 exactly why the action was reduced.
 
-## Health is not guilt
+## Health Is Not Guilt
 
 A broken feature extractor must never make traffic look more dangerous.
 
@@ -62,7 +62,7 @@ parser failure
 Security risk and system health are kept apart on purpose. If the sensor is
 unhealthy, the system does less, not more.
 
-## Feature health
+## Feature Health
 
 The reference distribution records, per feature, whether it was constant or
 nearly constant during training. A feature that is constant in production but
@@ -81,7 +81,7 @@ minimum_observation_seconds = 5.0
 minimum_categories = 3
 ```
 
-## See also
+## See Also
 
 * [Decision engine](DECISION_ENGINE.md)
 * [Out-of-distribution detection](OOD.md)

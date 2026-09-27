@@ -6,7 +6,7 @@ to.
 Nothing here is published to PyPI or to any package registry. You install from a
 local copy of the source, or from a wheel file you built yourself.
 
-## What you need
+## What You Need
 
 | Item | Value |
 | --- | --- |
@@ -26,7 +26,7 @@ The base program has **no** Python dependencies. Extras are optional:
 | `enrichment` | maxminddb, ipwhois | optional, off by default |
 | `test`, `lint`, `quality`, `ml-training` | development only | no |
 
-## 1. The installer (recommended)
+## 1. The Installer (Recommended)
 
 ```sh
 sh scripts/install.sh
@@ -65,7 +65,7 @@ sh scripts/uninstall.sh            # keeps your data
 sh scripts/uninstall.sh --purge    # deletes your data too
 ```
 
-## 2. By hand, with a virtual environment
+## 2. By Hand, With a Virtual Environment
 
 ```sh
 python3.12 -m venv .venv
@@ -83,7 +83,7 @@ python -m pip install '.[capture,ml]'
 
 Do not use `sudo pip` into the system Python.
 
-## 3. A pinned install with uv
+## 3. A Pinned Install With uv
 
 The project ships `uv.lock`, so a locked, repeatable install is possible:
 
@@ -98,7 +98,7 @@ capture and enrichment extras and everything they pull in.
 
 Changing the lock file needs a review and a new run of the checks.
 
-## Installing on a machine with no Internet
+## Installing on a Machine With No Internet
 
 On a preparation machine with the same operating system, architecture and Python
 version:
@@ -126,7 +126,7 @@ Notes:
 * GeoIP databases, p0f signatures and probe files are obtained and checked by
   you. Nothing is downloaded automatically, ever.
 
-## After the install
+## After the Install
 
 ```sh
 eye-for-an-eye status
@@ -136,12 +136,12 @@ eye-for-an-eye model status
 
 Then read [Quickstart](QUICKSTART.md).
 
-## Running it as a service
+## Running It as a Service
 
 Unit files are in `deploy/systemd/`. Read [systemd](SYSTEMD.md) first. The
 installer does not enable or start anything for you: that stays your decision.
 
-## See also
+## See Also
 
 * [Deployment matrix](DEPLOYMENT.md)
 * [Dependencies](DEPENDENCIES.md)
