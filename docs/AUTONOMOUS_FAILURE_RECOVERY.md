@@ -1,11 +1,11 @@
-# Autonomous failure and recovery
+# Autonomous Failure and Recovery
 
 What happens when something breaks, and how the system comes back without being
 asked.
 
-## The failure that matters
+## The Failure That Matters
 
-Not a bad block — a *correlated* bad block. A model that degrades, a feature
+Not a bad block: a *correlated* bad block. A model that degrades, a feature
 pipeline that starts emitting zeros, a NAT that suddenly carries a conference's
 worth of traffic: none of these produce one mistake. They produce the same
 mistake against every source at once, each one individually well-supported by
@@ -13,31 +13,31 @@ the evidence, because the evidence itself is what went wrong. By the time a
 person notices, the site is unreachable.
 
 So there are four brakes, and they are deliberately dumb. **None of them looks at
-whether a block was correct** — that judgement is exactly what has failed. They
+whether a block was correct**. That judgement is exactly what has failed. They
 look at rate, at share, at externally established outcomes, and at whether the
 machinery underneath is working.
 
-## The four brakes
+## The Four Brakes
 
-### The block budget
+### The Block Budget
 
 Caps new autonomous blocks per minute (10) and blocks held at once (500). A rate
 limit on the system's own certainty. Exceeding it is `ENFORCEMENT_DEGRADED`:
 no new blocks until the window moves on.
 
-### The mass-block circuit breaker
+### The Mass-block Circuit Breaker
 
 Watches the *share* of recently seen sources under an autonomous block. Expecting
 a fraction of a percent and seeing a fifth of everything is not a discovery, it
 is a fault. Default ceiling 2% of recent sources, evaluated only once at least
-200 distinct sources have been seen — three blocks out of five sources is not a
+200 distinct sources have been seen, three blocks out of five sources is not a
 60% catastrophe.
 
 **Shadow decisions count towards the share.** §51 is about the distribution of
 decisions, and a model that *would have* blocked a fifth of the Internet is
 exactly what shadow mode exists to catch before anybody promotes it.
 
-### The false-positive circuit breaker
+### The False-positive Circuit Breaker
 
 Opens when trusted evaluation shows benign sources being blocked: more than 1.0
 false blocks per 1000 benign sources, over at least 500 trusted benign examples.
@@ -45,16 +45,16 @@ false blocks per 1000 benign sources, over at least 500 trusted benign examples.
 The word carrying this one is *trusted*. It accepts outcomes only from a
 controlled lab scenario, a signed PCAP sidecar label, a deterministic harness or
 a reviewed evaluation. **Feeding it the system's own decisions is refused
-outright**, not discouraged — a false-positive breaker trained on its own blocks
+outright**, not discouraged. A false-positive breaker trained on its own blocks
 would confirm whatever it was already doing.
 
 With no trusted outcomes it reports `GROUND_TRUTH_UNAVAILABLE`, not zero. Zero is
 a measurement; the absence of one is not.
 
-### The technical circuit breaker
+### The Technical Circuit Breaker
 
 Not statistical at all. A corrupt artifact or a jumped clock does not make the
-next decision *less accurate* — it makes it meaningless. Named faults:
+next decision *less accurate*. It makes it meaningless. Named faults:
 
 `model_invalid`, `feature_schema_mismatch`, `data_quality_unavailable`,
 `identity_resolver_failed`, `firewall_verify_failed`, `storage_corruption`,
@@ -89,7 +89,7 @@ Automatic too, and deliberately slow. Three conditions, all of them:
    default. A breaker that closed the instant a metric dipped back over its
    threshold would flap, and the measurement that degraded the system is usually
    the same one that just wobbled.
-3. **The readiness gate passes again.** Not the gate that passed at startup — a
+3. **The readiness gate passes again.** Not the gate that passed at startup. A
    fresh one, now.
 
 The sequence, end to end:
@@ -109,7 +109,7 @@ problem detected
 
 No step in that chain needs a person.
 
-## What no failure may cause
+## What No Failure May Cause
 
 §161, asserted by `tests/test_p15_runtime.py`:
 
@@ -125,7 +125,7 @@ worthless. A system that survives a corrupt model by carrying on and blocking
 people has failed in the expensive direction; a system that stops working is not
 protecting anything.
 
-## Reading the state
+## Reading the State
 
 ```
 eye-for-an-eye autonomy status
@@ -146,7 +146,7 @@ block_circuit_breaker_total
 autonomous_safe_mode_total
 ```
 
-## Stopping it by hand
+## Stopping It by Hand
 
 `[autonomy] enabled = false` and a restart, which stops new decisions; or
 `[enforcement] host_enabled = false` and a restart, which keeps the decisions
@@ -158,9 +158,9 @@ There is no command that disarms a sensor already running: this page used to
 document `eye-for-an-eye autonomy disable`, which has never existed.
 [AUTONOMOUS_MODE.md](AUTONOMOUS_MODE.md) has the three ways that do work.
 
-## See also
+## See Also
 
 - [AUTONOMOUS_MODE.md](AUTONOMOUS_MODE.md)
-- [MODEL_SAFE_MODE.md](MODEL_SAFE_MODE.md) — the model-level equivalent
+- [MODEL_SAFE_MODE.md](MODEL_SAFE_MODE.md): the model-level equivalent
 - [AUTO_ROLLBACK.md](AUTO_ROLLBACK.md)
 - [SHADOW_MODE.md](SHADOW_MODE.md)

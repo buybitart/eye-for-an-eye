@@ -1,14 +1,14 @@
-# Scientific basis
+# Scientific Basis
 
 Which idea from the literature each part of this system rests on, how this
-project interprets it, where it is implemented, and — the part that matters most
-— what the interpretation does not give you.
+project interprets it, where it is implemented, and (the part that matters most
+) what the interpretation does not give you.
 
 Every entry has four lines. The fourth is the honest one.
 
 ---
 
-## Rare-class classification
+## Rare-class Classification
 
 **Source concept.** When one class is a small fraction of the data, a classifier
 optimised for overall error learns to predict the majority class. Standard
@@ -29,7 +29,7 @@ which is why precision is reported across a sweep rather than as one number.
 
 ---
 
-## The accuracy trap
+## The Accuracy Trap
 
 **Source concept.** On a 99.9%/0.1% split, a constant-negative classifier scores
 99.9% accuracy.
@@ -44,11 +44,11 @@ footnotes.
 first, then the refusal.
 
 **Limitation.** The verdict needs trusted labels. With none, it returns `UNKNOWN`
-— which is honest and is also not a safety net.
+, which is honest and is also not a safety net.
 
 ---
 
-## Confusion matrix, precision, recall, specificity
+## Confusion Matrix, Precision, Recall, Specificity
 
 **Source concept.** Four cells; every rate is a ratio of two of them.
 
@@ -64,7 +64,7 @@ says nothing about traffic that procedure has never seen.
 
 ---
 
-## Cost-sensitive classification and the Bayes cutoff
+## Cost-sensitive Classification and the Bayes Cutoff
 
 **Source concept.** With costs `C_FP` and `C_FN` and zero cost for correct
 outcomes, the expected-loss-minimising threshold is
@@ -84,7 +84,7 @@ correcting an error.
 
 ---
 
-## Type I and Type II error
+## Type I and Type II Error
 
 **Source concept.** A false positive and a false negative are different errors
 with different consequences, and a test's design chooses which to make rarer.
@@ -125,7 +125,7 @@ automatically transportable to a site the calibration set did not represent.
 
 ---
 
-## Uncertainty and interval estimation
+## Uncertainty and Interval Estimation
 
 **Source concept.** A point estimate without a spread is not a basis for a
 decision. Wilson intervals for proportions; the bootstrap for statistics with no
@@ -147,7 +147,7 @@ authority the implementation has not earned.
 
 ---
 
-## Class imbalance handling
+## Class Imbalance Handling
 
 **Source concept.** Class weighting, undersampling, oversampling and synthetic
 minority generation each trade bias for variance differently.
@@ -165,7 +165,7 @@ a lab corpus is a lab-corpus weight.
 
 ---
 
-## Cross-validation and held-out evaluation
+## Cross-validation and Held-out Evaluation
 
 **Source concept.** Model selection on the same data used to report performance
 produces optimistic results. Grouped splits are needed when observations are
@@ -184,11 +184,11 @@ scenarios.
 
 ---
 
-## Generalization under distribution shift
+## Generalization Under Distribution Shift
 
 **Source concept.** A model's error on data drawn from its training distribution
 bounds nothing about its error under *shift*. The literature separates several
-kinds — covariate shift, label shift, domain shift — and the one that matters
+kinds (covariate shift, label shift, domain shift), and the one that matters
 here is closest to **compositional** or **systematic** generalization: the test
 distribution is built from the same primitives as the training distribution,
 arranged in combinations the training distribution never contained. Random
@@ -199,14 +199,14 @@ arrangement. Only withholding whole *groups* can.
 before it cannot.
 
 *Whole-family holdout.* `dataset/split.py` withholds entire scenario families
-from every fitted component — model and calibrator alike — rather than
+from every fitted component (model and calibrator alike) rather than
 withholding runs of familiar behaviour. A system that has learned "traffic shaped
 like `scan/sequential/50-ports`" has memorised a generator; one that has learned
 "many distinct ports, in order, sustained" has learned something that will still
 be true of a tool nobody has written yet. Only family holdout separates the two.
 
 *Compositional holdout.* P15.3 added six families that are new *compositions* of
-primitives the corpus already contained — slow pacing with port breadth and
+primitives the corpus already contained, slow pacing with port breadth and
 address breadth; credential shapes without concentration; decoy contact followed
 by enumeration. No new primitive and no new generator behaviour: a combination
 never shown. This is the sharpest test of reasoning-versus-matching that
@@ -230,7 +230,7 @@ writing them is to make the standard executable and commit it first.
 **Sample independence.** Windows from one source are not independent
 observations. Recall, precision and false-block rate carry percentile bootstrap
 intervals resampled over **source groups**, never over windows. Thousands of
-correlated windows must not pretend to be thousands of examples — which is the
+correlated windows must not pretend to be thousands of examples, which is the
 P15.2 root cause in general form, where a Wilson interval was computed over the
 packet count in a window rather than over the calibration sample.
 
@@ -252,7 +252,7 @@ observation, not a better weight.
 
 ---
 
-## Data leakage
+## Data Leakage
 
 **Source concept.** A feature that encodes the answer produces excellent offline
 metrics and no field performance.
@@ -266,12 +266,12 @@ leakage is treated as a first-class case.
 
 **Limitation.** An exclusion list catches the columns somebody thought of. A
 subtle proxy for the label inside a permitted feature would not be caught by a
-name list — which is why `dataset/leakage.py` also looks for near-perfect
+name list, which is why `dataset/leakage.py` also looks for near-perfect
 separation and generator fingerprints.
 
 ---
 
-## Anomaly detection and Isolation Forest
+## Anomaly Detection and Isolation Forest
 
 **Source concept.** Isolation Forest isolates points with few random splits;
 unusual points are isolated quickly. It is unsupervised and answers "how
@@ -291,7 +291,7 @@ sometimes wrong about ordinary things.
 
 ---
 
-## Out-of-distribution detection
+## Out-of-distribution Detection
 
 **Source concept.** A model's outputs are unreliable on inputs unlike its
 training distribution. A high score on a far-OOD input is extrapolation.
@@ -304,12 +304,12 @@ distribution), `distribution_confidence` in the fusion, the `HIGH_OOD` restraint
 
 **Limitation.** The reference distribution is built from whatever was observed
 when it was built. A site whose legitimate traffic changes shape will look
-out-of-distribution to it — which costs detection, not availability, and that is
+out-of-distribution to it: which costs detection, not availability, and that is
 the correct direction for this trade.
 
 ---
 
-## Concept drift
+## Concept Drift
 
 **Source concept.** The relationship between features and labels changes over
 time; population-level statistics reveal it before labelled performance does.
@@ -322,12 +322,12 @@ never reaches a source's score.
 `DRIFT_DEGRADED` restraint, the P14 governance freeze.
 
 **Limitation.** Population drift and a change in attack mix look the same from
-here. The response is the same either way — trust the model less — which is safe
+here. The response is the same either way (trust the model less), which is safe
 and is not diagnosis.
 
 ---
 
-## Robust statistics
+## Robust Statistics
 
 **Source concept.** Means and standard deviations are not robust on heavy-tailed
 data. Median, MAD, IQR and quantiles are.
@@ -346,7 +346,7 @@ also means no distribution opinion at all.
 
 ---
 
-## Model collapse and feedback loops
+## Model Collapse and Feedback Loops
 
 **Source concept.** Training a model on its predecessor's output narrows the
 distribution and amplifies its errors.
@@ -364,7 +364,7 @@ baselines are governed rather than continuously absorbed.
 
 ---
 
-## Continuous monitoring and model governance
+## Continuous Monitoring and Model Governance
 
 **Source concept.** A deployed model needs monitoring, versioning, staged
 rollout and rollback, because offline validation cannot cover production.
@@ -382,13 +382,13 @@ and `NEED_MORE_DATA` is a common and correct answer.
 
 ---
 
-## Cost-sensitive automated response
+## Cost-sensitive Automated Response
 
 **Source concept.** Automated response systems are evaluated on the cost of their
 actions, not on detection counts alone.
 
 **Project interpretation.** The objective is to minimise expected security loss
-subject to availability, false-block, resource and safety constraints — not to
+subject to availability, false-block, resource and safety constraints, not to
 block as many suspicious sources as possible.
 
 **Implemented component.** `autonomy/authority.py`, `autonomy/breakers.py`,
@@ -400,7 +400,7 @@ assigned, against a prevalence nobody has measured.
 
 ---
 
-## Adaptive security and safe exploration
+## Adaptive Security and Safe Exploration
 
 **Source concept.** Bandits and reinforcement learning optimise sequential
 decisions by trading exploration against exploitation.
@@ -420,7 +420,7 @@ someone losing access to a service they paid for.
 
 ---
 
-## Large language models
+## Large Language Models
 
 **Source concept.** LLMs are effective at summarisation and explanation.
 
@@ -434,7 +434,7 @@ to one, and nothing in the runtime imports a client for one.
 
 ---
 
-### Interval estimation for a proportion
+### Interval Estimation for a Proportion
 
 **Source concept.** Wilson, 1927: a score interval for a binomial proportion,
 better behaved than the normal approximation at small `n` and near 0 or 1.
@@ -449,16 +449,16 @@ the bound rather than the point estimate.
 
 **Limitation.** The interval quantifies sampling error in the calibration data
 and nothing else. It says nothing about a source the calibration corpus never
-resembled — that is what the OOD, diversity, maturity and data-quality gates are
+resembled: that is what the OOD, diversity, maturity and data-quality gates are
 for. P15 applied this same correction to the number of packets in an observation
 window, which is not the sample size of this estimate; the interval was two
 orders of magnitude too wide and the system blocked nothing for two cycles.
 
 ---
 
-## A closing note on what this page is
+## A Closing Note on What This Page Is
 
-Every entry above describes an *interpretation* — a choice about how to apply a
+Every entry above describes an *interpretation*. A choice about how to apply a
 result to this system. The results are established; the choices are this
 project's, made without deployment data, and each one could reasonably have been
 made differently.
@@ -467,7 +467,7 @@ Nothing here is evidence that the system's decisions are correct. It is evidence
 that the decisions were designed deliberately, with the known failure modes
 named. Those are different claims, and this project keeps them apart.
 
-## See also
+## See Also
 
 - [COST_SENSITIVE_POLICY.md](COST_SENSITIVE_POLICY.md)
 - [DECISION_UNCERTAINTY.md](DECISION_UNCERTAINTY.md)

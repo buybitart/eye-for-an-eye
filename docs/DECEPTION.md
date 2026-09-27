@@ -6,7 +6,7 @@ and records what the visitor does. This is called **defensive deception**.
 Status: **Beta.** The Linux redirect mode is **NOT VERIFIED IN CURRENT
 ENVIRONMENT**.
 
-## Why do this
+## Why Do This
 
 * It slows down automatic scanning.
 * It collects behaviour data about the scanner.
@@ -14,7 +14,7 @@ ENVIRONMENT**.
   to a port that no real service uses.
 * It gives an attacker a false picture of your machine.
 
-## There is no hack-back
+## There Is No Hack-back
 
 This is a hard rule in the code, not a policy in a document.
 
@@ -32,7 +32,7 @@ The visitor never gets:
 If you read older project documents that talk about attacking back, they are
 **historical** and are not the current design. See `docs/history/`.
 
-## What a decoy can say
+## What a Decoy Can Say
 
 There are three reviewed, fixed profiles in catalogue version 2:
 
@@ -50,7 +50,7 @@ eye-for-an-eye profiles list
 eye-for-an-eye profiles show ssh-banner-v2
 ```
 
-## How a session works
+## How a Session Works
 
 ```text
 Accepted TCP socket
@@ -72,7 +72,7 @@ are checked again for every answer, and the current policy is checked again just
 before writing to the socket. If the event queue rejects telemetry, the engine
 falls back to observe-only for a while.
 
-## Who may reach a decoy
+## Who May Reach a Decoy
 
 `deception.source_allowlist` is `["127.0.0.0/8", "::1/128"]` by default. An
 empty list allows nobody.
@@ -80,7 +80,7 @@ empty list allows nobody.
 In `lab` mode the rules are stricter: the listener must bind loopback, and the
 allowed source range must be a non-global IPv4 `/24` or IPv6 `/120` or narrower.
 
-## Which ports
+## Which Ports
 
 | `port_set` | Ports |
 | --- | --- |
@@ -105,18 +105,18 @@ A configuration that puts a decoy on a protected port is rejected. The listener
 also refuses to bind a real service port or a management port. Real services
 always win.
 
-## Direct mode and redirect mode
+## Direct Mode and Redirect Mode
 
 * **Direct**: the decoy uses its own local socket endpoint. This works today.
 * **Redirected**: the decoy asks the kernel for the original destination
-  (`SO_ORIGINAL_DST`, Linux IPv4 TCP only). On any failure — unknown address or
-  port, IPv6, or UDP — the result is `UNKNOWN` and the session becomes
+  (`SO_ORIGINAL_DST`, Linux IPv4 TCP only). On any failure (unknown address or
+  port, IPv6, or UDP) the result is `UNKNOWN` and the session becomes
   observe-only. There is no fallback to the listener endpoint when redirect is
   required.
 
 Actual Linux redirect is **NOT VERIFIED IN CURRENT ENVIRONMENT**.
 
-## What is recorded
+## What Is Recorded
 
 Metadata only:
 
@@ -128,7 +128,7 @@ Metadata only:
 Not recorded: the payload itself, the username, the password. The default
 `username_policy` is `redact` and `preview_enabled` is `false`.
 
-## The secret
+## The Secret
 
 Honeypot and lab profiles use a persistent 32-byte secret. `eye-for-an-eye
 setup` creates it once, with file mode `0600` on POSIX systems. It is never
@@ -137,7 +137,7 @@ overwritten and never printed. `*.secret` is in `.gitignore`.
 If you lose it, profile selection changes. If you leak it, an attacker can
 predict which decoy answers on which port.
 
-## Turning it off
+## Turning It Off
 
 ```toml
 [deception]
@@ -147,7 +147,7 @@ enabled = false
 A passive sensor never serves a decoy, whatever this setting says, because it
 has no listener.
 
-## See also
+## See Also
 
 * [Deception safety](DECEPTION_SAFETY.md)
 * [Protocol emulation](PROTOCOL_EMULATION.md)

@@ -1,4 +1,4 @@
-# HTTP features
+# HTTP Features
 
 Every web feature, what it means, and why a single one is never enough.
 
@@ -15,7 +15,7 @@ HTTP_ERRORS        METHOD_BEHAVIOUR   TIMING
 SESSION            PROTOCOL_QUALITY   PERSISTENCE
 ```
 
-## The features
+## The Features
 
 Every value is bounded. The ceiling is the point where a feature has said as
 much as it can; beyond it the value saturates rather than dominating.
@@ -115,8 +115,8 @@ that randomises its delay still produces a *distribution* unlike a person's.
 | `agent_change_rate` | 1 | how often the user agent changed |
 
 A browser loading a page pulls CSS, JavaScript, images and fonts. A script asking
-only for HTML does not. Each signal is weak on its own — an API client looks
-exactly like a script — so the whole family carries a small weight.
+only for HTML does not. Each signal is weak on its own (an API client looks
+exactly like a script), so the whole family carries a small weight.
 
 ### PROTOCOL_QUALITY
 
@@ -138,7 +138,7 @@ Slow and patient is still a pattern. One unusual request every five seconds for
 fifteen minutes is reconnaissance, and a rate detector alone would miss it
 entirely.
 
-## How the score is built
+## How the Score Is Built
 
 `web-math-risk-v1` is a weighted sum of ten terms through a logistic curve. No
 model, no training, no opaque number.
@@ -158,14 +158,14 @@ model, no training, no opaque number.
 | `evidence_diversity` | 0.9 |
 
 The largest single weight is 1.6. With a bias of -4.0, one maximal term alone
-reaches about 0.35 — below WATCH. **No single signal can reach a strong action.**
+reaches about 0.35, below WATCH. **No single signal can reach a strong action.**
 Three families agreeing is where it starts to mean something.
 
 `evidence_diversity` is separate on purpose: independent families agreeing is
 itself evidence, and making it a visible term is better than hiding it inside the
 weights.
 
-## Measured behaviour
+## Measured Behaviour
 
 The score for each scenario in the test suite:
 
@@ -209,6 +209,6 @@ Never "AI found hacker".
 
 ## Related
 
-* [WEB_PROTECTION.md](WEB_PROTECTION.md) — the wider picture
-* [MATH_MODEL.md](MATH_MODEL.md) — the network-side equivalent
-* [WEB_ENFORCEMENT.md](WEB_ENFORCEMENT.md) — what a score is allowed to cause
+* [WEB_PROTECTION.md](WEB_PROTECTION.md): the wider picture
+* [MATH_MODEL.md](MATH_MODEL.md): the network-side equivalent
+* [WEB_ENFORCEMENT.md](WEB_ENFORCEMENT.md): what a score is allowed to cause

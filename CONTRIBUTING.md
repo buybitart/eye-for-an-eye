@@ -6,7 +6,7 @@ machine, how to run the checks, and what a good change looks like.
 You do not need to be a machine-learning expert. Most useful work here is
 ordinary Python, tests and documentation.
 
-## Set up
+## Set Up
 
 You need CPython 3.12 and `uv`.
 
@@ -14,7 +14,7 @@ You need CPython 3.12 and `uv`.
 uv sync --frozen --extra capture --extra enrichment --extra test --extra lint --extra quality
 ```
 
-## Run the checks
+## Run the Checks
 
 Run all of these before you send a change:
 
@@ -34,7 +34,29 @@ Notes:
 * Security review exceptions are pinned by exact code hash in
   `security/bandit-reviewed.json`. Never refresh them without a review.
 
-## What you can contribute
+## Documentation Style
+
+The public documentation is written in simple English, at about CEFR A2 level.
+Simple does not mean vague: a technical fact, a safety warning or a status word
+is never softened to make a sentence shorter.
+
+Two style guides decide questions of wording and punctuation, in this order:
+
+1. [Stylepedia](https://stylepedia.net/style/), the rendered Red Hat technical
+   writing style guide.
+2. [WritingStyleGuide](https://github.com/StyleGuides/WritingStyleGuide), the
+   source of the same guide.
+
+Please do not bring in a third style guide, even one that these two link to.
+
+Two house rules that come from them:
+
+* No contractions. Write "do not", not "don't".
+* No em dash (U+2014) in text this project wrote. Use a full stop, a colon, a
+  semicolon, a comma or brackets, whichever the sentence needs. Program output
+  quoted in a code block is copied exactly, dashes included.
+
+## What You Can Contribute
 
 | Kind | What it means |
 | --- | --- |
@@ -47,7 +69,7 @@ Notes:
 | Documentation | Simpler English, missing steps, wrong facts. |
 | Translations | Documentation in other languages. |
 
-## Rules that a change must not break
+## Rules That a Change Must Not Break
 
 These are the safety promises of the project:
 
@@ -70,7 +92,7 @@ Namespace firewall tests need `E4E_RUN_NAMESPACE_LAB=1`, setup privileges and a
 throw-away Linux host. Use the separate manual platform-lab workflow. **Never
 run them on a production machine.**
 
-## Sending a change
+## Sending a Change
 
 Explain four things:
 
@@ -82,9 +104,10 @@ Explain four things:
 Update the version, the migration notes and the changelog when they are
 affected.
 
-A review looks at failure paths and cleanup, not only at the happy path.
+A review looks at failure paths and cleanup, not only at the path where
+everything works.
 
-## Model and dataset changes
+## Model and Dataset Changes
 
 A model change is a security-relevant change, like a code change. A pull request
 that adds or replaces a model must include:
@@ -97,14 +120,14 @@ that adds or replaces a model must include:
 
 See [Controlled self-learning](docs/SELF_LEARNING.md).
 
-## What we cannot accept
+## What We Cannot Accept
 
 * Code that attacks a third party, in any form.
 * Code that sends user data to an external service by default.
 * A model without provenance.
 * A capture file with real traffic in it.
 
-## Security problems
+## Security Problems
 
 Do not open a public issue for a security problem. Read [SECURITY.md](SECURITY.md).
 

@@ -1,9 +1,9 @@
-# Autonomous data curation
+# Autonomous Data Curation
 
 How data becomes a dataset without a person approving each row, and the rules
 that make that safe.
 
-## The pipeline
+## The Pipeline
 
 ```
 ingest
@@ -22,10 +22,10 @@ ingest
 ```
 
 Nothing in this pipeline trains, promotes or deletes anything. It produces a
-candidate dataset and a report, and a candidate that fails a gate is refused —
+candidate dataset and a report, and a candidate that fails a gate is refused,
 which is the safe outcome, not a setback.
 
-## The data dictionary
+## The Data Dictionary
 
 `datasets/model_features_v1.json` is the machine-readable dictionary, generated
 from `dataset/schema.py` rather than maintained by hand. Every column carries:
@@ -46,10 +46,10 @@ from `dataset/schema.py` rather than maintained by hand. Every column carries:
 `never_model_input` is the list that matters most. It names every column a model
 may never see, with the reason: addresses, ASN, country, domain, source and
 capture groups, scenario identifiers, labels, and every decision this system
-itself made — `blocked`, `block_status`, `would_block`, `final_risk`,
+itself made: `blocked`, `block_status`, `would_block`, `final_risk`,
 `math_score`, `ml_score`, `previous_risk`.
 
-## Trusted labels, and only trusted labels
+## Trusted Labels, and Only Trusted Labels
 
 A supervised label may come from four places:
 
@@ -65,12 +65,12 @@ common one in production.
 **Forbidden as label sources, permanently:** `blocked`, `automatically_blocked`,
 `shadow_decision`, `model_score`, `math_score`, `risk_threshold`, `firewall`,
 `previous_model`, `self_labelled`. A dataset row carrying one of these cannot be
-constructed — the schema refuses it before any quality gate is consulted.
+constructed. The schema refuses it before any quality gate is consulted.
 
 A strong heuristic is still a heuristic. It does not become ground truth by
 performing well.
 
-## Autonomy without new labels
+## Autonomy Without New Labels
 
 The runtime operates autonomously even when no new trusted labels arrive. This
 is **not** solved by pseudo-labelling its own decisions. Unlabelled production
@@ -86,13 +86,13 @@ data feeds the things that do not need a label:
 Supervised retraining needs trustworthy labels. If none arrive for six months,
 the system keeps running on the validated model it has, plus MathRisk, anomaly,
 OOD, drift, the local baseline and the cost model. **Model age alone is not a
-reason to replace anything** — health, drift, OOD and trusted performance
+reason to replace anything**: health, drift, OOD and trusted performance
 evidence are.
 
 The review queue stays available for diagnostics, and the runtime never waits on
 it. Unreviewed samples remain unlabelled.
 
-## Model collapse
+## Model Collapse
 
 Lineage is tracked and provenance shares are bounded, because a dataset that is
 mostly the previous model's own output teaches the next model to agree with the
@@ -109,7 +109,7 @@ last one.
 A candidate dominated by one group fails the quality gate. So does one with no
 rows of a class, or a smaller class below 10% of the data.
 
-## Synthetic data
+## Synthetic Data
 
 Allowed, and never hidden. Synthetic rows are purposeful, versioned,
 scenario-defined, marked as synthetic, and evaluated separately. The synthetic
@@ -132,7 +132,7 @@ decision's features. Splits are grouped by source, scenario, capture, site and
 time so that correlated rows never straddle the boundary, and exact or near
 duplicates are controlled across splits.
 
-## Class imbalance
+## Class Imbalance
 
 Malicious automation is the rare class, and it is treated as one. Any resampling
 happens on the **training split only**; validation and test keep realistic
@@ -143,25 +143,25 @@ rows, and weights are recorded in the training manifest.
 SMOTE is not enabled by default. Synthesising minority-class points in a
 heavy-tailed feature space invents behaviour nobody observed.
 
-## Pipeline parity
+## Pipeline Parity
 
 There is exactly one FeatureVector implementation. `dataset/schema.py` reuses
 `eye_for_an_eye.decision.features` and never restates a formula, so a dataset row
 and a runtime tensor cannot drift apart. There is no notebook-only preprocessing
 step anywhere in this project.
 
-## Multiple testing
+## Multiple Testing
 
 Feature screening across many columns produces small p-values by chance. This
 project does not select runtime behaviour from raw per-feature significance
 tests, and no blocking decision depends on one. Where many tests are run, false
 discovery is controlled or the results are treated as descriptive.
 
-Correlated features are audited and reported, and — crucially — they cannot
+Correlated features are audited and reported, and (crucially) they cannot
 manufacture evidence diversity: correlated columns share a family, and a family
 contributes once.
 
-## The catalogue
+## The Catalogue
 
 Local metadata, no cloud anything:
 
@@ -175,7 +175,7 @@ Local metadata, no cloud anything:
 | baselines | per-site baseline state |
 | evaluation reports | `reports/` |
 
-## See also
+## See Also
 
 - [DATASET.md](DATASET.md)
 - [FEATURE_SCHEMA.md](FEATURE_SCHEMA.md)

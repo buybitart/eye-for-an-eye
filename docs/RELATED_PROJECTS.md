@@ -1,4 +1,4 @@
-# Related projects
+# Related Projects
 
 This page compares Eye for an Eye with existing open-source work. The goal is an
 honest position, not a sales argument. Every project listed here is good at
@@ -11,10 +11,10 @@ before using it in an application.
 
 ## Categories
 
-### Log-based intrusion prevention
+### Log-based Intrusion Prevention
 
-**Fail2ban** — <https://github.com/fail2ban/fail2ban>
-**SSHGuard** — <https://www.sshguard.net/>
+**Fail2ban** (<https://github.com/fail2ban/fail2ban>
+**SSHGuard**) <https://www.sshguard.net/>
 
 They watch log files for lines matching a pattern and ban the address for a
 time.
@@ -26,9 +26,9 @@ time.
   invisible to a pattern matcher.
 * This project **complements** them. Running both is reasonable.
 
-### Community reputation systems
+### Community Reputation Systems
 
-**CrowdSec** — <https://www.crowdsec.net/> ·
+**CrowdSec**: <https://www.crowdsec.net/> ·
 <https://github.com/crowdsecurity/crowdsec>
 
 Local detection plus a shared, curated blocklist built from what other
@@ -42,24 +42,24 @@ participants report.
 * This project does not try to replace it. A user who is comfortable sharing
   signals will probably get more value from a community system.
 
-### Web application firewalls
+### Web Application Firewalls
 
-**OWASP ModSecurity** — <https://github.com/owasp-modsecurity/ModSecurity>
-**Coraza** — <https://coraza.io/>
-**OWASP Core Rule Set** — <https://coreruleset.org/>
+**OWASP ModSecurity** (<https://github.com/owasp-modsecurity/ModSecurity>
+**Coraza**) <https://coraza.io/>
+**OWASP Core Rule Set**, <https://coreruleset.org/>
 
 They inspect HTTP requests against rules and block matching requests.
 
-* Stronger at: stopping a specific attack in a specific request — SQL injection,
+* Stronger at: stopping a specific attack in a specific request, such as SQL injection,
   cross-site scripting, path traversal.
 * Different: a WAF judges one request. This project judges a source's behaviour
   across 10, 60 and 900 second windows. They answer different questions.
 * Complementary. A WAF plus behaviour analysis is a reasonable pair.
 
-### Network intrusion detection
+### Network Intrusion Detection
 
-**Suricata** — <https://suricata.io/>
-**Zeek** — <https://zeek.org/>
+**Suricata** (<https://suricata.io/>
+**Zeek**) <https://zeek.org/>
 
 Deep protocol analysis, signatures, rich network logs.
 
@@ -71,9 +71,9 @@ Deep protocol analysis, signatures, rich network logs.
 * Zeek in particular can do everything the correlation engine here does, and
   much more, given a person to write the scripts.
 
-### Host-based monitoring
+### Host-based Monitoring
 
-**Wazuh** — <https://wazuh.com/>
+**Wazuh**: <https://wazuh.com/>
 
 Agent-based host monitoring, file integrity, log analysis, with a management
 server.
@@ -84,9 +84,9 @@ server.
 
 ### Honeypots
 
-**Cowrie** — <https://github.com/cowrie/cowrie>
-**OpenCanary** — <https://github.com/thinkst/opencanary>
-**T-Pot** — <https://github.com/telekom-security/tpotce>
+**Cowrie** (<https://github.com/cowrie/cowrie>
+**OpenCanary**) <https://github.com/thinkst/opencanary>
+**T-Pot**: <https://github.com/telekom-security/tpotce>
 
 Fake services that record what attackers do.
 
@@ -97,7 +97,7 @@ Fake services that record what attackers do.
   is a signal source for the decision engine, not a research honeypot.
 * Anyone whose goal is collecting attacker tooling should use Cowrie.
 
-### Machine learning for intrusion detection
+### Machine Learning for Intrusion Detection
 
 There is a large research literature, and a long history of models that score
 well on public datasets and poorly in production. The usual causes are label
@@ -109,7 +109,7 @@ frozen test set, explicit leakage checks (port, timing, generator fingerprint,
 source type, single feature), a published data card and model card, and a
 recommendation to run in shadow. See [Dataset](DATASET.md).
 
-## What is actually different here
+## What Is Actually Different Here
 
 No claim of being first or unique. The combination is:
 
@@ -128,7 +128,7 @@ No claim of being first or unique. The combination is:
 6. **A2-level English documentation**, because the intended users are not
    security engineers and often not native English speakers.
 
-## Where this project is weaker
+## Where This Project Is Weaker
 
 Stated plainly:
 
@@ -143,6 +143,6 @@ Stated plainly:
 A reader deciding what to install today should probably install Fail2ban or
 CrowdSec. This project is worth watching, not yet worth depending on.
 
-## See also
+## See Also
 
 * [Limitations](LIMITATIONS.md)

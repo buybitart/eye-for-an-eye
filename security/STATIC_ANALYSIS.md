@@ -1,4 +1,4 @@
-# Static analysis decisions, P6
+# Static Analysis Decisions, P6
 
 Bandit runs at medium/high severity. The six findings below were reviewed on
 2026-09-08. The gate keys each exception by rule, normalized filename and hash

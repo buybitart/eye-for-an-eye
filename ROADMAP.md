@@ -5,29 +5,29 @@ owner sets one.
 
 Status words used here: **Done**, **In progress**, **Planned**.
 
-## 1. Safe autonomous sensor — Done
+## 1. Safe Autonomous Sensor: Done
 
 Passive observation, bounded queues and storage, privilege separation, a
 read-only local API, and safe defaults.
 
-## 2. Local ONNX model — Done, shadow only
+## 2. Local ONNX Model: Done, Shadow Only
 
 A small logistic regression model in ONNX, run locally in a separate process,
 with a strict manifest contract. The current model is for watching, not for
 blocking.
 
-## 3. Dataset v1 — Done
+## 3. Dataset v1: Done
 
 One reproducible pipeline for three sources: lab traffic, offline capture files
 and unlabelled shadow telemetry. Group splits, a frozen test set and leakage
 checks.
 
-## 4. Shadow evaluation — In progress
+## 4. Shadow Evaluation: In Progress
 
 Measure the decision engine on real traffic, in Shadow Mode, on more than one
 kind of deployment. Publish what is measured and what is not.
 
-## 5. Open-source release — In progress
+## 5. Open-source Release: In Progress
 
 Done:
 
@@ -47,7 +47,7 @@ Remaining, and the reason this is still *In progress*:
   [docs/GITHUB_RELEASE.md](docs/GITHUB_RELEASE.md).
 * The release artifacts are unsigned. There is no signing key.
 
-## 6. Limited temporary enforcement — Planned
+## 6. Limited Temporary Enforcement: Planned
 
 Today blocking works only inside an isolated Linux network namespace. To make it
 useful on a real server it needs:
@@ -57,24 +57,24 @@ useful on a real server it needs:
 * a lockout-safe design, so an operator can never lose access to their own
   machine.
 
-## 7. Adaptive local learning — Planned
+## 7. Adaptive Local Learning: Planned
 
 Make the human-in-the-loop retraining cycle easier to run: better review tools,
 model candidate comparison in shadow, and a documented promotion and rollback
 process.
 
-## 8. Wider protocol support — Planned
+## 8. Wider Protocol Support: Planned
 
 More protocol families in the correlation engine and more decoy profiles.
 
-## Not planned
+## Not Planned
 
 * Cloud analysis of user traffic.
 * A central reputation service.
 * Any form of hack-back.
 * Automatic promotion of a model without a human decision.
 
-## See also
+## See Also
 
 * [Changelog](CHANGELOG.md)
 * [Limitations](docs/LIMITATIONS.md)

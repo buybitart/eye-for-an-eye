@@ -1,4 +1,4 @@
-# Model promotion
+# Model Promotion
 
 Promotion is the moment a new model starts making real decisions. It is the most
 dangerous step in the whole learning process, so it is the most restricted one.
@@ -10,7 +10,7 @@ command with `--yes`.
 Status: **Beta.** Threshold values are provisional and expected to change once
 there is enough real evaluation data to set them properly.
 
-## Why promotion is manual
+## Why Promotion Is Manual
 
 A promoted model decides who gets blocked. If promotion were automatic, then
 anyone who could shape the training data could eventually shape who gets blocked,
@@ -20,7 +20,7 @@ tool: it is the whole risk.
 So the project keeps a plain rule. The system may **recommend**. Only a person
 may **promote**.
 
-## The two halves
+## The Two Halves
 
 A quality gate produces a **recommendation**. It changes nothing.
 
@@ -40,7 +40,7 @@ Without `--yes` the command refuses and prints what it would have done.
 `PROMOTE` is a recommendation, not an action. The registry itself refuses a
 promotion that does not carry a passing gate.
 
-## Blocking checks
+## Blocking Checks
 
 A blocking check that fails means `FAIL`, which means `REJECT`. There is no
 override and no "promote anyway" flag.
@@ -64,7 +64,7 @@ A better overall score does not buy a pass on any of them. A model with a better
 F1 and a worse hard-negative result is rejected. Blocking a legitimate user is
 not paid for by being right more often elsewhere.
 
-## Warning checks
+## Warning Checks
 
 A warning check that fails means `PASS_WITH_WARNINGS`, which means `KEEP_ACTIVE`:
 a person should read the warnings before deciding.
@@ -75,7 +75,7 @@ a person should read the warnings before deciding.
 | `inference_latency` | at most twice the active model's latency |
 | `pr_auc`, `roc_auc`, `calibration_error` | measured against the active model |
 
-## The shadow requirement
+## The Shadow Requirement
 
 Before any recommendation to promote, a candidate must have run in shadow
 alongside the active model on at least **500 feature vectors**. Fewer than that
@@ -88,7 +88,7 @@ One shadow result holds promotion back on its own:
 Those disagreements are the expensive ones. They are listed so a person can look
 at them before anything is promoted.
 
-## What promotion actually does
+## What Promotion Actually Does
 
 One atomic write to `registry.json`:
 
@@ -101,7 +101,7 @@ No file is copied, moved or deleted. The old model is still there, unchanged.
 
 Restart the service for the change to take effect.
 
-## What promotion does not do
+## What Promotion Does Not Do
 
 * It does not delete the previous model.
 * It does not change any threshold, any policy rule, or any firewall setting.
@@ -110,7 +110,7 @@ Restart the service for the change to take effect.
 
 ## Related
 
-* [MODEL_REGISTRY.md](MODEL_REGISTRY.md) — where versions live
-* [MODEL_ROLLBACK.md](MODEL_ROLLBACK.md) — undoing a promotion
-* [MODEL_EVALUATION.md](MODEL_EVALUATION.md) — how the numbers are produced
-* [SHADOW_MODE.md](SHADOW_MODE.md) — running without enforcing
+* [MODEL_REGISTRY.md](MODEL_REGISTRY.md): where versions live
+* [MODEL_ROLLBACK.md](MODEL_ROLLBACK.md): undoing a promotion
+* [MODEL_EVALUATION.md](MODEL_EVALUATION.md): how the numbers are produced
+* [SHADOW_MODE.md](SHADOW_MODE.md): running without enforcing

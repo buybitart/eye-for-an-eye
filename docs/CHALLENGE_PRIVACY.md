@@ -1,8 +1,8 @@
-# Challenge privacy
+# Challenge Privacy
 
 What the challenge subsystem stores, what it does not, and why.
 
-## The token
+## The Token
 
 A challenge token contains four numbers and a random nonce:
 
@@ -30,7 +30,7 @@ A token cannot be linked to a person, and two tokens issued to the same client
 cannot be linked to each other: the nonce is random and nothing in the payload
 is stable across issues.
 
-## No fingerprinting
+## No Fingerprinting
 
 The challenge does not read anything from the browser. Specifically, there is
 no canvas fingerprinting, no WebGL fingerprinting, no audio fingerprinting, no
@@ -39,7 +39,7 @@ default challenge.
 
 Browser entropy is never used as an identity. There is no plan to add it.
 
-## No third parties
+## No Third Parties
 
 The challenge page loads nothing from anywhere. No fonts, no analytics, no
 images, no scripts, no CAPTCHA service. The page is under a kilobyte of static
@@ -47,14 +47,14 @@ HTML with `Content-Security-Policy: default-src 'none'`.
 
 No request leaves your server as part of a challenge.
 
-## Challenge state
+## Challenge State
 
 The system keeps a small record per client while it is being challenged:
 
 | | |
 | --- | --- |
 | Keyed by | the resolved client address from the P10 resolver |
-| Contains | counts — presented, passed, failed, timed out, attempts since a pass, requests and suspicious requests since a pass, and up to 16 recent timestamped outcomes |
+| Contains | counts: presented, passed, failed, timed out, attempts since a pass, requests and suspicious requests since a pass, and up to 16 recent timestamped outcomes |
 | Size | about 940 bytes |
 | Capacity | 10,000 clients, then least-recently-used eviction |
 | Lifetime | 1 hour, then expiry |
@@ -64,16 +64,16 @@ content. It is counts and times.
 
 The key is an address, which in some jurisdictions is personal data. It is held
 for at most an hour, is not written to disk by the challenge subsystem, and is
-not used to identify anyone — see below.
+not used to identify anyone. See below.
 
-## An address is not a person
+## An Address Is Not a Person
 
 The system never treats an address as a user identity. Addresses are shared: NAT,
 carrier-grade NAT, office networks, VPNs, CDNs and university networks all put
 many people behind one address. A challenge is attached to a web client context,
 not to a human being, and nothing in this system claims otherwise.
 
-## What is written down
+## What Is Written Down
 
 Logs record that a challenge was issued, valid, invalid, expired, rate limited,
 or that the subsystem failed. They record counts and reasons.
@@ -88,8 +88,8 @@ They never record:
 
 Central redaction removes the challenge cookie if it appears anywhere in a
 header, an error, or a debug log, and there are tests for that. The gateway's
-own explanation strips `Set-Cookie` before it can reach a log or a terminal —
-a token in a bug report is a live bypass.
+own explanation strips `Set-Cookie` before it can reach a log or a terminal.
+A token in a bug report is a live bypass.
 
 ## Metrics
 
@@ -104,16 +104,16 @@ Challenge outcomes may be stored as bounded numeric features. They are never
 labels: a failed challenge does not mark a row malicious and a passed one does
 not mark it benign. See [Challenge security](CHALLENGE_SECURITY.md) on the
 feedback loop, and [Self-learning](SELF_LEARNING.md) on how a label is actually
-produced — a person answering a review queue entry, and nothing else.
+produced. A person answering a review queue entry, and nothing else.
 
-## The secret
+## The Secret
 
 One local file, at least 32 bytes, `chmod 600`, never in Git, never in a log,
 never in CLI output, never in a dataset. Per-site keys are derived from it with
 HKDF, so hosting several sites on one server does not mean sharing one key
 between them.
 
-## What you should tell your users
+## What You Should Tell Your Users
 
 If you publish a privacy notice, the accurate version is short:
 

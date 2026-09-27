@@ -1,6 +1,6 @@
-# Release notes
+# Release Notes
 
-## Eye for an Eye 0.8.0 RC2 — Public Beta
+## Eye for an Eye 0.8.0 RC2: Public Beta
 
 **Mark this release as a pre-release.** The version is a release candidate and
 the posture is public beta. It is not stable, and the reason is in
@@ -14,13 +14,13 @@ service, no account, no API key.
 
 ---
 
-### Supported platforms
+### Supported Platforms
 
 | System | Status |
 | --- | --- |
 | Ubuntu 24.04 LTS, x86_64 | Supported and tested |
 | Ubuntu 24.04 LTS, other architectures | Expected to work, not tested |
-| Debian 12, Debian 13 | Release archive only — their system Python is not 3.12 |
+| Debian 12, Debian 13 | Release archive only, because their system Python is not 3.12 |
 | Other Linux with Python 3.12 | Expected to work, not tested |
 | Windows 11 x64 | Website-log monitoring and the demo only |
 
@@ -32,7 +32,7 @@ installer can obtain a 3.12 of its own.
 
 ---
 
-### What you get
+### What You Get
 
 **Safe Monitoring, out of the box.** Installing sets up the `production-shadow`
 posture: the whole analysis path runs, decides and records evidence, and enforces
@@ -44,7 +44,7 @@ checksum, install, `eye-for-an-eye setup`, `eye-for-an-eye start`,
 `eye-for-an-eye status`. No `git`, no `pip`, no virtual environment, no root, and
 no editing a configuration file by hand.
 
-**`eye-for-an-eye setup` asks what to watch** and checks the answer — that the
+**`eye-for-an-eye setup` asks what to watch** and checks the answer. It checks that the
 access log exists, that it can be read, and that its first line is in the format
 the reader parses. A log in the wrong format is refused with the command that
 fixes it, rather than accepted into a sensor that would silently see nothing.
@@ -59,7 +59,7 @@ healthy, and the readiness checks pass. It is Linux only.
 
 ---
 
-### What changed since 0.8.0 RC1
+### What Changed Since 0.8.0 RC1
 
 0.8.0 RC1 was the first push to a public repository, and publishing it ran this
 project's own continuous integration in public for the first time. Two jobs went
@@ -101,7 +101,7 @@ and automatic blocking is still off after installation.
 
 ---
 
-### New in the 0.8.0 release candidates
+### New in the 0.8.0 Release Candidates
 
 * A Linux release archive, `eye-for-an-eye-0.8.0rc2-linux-x86_64.tar.gz`, usable
   without the development repository, with `START_HERE.md` and `install.sh` at the
@@ -120,7 +120,7 @@ and automatic blocking is still off after installation.
 
 ---
 
-### Known limitations
+### Known Limitations
 
 **Real-world validation of autonomous blocking is pending.** Automatic blocking
 has never run against real Internet traffic. What it would block, and how often it

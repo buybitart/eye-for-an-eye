@@ -1,10 +1,10 @@
-# Benchmarks: how to repeat them (P5)
+# Benchmarks: How to Repeat Them (P5)
 
 This page says how the P5 speed measurements were made and what they do and do
 not prove. Read it if you want to repeat the numbers or check them yourself.
 All numbers come from **one laptop**. They are not a promise for your machine.
 
-## Order of work
+## Order of Work
 
 1. Run the unchanged P4 test suite: **193 passed, 2 skipped, 154 subtests**.
 2. Run the P4 operational sanity check.
@@ -19,7 +19,7 @@ The starting production SHA256 was
 `20e0de6e9aee3cd5021091f32a58499f0631425b91630657d6fa264d2a61d4ee`. This is a
 snapshot of files. It is not a made-up commit id.
 
-## The machine
+## The Machine
 
 | Item | Value |
 | --- | --- |
@@ -47,7 +47,7 @@ Seed 20260908, catalogue v2. Private and TEST-NET addresses are used as
 synthetic metadata. Sockets bind only to `127.0.0.1`. No internet, no firewall
 and no live capture were used.
 
-## The workload profiles
+## The Workload Profiles
 
 | Profile | What actually ran |
 |---|---|
@@ -59,7 +59,7 @@ and no live capture were used.
 | F conversation | HTTP request, FTP 5 commands, SSH identification; all catalogue profiles are called, and the table shows the last profile of each family |
 | G mixed | 400 paced base events plus derived results, WAL writer, 2 API clients, 1 scraper; separately a 250-row endpoint and a 50k-row reader |
 
-## What each measurement really measures
+## What Each Measurement Really Measures
 
 **Offline packet loop.** It decodes 64 pre-built SYN byte sequences and runs
 `PacketObserver` → fingerprint events → bounded serialization → correlation. It
@@ -83,7 +83,7 @@ admission into the queue, not durable throughput.
 batching. It has no full error or retention contract. The final
 `production_batches` figure measures the real `SQLiteStore.write_batch`.
 
-## How comparable the numbers are
+## How Comparable the Numbers Are
 
 Packet parsing, scanner correlation and production storage each got **3
 unprofiled runs before and after**, and the median is reported.
@@ -94,7 +94,7 @@ unprofiled runs before and after**, and the median is reported.
 For all other modules there was a **single run**. Those are exploratory
 evidence. No confidence interval and no universal speed-up factor is claimed.
 
-### The API outlier
+### The API Outlier
 
 The first final API mixed p95 was **25.615 ms**, which is worse than the initial
 baseline of **9.216 ms**. That artifact was kept, not deleted.
@@ -107,7 +107,7 @@ The editable distribution metadata seen during replay refers to the installed
 P5 package. The `executed_version` and `source_sha256` fields show which tree
 really ran.
 
-### The excluded large-table run
+### The Excluded Large-table Run
 
 The first `final-api_large.json` is marked `valid=false`. A wrong fixture
 timestamp made all queries return nothing. It is excluded from the report.
@@ -123,7 +123,7 @@ count. `cProfile` shows hotspots but adds its own overhead. The allocation
 sample of 32 packets is measured separately from throughput. See the
 [Python profiling guidance](https://docs.python.org/3.12/library/profile.html).
 
-## Regression checks
+## Regression Checks
 
 The stable smoke test checks budgets, repeatability, atomic rollback, state
 copying, the queue and shutdown. It makes **no** throughput assertions. The full
@@ -147,7 +147,7 @@ that the workload, the configuration and the source hashes all match.
 If a value goes past a threshold: keep the failing run, alternate the old and
 new versions, then profile only the part you confirmed.
 
-## Long runs (soak)
+## Long Runs (Soak)
 
 Soak scripts exist for 15 to 59 minutes. What actually ran here was **40 seconds
 and 60 seconds**.
@@ -160,7 +160,7 @@ garbage collection.
 Growth in an RSS cache and memory kept by the allocator are **not** a leak. And
 a stable short run does **not** prove there is no leak over many hours.
 
-## The autonomous decision path (P15.5R §23)
+## The Autonomous Decision Path (P15.5R §23)
 
 `--case autonomous` answers one question: what does attaching the P15 decision
 stack cost the runtime that carries it? Four configurations run back to back in
@@ -177,7 +177,7 @@ how much of the stack is attached:
 No enforcer is attached in any of them. Measuring one would measure process
 spawn on this machine and nothing about the decision path.
 
-### Two decision densities, because one number would hide the answer
+### Two Decision Densities, Because One Number Would Hide the Answer
 
 The autonomous path runs once per decision **window**, not once per packet:
 `DecisionEngine.observe` refuses to evaluate a source again until
@@ -185,7 +185,7 @@ The autonomous path runs once per decision **window**, not once per packet:
 therefore hides both the per-packet cost (almost nothing) and the per-decision
 cost (not nothing).
 
-**`interval_ms = 0`** — every event is a decision window. Deliberately the
+**`interval_ms = 0`**: every event is a decision window. Deliberately the
 densest possible stream and not a realistic one. 3,000 events, 3,000 decisions:
 
 | Case | seconds | events/s | p50 ms | p95 ms | vs legacy | added ms/decision |
@@ -195,7 +195,7 @@ densest possible stream and not a realistic one. 3,000 events, 3,000 decisions:
 | `journal` | 6.220 | 482.3 | 2.105 | 2.192 | 1.431x | 0.624 |
 | `journal_and_export` | 6.434 | 466.3 | 2.173 | 2.271 | 1.480x | 0.695 |
 
-**The shipped 2,000 ms interval** — 3,000 events, 8 decisions. This is what a
+**The shipped 2,000 ms interval**: 3,000 events, 8 decisions. This is what a
 stream at this event rate pays, and it is not a claim about any other event
 rate:
 
@@ -215,14 +215,14 @@ the noise. Both numbers are ALLOW-path costs: no window in this workload reached
 TEMP_BLOCK, and a block is journalled a second time after the enforcement
 attempt.
 
-### Where the time goes
+### Where the Time Goes
 
 A profiled run (`--profile`, which writes its profile JSON under `reports/`)
 puts `pipeline.decide` at roughly 8% of cumulative time. The dominant cost on
-this path is `TTLCache._size` — the correlation engine's byte accounting — not
+this path is `TTLCache._size` (the correlation engine's byte accounting), not
 the decision stack. Profiled throughput is never the unprofiled baseline.
 
-### The machine these numbers came from
+### The Machine These Numbers Came From
 
 | Item | Value |
 | --- | --- |
@@ -239,7 +239,7 @@ python -m benchmarks.run --case autonomous --full --output <your-file>.json
 python -m benchmarks.run --case autonomous --profile --output <your-profile>.json
 ~~~
 
-## See also
+## See Also
 
 * [Capacity and internal targets](CAPACITY.md)
 * [Performance](PERFORMANCE.md)

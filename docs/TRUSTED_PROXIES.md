@@ -1,4 +1,4 @@
-# Trusted proxies and challenges
+# Trusted Proxies and Challenges
 
 How the challenge subsystem behaves behind a reverse proxy or a CDN.
 
@@ -7,11 +7,11 @@ The rules for *resolving* a client address are in
 unchanged in P11. This page covers what is new: what a challenge does with the
 result.
 
-## The one-line version
+## The One-line Version
 
 A challenge is safe behind a proxy. A network block is not.
 
-## Why they are different
+## Why They Are Different
 
 A network block acts on an address. Behind a CDN, that address is the CDN, and
 the CDN is carrying every other visitor to your site. Blocking it takes the site
@@ -34,7 +34,7 @@ So the ceilings are different:
 Every proxied client is `network_enforceable = False`, and the web sensor caps
 the action at RATE_LIMIT with a reason that says why. This is a regression test,
 not a convention: `test_challenge_lab.py` and `test_web_enforcement_safety.py`
-both check it, and one of them checks the control case too — a *direct* scanner
+both check it, and one of them checks the control case too. A *direct* scanner
 must still reach TEMP_BLOCK, or the test proves nothing.
 
 ## Configuration
@@ -54,7 +54,7 @@ With no trusted proxies configured, forwarded headers are read and ignored, and
 the address that actually connected is used. For a directly exposed server that
 is correct.
 
-## Challenge state is per client, not per proxy
+## Challenge State Is Per Client, Not Per Proxy
 
 Each resolved client gets its own challenge context. Twelve clients behind one
 CDN address are twelve contexts, not one.
@@ -66,7 +66,7 @@ rate-limit decision. The LAB fixtures check exactly this: a scanner and an
 ordinary browser arriving through the same CDN address end with different risk
 scores, and the ordinary one is never challenged.
 
-## When the proxy does not tell you who the client is
+## When the Proxy Does Not Tell You Who the Client Is
 
 If a proxy forwards nothing usable, every client behind it resolves to the same
 address, with `MEDIUM` or `LOW` confidence.
@@ -74,7 +74,7 @@ address, with `MEDIUM` or `LOW` confidence.
 The system does not guess. It says so:
 
 - data quality drops, which lowers the strongest available action,
-- `LOW` confidence caps the action at WATCH and refuses a challenge outright —
+- `LOW` confidence caps the action at WATCH and refuses a challenge outright:
   a challenge is attached to a client, and if you do not know which client,
   there is nothing to attach it to,
 - `proxy_identity_uncertain_total` counts it.
@@ -83,7 +83,7 @@ If you see that counter rising, fix the proxy configuration. Until it is fixed,
 the web layer is watching an aggregate and cannot act safely, which is the
 correct behaviour but not a useful one.
 
-## CDN caching
+## CDN Caching
 
 A challenge response is meant for one client. Every one is sent with
 `Cache-Control: no-store` and `Pragma: no-cache`.
@@ -96,7 +96,7 @@ likely to be discovered by your users rather than by you.
 Check this before stage 3 of the deployment sequence in
 [Progressive defense](PROGRESSIVE_DEFENSE.md).
 
-## Cookies through a proxy
+## Cookies Through a Proxy
 
 The challenge cookie is set on your site's domain by your origin, so it travels
 like any other cookie your application sets. Two things to check:
@@ -109,7 +109,7 @@ like any other cookie your application sets. Two things to check:
   `max_attempts` times before the system gives up. Add such routes to
   `no_challenge_path_prefixes`.
 
-## Checking it
+## Checking It
 
 ```
 eye-for-an-eye challenge doctor

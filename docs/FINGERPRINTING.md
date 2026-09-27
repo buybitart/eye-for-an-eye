@@ -4,7 +4,7 @@ This page explains what the sensor reads from packet headers. It also explains
 how careful the system is about what those numbers mean. Read it if you want to
 know why the tool almost never says "this is Windows" or "this is a VPN".
 
-## Three different things
+## Three Different Things
 
 The code keeps three things apart:
 
@@ -21,7 +21,7 @@ Confidence belongs to the hypothesis only. If a result has no hypothesis, a
 confidence of `UNKNOWN` does not mean the bytes we read are unknown. It means
 there is no guess to rate.
 
-## How a result is stored
+## How a Result Is Stored
 
 The runtime writes one `fingerprint_observation` event per feature:
 
@@ -34,7 +34,7 @@ The base event is always written before the fingerprint results. The
 `udp`, `icmp`, `icmpv6` and `other`. Every result must fit inside the shared
 JSON size boundary.
 
-## Short captures
+## Short Captures
 
 `capture_truncated` means the bytes we have are shorter than the length written
 in the IP or transport header.
@@ -50,7 +50,7 @@ When the body is incomplete:
 * header fields we did read are still kept as separate measurements, with a
   limitation attached.
 
-## TTL and IPv6 hop limit
+## TTL and IPv6 Hop Limit
 
 TTL ("time to live") is a small counter in the IP header. Each router lowers it
 by one. IPv6 calls the same idea "hop limit".
@@ -77,7 +77,7 @@ is `UNKNOWN`. No operating system is ever named from a TTL value.
 `ttl_observation` is kept as a P0 compatibility view. The current pipeline uses
 the split result.
 
-## TCP header and options
+## TCP Header and Options
 
 A bounded parser reads up to 60 bytes of the TCP header. It reads window size,
 flags, sequence and acknowledgment numbers, MSS, window scale, SACK-permitted and
@@ -121,7 +121,7 @@ Rules and limits:
 This matches the narrow job the ID field actually has, which is fragmentation.
 See [RFC 6864](https://www.rfc-editor.org/rfc/rfc6864.html).
 
-## TCP timestamps
+## TCP Timestamps
 
 State is kept per directed flow: up to 8 samples, hard maximum 32, with a time
 limit, an LRU cache and a 16 MiB byte budget.
@@ -164,7 +164,7 @@ database of our own. The content of a production p0f database, its accuracy and
 the effect of middleboxes have **not** been checked. The SHA-256 is computed at
 startup. Reloading the database while running is not supported.
 
-## Path and enrichment
+## Path and Enrichment
 
 `path_characteristics` stores the observed inbound TTL or hop limit, plus an
 optional reply TTL from an active probe. `nat_hypothesis` is always `UNKNOWN`.
@@ -197,7 +197,7 @@ not implemented. Missing transport fields are never invented. IPv6 meanings are
 not copied from IPv4; see
 [RFC 8200](https://www.rfc-editor.org/rfc/rfc8200.html).
 
-## What this data cannot prove
+## What This Data Cannot Prove
 
 The current data does not prove a person, the owner of a botnet, the real address
 behind a VPN, or the wider intent of a source.

@@ -1,4 +1,4 @@
-# Nginx and the challenge
+# Nginx and the Challenge
 
 How the challenge fits alongside the P10 Nginx integration.
 
@@ -8,10 +8,10 @@ still never reloads Nginx.
 
 Status: **Beta.** Shadow mode only is the recommended deployment.
 
-## The honest position
+## The Honest Position
 
 P10 reads a log. A log is written *after* Nginx has answered the request, so the
-P10 sensor cannot change what a client receives — which is why it is safe by
+P10 sensor cannot change what a client receives, which is why it is safe by
 construction.
 
 A challenge has to be decided while the request is still in flight. That is a
@@ -34,7 +34,7 @@ for each request and acts on the plan.
 Anyone telling you a one-line Nginx snippet makes this work has not tried it on
 a site that people use.
 
-## Start in shadow mode — no Nginx change needed
+## Start in Shadow Mode: No Nginx Change Needed
 
 ```toml
 [challenge]
@@ -55,7 +55,7 @@ The number that decides whether to go further is how often ordinary traffic
 would have been challenged. If it is not very close to zero, the thresholds are
 wrong for your site, and no amount of Nginx configuration will fix that.
 
-## Creating the secret
+## Creating the Secret
 
 ```bash
 sudo install -d -m 750 /etc/eye-for-an-eye
@@ -73,12 +73,12 @@ eye-for-an-eye challenge doctor
 It refuses a secret shorter than 32 bytes, and refuses one that other users can
 read. That refusal disables challenges; it does not stop the sensor.
 
-## Wiring up an active challenge
+## Wiring Up an Active Challenge
 
 Two shapes work. Both keep the rule from §65: **no Internet-facing control
 endpoint.**
 
-### Option A: in your application
+### Option A: In Your Application
 
 If your site is an application you control, call the gateway from your
 middleware. This is the simplest correct option, because your application
@@ -109,10 +109,10 @@ def middleware(request):
 ```
 
 `handle` never raises. If anything inside it fails, the plan says `PASS` and the
-request goes through. That behaviour is not incidental — it is asserted by tests
+request goes through. That behaviour is not incidental. It is asserted by tests
 that break each entry point on purpose.
 
-### Option B: a local responder behind `auth_request`
+### Option B: A Local Responder Behind `auth_request`
 
 If you cannot change the application, Nginx's `auth_request` can ask a local
 service. The service must bind to a Unix socket or loopback only, and must
@@ -138,7 +138,7 @@ location = /_efae {
 Three things must be true of that service:
 
 - it binds to a Unix socket or `127.0.0.1`/`::1`, never a public address;
-- it answers only the challenge question — it is not an administrative endpoint,
+- it answers only the challenge question; it is not an administrative endpoint,
   and it exposes no commands;
 - if it is down, the site stays up. Set `proxy_next_upstream` and your
   `error_page` handling so that an unreachable responder means "allow", not
@@ -148,7 +148,7 @@ That last point is the one people get wrong. A security component that returns
 500 to every visitor when it fails has caused a worse outage than the scanner it
 was watching for.
 
-## Never reload without validating
+## Never Reload Without Validating
 
 Whatever you change:
 
@@ -164,10 +164,10 @@ and will not edit your configuration.
 Challenge responses are sent with `Cache-Control: no-store`. If Nginx or a CDN in
 front of it is configured to cache regardless of origin headers, a challenge
 meant for one client will be served to everyone and the site will break. Check
-this before enabling active challenges — see
+this before enabling active challenges. See
 [Trusted proxies](TRUSTED_PROXIES.md).
 
-## Rolling back
+## Rolling Back
 
 Challenges are off by default and disabling them is one line:
 

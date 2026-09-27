@@ -1,4 +1,4 @@
-# Model registry
+# Model Registry
 
 The registry is a local directory that holds model versions and records which one
 the sensor loads.
@@ -8,7 +8,7 @@ central server. Everything here is a file on your own disk.
 
 Status: **Beta.**
 
-## Why this exists
+## Why This Exists
 
 Before the registry there was one model path in the configuration file. Changing
 the model meant overwriting a file. That has three problems:
@@ -51,7 +51,7 @@ model so you can compare them, and that is all it can do.
 
 Only one version is `ACTIVE` at a time. Only one is `CANDIDATE`.
 
-## Why a version directory is immutable
+## Why a Version Directory Is Immutable
 
 Because promotion then becomes a single small write.
 
@@ -63,7 +63,7 @@ half a model.
 
 If a version directory could be edited in place, none of that would hold.
 
-## What is checked before a version is registered
+## What Is Checked Before a Version Is Registered
 
 A candidate is written into a staging directory first, checked, and only then
 moved into place. If any check fails, nothing is left behind.
@@ -93,7 +93,7 @@ eye-for-an-eye model rollback --yes
 
 `model list --json` gives the same information for scripts.
 
-## The audit trail
+## The Audit Trail
 
 `registry.json` keeps a bounded history of what happened: candidates registered,
 promotions, rollbacks, rejections, and the reason given for each. It answers the
@@ -101,7 +101,7 @@ question "why is this model running?" months later.
 
 The history does not contain addresses, review identities, or traffic.
 
-## What the registry does not do
+## What the Registry Does Not Do
 
 * It does not train.
 * It does not decide. A quality gate decides, and a person decides after that.
@@ -111,7 +111,7 @@ The history does not contain addresses, review identities, or traffic.
 
 ## Related
 
-* [MODEL_PROMOTION.md](MODEL_PROMOTION.md) — how a candidate becomes active
-* [MODEL_ROLLBACK.md](MODEL_ROLLBACK.md) — how to undo that
-* [ONNX_MODEL.md](ONNX_MODEL.md) — the model format and how it is loaded
-* [MODEL_EVALUATION.md](MODEL_EVALUATION.md) — how a model is measured
+* [MODEL_PROMOTION.md](MODEL_PROMOTION.md): how a candidate becomes active
+* [MODEL_ROLLBACK.md](MODEL_ROLLBACK.md): how to undo that
+* [ONNX_MODEL.md](ONNX_MODEL.md): the model format and how it is loaded
+* [MODEL_EVALUATION.md](MODEL_EVALUATION.md): how a model is measured

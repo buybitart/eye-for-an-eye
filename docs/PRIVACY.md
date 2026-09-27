@@ -3,7 +3,7 @@
 This page says what the system stores, what it never stores, and where the data
 goes.
 
-## Where your data goes
+## Where Your Data Goes
 
 Nowhere.
 
@@ -17,7 +17,7 @@ The only optional network feature is RDAP lookup (`enrichment.rdap_enabled`).
 It is **off** by default. If you turn it on, you send an IP address to a public
 registry service. The documentation says so at the point where you turn it on.
 
-## What is never stored
+## What Is Never Stored
 
 The redaction code (`eye_for_an_eye/security/redaction.py`) removes these before
 anything is written to the database, the log file or the API:
@@ -34,12 +34,12 @@ There is no second path that writes around it.
 
 Two things replace the removed data:
 
-* `payload_length` — a number, for example 340.
-* `credential_like_attempt` — true or false.
+* `payload_length`: a number, for example 340.
+* `credential_like_attempt`: true or false.
 
 That is enough to say "someone tried to log in", without keeping what they typed.
 
-## What is stored
+## What Is Stored
 
 For each event:
 
@@ -58,7 +58,7 @@ For each decision:
 * the reasons,
 * which behaviour numbers contributed.
 
-## The source address
+## The Source Address
 
 The source IP address **is** stored. A network defender that does not know who
 connected cannot work.
@@ -70,7 +70,7 @@ But:
 * An IP address is not a person. The documentation repeats this on purpose.
 * GeoIP, when enabled, is an estimate. It is not proof of location.
 
-## How long it is kept
+## How Long It Is Kept
 
 You choose. The website profile keeps 7 days:
 
@@ -84,7 +84,7 @@ max_bytes = 268435456
 Old rows are deleted when any limit is passed. The database has a hard size
 limit, so it cannot fill your disk.
 
-## Deception data
+## Deception Data
 
 Decoy services record what a visitor did. They do not record what the visitor
 typed:
@@ -94,7 +94,7 @@ typed:
 * there is no shell and no command execution,
 * payload previews are off (`preview_enabled = false`).
 
-## Shadow telemetry and datasets
+## Shadow Telemetry and Datasets
 
 Data exported from a live system is treated as sensitive:
 
@@ -106,13 +106,13 @@ Data exported from a live system is treated as sensitive:
 The data card lists exactly what a dataset row contains:
 [DATA_CARD_v1.md](DATA_CARD_v1.md).
 
-## Your rights over your own data
+## Your Rights Over Your Own Data
 
 The database is a single SQLite file that you own. You can read it, copy it,
 move it or delete it with normal tools. Nothing is encrypted with a key you do
 not have, and nothing is hidden from you.
 
-## See also
+## See Also
 
 * [Storage](STORAGE.md)
 * [Logging](LOGGING.md)

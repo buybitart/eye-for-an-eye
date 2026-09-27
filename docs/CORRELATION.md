@@ -8,9 +8,9 @@ The CorrelationEngine (the part of the code that finds patterns) groups events b
 
 The default sliding time windows are 60 seconds and 900 seconds. There can be at most 4 windows. Each window must be between 1 and 3600 seconds. The TTL (how long data is kept) must cover the longest window. The system's clock is a "watermark": it only moves forward, based on capture or event timestamps. Events that arrive out of order, but still inside the time horizon, are sorted correctly. Events that arrive too late are dropped, and a counter called `late_events` counts them. If test data (an "operator corpus") has timestamps in the future, the system trusts them as capture metadata.
 
-One limited-size buffer holds samples for all windows together. Its limits are: `max_sources=10000`, `max_events_per_source=256`, `max_bytes=32 MiB` (mebibytes). Three quarters of that byte budget goes to the "source cache" (data about each address). One quarter goes to "distributed groups" (up to 1024 of them). The buffer uses TTL (a time limit) and LRU (Least Recently Used — old items are removed first) to stay small, and it tracks its own memory use in code fields. Short-lived copies of data, and the real memory used by the running program (native RSS), need separate, outside limits. This stored state never contains payload data or passwords.
+One limited-size buffer holds samples for all windows together. Its limits are: `max_sources=10000`, `max_events_per_source=256`, `max_bytes=32 MiB` (mebibytes). Three quarters of that byte budget goes to the "source cache" (data about each address). One quarter goes to "distributed groups" (up to 1024 of them). The buffer uses TTL (a time limit) and LRU (Least Recently Used, old items are removed first) to stay small, and it tracks its own memory use in code fields. Short-lived copies of data, and the real memory used by the running program (native RSS), need separate, outside limits. This stored state never contains payload data or passwords.
 
-When a limit is reached, old samples are removed and lost. Counters called `sample_drops` and cache counters show this in the running status and in the offline summary report. After this happens, event counts are only a lower estimate — the real number could be higher. After a sample limit is hit, the confidence level drops to LOW at most, and "targeted-hypothesis" is not allowed. A "capped" (limited) flag stays on that source's data until it expires or is removed.
+When a limit is reached, old samples are removed and lost. Counters called `sample_drops` and cache counters show this in the running status and in the offline summary report. After this happens, event counts are only a lower estimate. The real number could be higher. After a sample limit is hit, the confidence level drops to LOW at most, and "targeted-hypothesis" is not allowed. A "capped" (limited) flag stays on that source's data until it expires or is removed.
 
 A directed connection is identified by a `FlowKey`, which has fixed fields: source IP, source port, destination IP, destination port, and transport protocol (like TCP or UDP). For ICMP and ICMPv6 traffic, the port fields are empty (`None`). Evidence about connections (`FlowEvidence`) has its own separate limits: TTL, LRU, and 4 MiB of memory. The system only marks a `completed_handshake` (a full TCP connection setup) after it sees a SYN packet, then a matching SYN-ACK packet, then a matching ACK packet. A single ACK packet alone does not count as a handshake. The live capture helper only sees incoming local packets, so it may not see the full exchange between both sides.
 
@@ -20,10 +20,10 @@ A directed connection is identified by a `FlowKey`, which has fixed fields: sour
 | --- | --- |
 | `unique_destination_ports` / `unique_destinations` | How many different ports or hosts were seen, inside the limited time window. |
 | `unique_protocol_probes` / `probe_family_diversity` | How many known "probe templates" (test patterns tools use to scan) matched, and how many different probe "families" (prefix groups) were recognized. |
-| `connection_attempts` | The number of captured SYN packets, or connections the listener accepted. This does not see every attempt — it is a partial view. |
+| `connection_attempts` | The number of captured SYN packets, or connections the listener accepted. This does not see every attempt. It is a partial view. |
 | `completed_handshakes` | A connection accepted by the operating system kernel, or a full 3-step TCP handshake that was fully observed. |
 | `max_probe_repetition` | How many times the same short-lived HMAC (a keyed hash used to compare data safely) digest repeats, not counting flagged retransmissions or duplicate packets. |
-| `inter_arrival_mean_seconds` / `CV` | The average time between useful samples (or between attempts, if there is no payload), and the CV (coefficient of variation — how much that timing varies). |
+| `inter_arrival_mean_seconds` / `CV` | The average time between useful samples (or between attempts, if there is no payload), and the CV (coefficient of variation, how much that timing varies). |
 | `sequential_port_fraction` / `repeated_sequence` | The share of ports that are next to each other in number, and whether a 2-to-4-step pattern repeats. |
 | `credential_attempts` / `protocol_anomalies` | Simple true/false counters. They never store any actual username or password content. |
 | `response_continuations` / `retry_observations` | Data the client sent after it saw a response, and repeated TCP sequence numbers that look like retries. |
@@ -33,9 +33,9 @@ The classifier (the part that decides the label) does not add TTL or p0f confide
 
 ## Saving Payload Repetition Without Storing Credentials
 
-The `PayloadFeatures` code checks at most 4096 bytes of a payload for patterns that look like login credentials. It only saves a true/false flag and a count — never the actual content. When it recognizes a credential-like attempt, it does not create a digest (hash) for it. For all other limited payloads, it uses HMAC-SHA256 (a keyed hashing method) with a new random key each time the analysis starts. This key is never stored or logged. This means the digests cannot be used as an identity, and cannot be matched across restarts or between different sensors. A flag called `inspection_limited` shows that this checking was cut short.
+The `PayloadFeatures` code checks at most 4096 bytes of a payload for patterns that look like login credentials. It only saves a true/false flag and a count, never the actual content. When it recognizes a credential-like attempt, it does not create a digest (hash) for it. For all other limited payloads, it uses HMAC-SHA256 (a keyed hashing method) with a new random key each time the analysis starts. This key is never stored or logged. This means the digests cannot be used as an identity, and cannot be matched across restarts or between different sensors. A flag called `inspection_limited` shows that this checking was cut short.
 
-The setting `min_probe_evidence` controls how many bytes are needed before a match counts. Its default is 8 bytes. When the data matches a known probe template, the system reports it only as "Nmap-compatible probe; tool identity unknown." (Nmap is a well-known network scanning tool, but a match does not prove Nmap was used.) A prefix match is not a probability that Nmap was used — any client could send data that matches one of these templates. The format for these probe templates is described in the [Nmap reference](https://nmap.org/book/vscan-fileformat.html).
+The setting `min_probe_evidence` controls how many bytes are needed before a match counts. Its default is 8 bytes. When the data matches a known probe template, the system reports it only as "Nmap-compatible probe; tool identity unknown." (Nmap is a well-known network scanning tool, but a match does not prove Nmap was used.) A prefix match is not a probability that Nmap was used, any client could send data that matches one of these templates. The format for these probe templates is described in the [Nmap reference](https://nmap.org/book/vscan-fileformat.html).
 
 ## Explainable Scoring Rules
 
@@ -69,7 +69,7 @@ Every result includes: reasons showing which rules contributed, up to 8 supporti
 
 ## Distributed Pattern Detection
 
-There is a separate, size-limited cache for groups. A group is defined by: sensor, a similar digest or template, and the destination IP, port, and transport protocol. When at least 5 different source addresses appear in the same time window and match, the system reports `distributed_scan_pattern` with LOW confidence. The score is `source_count × 5`, capped at a maximum — it is not a probability. This pattern can also come from common client software, or from spoofing (faking addresses). The system never concludes that this is the same attacker or the same botnet owner.
+There is a separate, size-limited cache for groups. A group is defined by: sensor, a similar digest or template, and the destination IP, port, and transport protocol. When at least 5 different source addresses appear in the same time window and match, the system reports `distributed_scan_pattern` with LOW confidence. The score is `source_count × 5`, capped at a maximum. It is not a probability. This pattern can also come from common client software, or from spoofing (faking addresses). The system never concludes that this is the same attacker or the same botnet owner.
 
 Results calculated this way are saved as a `correlation_result`. They are never fed back into the engine as new input. Classification never controls network responses or the firewall by itself. The live running system uses the same size-limited queue as before. The offline "paced" mode uses the same `EventAnalysis` code, but without background worker threads and without sampling.
 
@@ -79,11 +79,11 @@ The file [calibration.py](../eye_for_an_eye/calibration.py) reads a local test-d
 
 Labels apply to the last active source and window. The system computes a confusion matrix (a table comparing predicted labels to real labels) and one-vs-rest precision, recall, FPR (false positive rate), and FNR (false negative rate). When a calculation would divide by zero, the result is `null` instead. If a source or window was never observed, the result is `unobserved`. Distributed group detection is checked with separate behavior tests. To label test data at the group level, the schema (data format) would need a new version.
 
-The synthetic (artificially made) test fixtures are only "contract checks" — they check that the code behaves as expected. They are not a realistic data set for tuning the system. Weights are never trained automatically. An example of how to reproduce these tests, and the benchmark results, are in [LIMITATIONS.md](LIMITATIONS.md).
+The synthetic (artificially made) test fixtures are only "contract checks". They check that the code behaves as expected. They are not a realistic data set for tuning the system. Weights are never trained automatically. An example of how to reproduce these tests, and the benchmark results, are in [LIMITATIONS.md](LIMITATIONS.md).
 
-## See also
+## See Also
 
-- [CONFIDENCE.md](CONFIDENCE.md) — how confidence levels work
-- [FINGERPRINTING.md](FINGERPRINTING.md) — how TTL and p0f based fingerprinting works
-- [LIMITATIONS.md](LIMITATIONS.md) — known limits of the analysis
-- [MATH_MODEL.md](MATH_MODEL.md) — the math behind scoring and the model
+- [CONFIDENCE.md](CONFIDENCE.md): how confidence levels work
+- [FINGERPRINTING.md](FINGERPRINTING.md): how TTL and p0f based fingerprinting works
+- [LIMITATIONS.md](LIMITATIONS.md): known limits of the analysis
+- [MATH_MODEL.md](MATH_MODEL.md): the math behind scoring and the model

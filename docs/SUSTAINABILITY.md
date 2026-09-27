@@ -2,11 +2,11 @@
 
 Can this project still be alive in three years? This page answers honestly.
 
-## The short answer
+## The Short Answer
 
 Not as it is today. One person maintains it, and nothing funds it.
 
-## Bus factor: 1
+## Bus Factor: 1
 
 One person wrote all of it. If that person stops, the project stops.
 
@@ -24,7 +24,7 @@ the same as having a second maintainer.
 
 **Goal: find one more maintainer.** Nothing else on this page matters as much.
 
-## What keeps working without maintenance
+## What Keeps Working Without Maintenance
 
 If development stopped tomorrow, an installed copy would keep running:
 
@@ -38,7 +38,7 @@ It would slowly become less useful, and eventually a dependency vulnerability
 would make it unwise to run. But it would not stop working on a schedule
 somebody else controls. For the intended users that is a real property.
 
-## Maintenance load
+## Maintenance Load
 
 | Task | How often | Effort |
 | --- | --- | --- |
@@ -53,7 +53,7 @@ somebody else controls. For the intended users that is a real property.
 The Python 3.12 pin (`>=3.12,<3.13`) is a real maintenance debt. It must be
 widened before 3.12 leaves support.
 
-## Release process
+## Release Process
 
 Documented in [Release process](RELEASE.md). Gates: tests, lint, type check,
 security scan, dependency audit, package smoke test, SBOM, checksums.
@@ -61,7 +61,7 @@ security scan, dependency audit, package smoke test, SBOM, checksums.
 Two blockers stop any release today: no licence, and no private security
 reporting channel.
 
-## Model and dataset sustainability
+## Model and Dataset Sustainability
 
 A model ages as traffic changes. The project's answer is that the model is
 optional and the mathematical engine is not: an old model can be removed and the
@@ -97,7 +97,7 @@ Options the project should not take, because they would break its purpose:
 * A shared reputation network as the default.
 * An open-core split where the real detection is closed.
 
-## Honest risk list for a funder
+## Honest Risk List for a Funder
 
 * One maintainer.
 * No users, so no external pressure to keep it alive.
@@ -107,7 +107,7 @@ Options the project should not take, because they would break its purpose:
 
 None of these is hidden anywhere else in this documentation either.
 
-## See also
+## See Also
 
 * [Governance](GOVERNANCE.md)
 * [Distribution](DISTRIBUTION.md)

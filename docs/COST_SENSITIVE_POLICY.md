@@ -1,8 +1,8 @@
-# Cost-sensitive policy
+# Cost-sensitive Policy
 
 Why the cutoff is 0.976 and not 0.5.
 
-## 0.5 is not a decision boundary
+## 0.5 Is Not a Decision Boundary
 
 It is the number people reach for when they have not asked what a mistake costs.
 A classifier outputs 0.5 at the point where the two classes are equally likely,
@@ -12,7 +12,7 @@ In security they are not comparable, and on a public website they are not close.
 **Blocking somebody who did nothing wrong** denies a real person a real service.
 They cannot tell you, cannot appeal, and in most cases will not come back. It
 lands hardest on people using unusual networks, unusual clients, shared
-addresses and assistive technology — that is, on exactly the people a
+addresses and assistive technology. That is, on exactly the people a
 distribution-based system finds unusual.
 
 **Allowing a scanner to continue** means it continues, against a system that is
@@ -23,7 +23,7 @@ Those are different sizes of wrong. The cutoff follows from that, not from a
 round number.
 
 
-## The cutoff is a probability, and twice it was not given one
+## The Cutoff Is a Probability, and Twice It Was Not Given One
 
 Precise history, because it is useful engineering history rather than an
 embarrassment.
@@ -36,18 +36,18 @@ review because nothing at the call site said which quantity was which.
 **P15.1** replayed a trusted labelled corpus through the whole system and found
 the consequence: the system blocked nothing at all, on any scenario. It disabled
 autonomous blocking on an uncalibrated estimate rather than lowering the cutoff
-to make blocks appear — `CALIBRATION_UNAVAILABLE` became a hard gate.
+to make blocks appear, `CALIBRATION_UNAVAILABLE` became a hard gate.
 
 **P15.2** supplies the missing quantity. A validated calibrator maps a score to
 P(malicious | score) and carries a Wilson lower bound over its own fitting
 sample; the cost comparison uses that bound. `decision/scores.py` gives every
 number on the path a type, and the one function that needs a probability accepts
-only the type that is one — a bare float included, because the P15.1 bug was a
+only the type that is one. A bare float included, because the P15.1 bug was a
 float arriving from a fallback branch with nothing to mark it.
 
 None of the numbers on this page changed in any of those cycles.
 
-## The cost matrix
+## The Cost Matrix
 
 ```
                     actual benign     actual malicious automation
@@ -58,21 +58,21 @@ RATE_LIMIT          rate-limit cost          rate-limit cost
 ```
 
 Correct outcomes cost zero, which keeps the arithmetic simple and the two
-numbers that matter visible. The intermediate actions are not free — a challenge
-asks a real person to wait — because an expected-loss calculation that treated
+numbers that matter visible. The intermediate actions are not free (a challenge
+asks a real person to wait), because an expected-loss calculation that treated
 them as costless would reach for them constantly.
 
-## The costs are weights, not money
+## The Costs Are Weights, Not Money
 
 `C_FN = 1.0` is the reference unit throughout. Every `C_FP` reads as *"this many
 times worse than letting one automated source carry on for one block interval"*.
 
 Nothing here is a currency value, and none of it is derived from measurement.
 Inventing a monetary figure would give false precision to what is a judgement
-about a particular site — the kind of number that survives three copy-pastes and
+about a particular site. The kind of number that survives three copy-pastes and
 arrives somewhere as a fact.
 
-## The cutoff
+## The Cutoff
 
 From the simplest cost matrix:
 
@@ -80,7 +80,7 @@ From the simplest cost matrix:
 p* = C_FP / (C_FP + C_FN)
 ```
 
-## The shipped profiles
+## The Shipped Profiles
 
 | Profile | C_FP | Cutoff | Network block | For |
 | --- | --- | --- | --- | --- |
@@ -99,7 +99,7 @@ false, so it refuses an autonomous network block *at any probability*, including
 1.0. The cost of breaking a payment integration is not a number you trade against
 reconnaissance; observation and rate limiting remain.
 
-## The cutoff is a floor, not a decision
+## The Cutoff Is a Floor, Not a Decision
 
 Reaching `p*` means the arithmetic no longer favours allowing. That is a
 necessary condition and nowhere near a sufficient one. Everything in
@@ -115,12 +115,12 @@ has to be, as a fraction of the larger loss. A small advantage is noise.
 pessimistic reading of the probability, never the optimistic one. See
 [DECISION_UNCERTAINTY.md](DECISION_UNCERTAINTY.md).
 
-## What this means in practice
+## What This Means in Practice
 
 On the default `public_website` profile, an autonomous network block requires a
 calibrated probability near 0.999, several hundred observations, complete data,
 an in-distribution sample, a healthy undrifted model and four independent
-evidence families — because a conservative estimate must still clear 0.9756
+evidence families, because a conservative estimate must still clear 0.9756
 after uncertainty has been subtracted from it.
 
 **This makes an autonomous network block on a public website a rare event by
@@ -129,7 +129,7 @@ to be tuned away. The ordinary load is carried by the softer actions: observe,
 watch, challenge, rate limit. Blocking is what happens when the evidence is
 overwhelming and cheap to be wrong about.
 
-## Per-scope profiles
+## Per-scope Profiles
 
 ```toml
 [autonomy]
@@ -145,7 +145,7 @@ An unmapped scope gets the default, and the default is the most protective of th
 general-purpose profiles rather than the most permissive: a site nobody
 configured is a site nobody thought about.
 
-## Nothing learned can rewrite the costs
+## Nothing Learned Can Rewrite the Costs
 
 The cost model is operator configuration. No training job, no governance
 decision, no model artifact and no runtime component writes to it. A component
@@ -160,7 +160,7 @@ was deemed to cost at the time.
 eye-for-an-eye autonomy policy
 ```
 
-## See also
+## See Also
 
 - [AUTONOMOUS_DECISION.md](AUTONOMOUS_DECISION.md)
 - [DECISION_UNCERTAINTY.md](DECISION_UNCERTAINTY.md)

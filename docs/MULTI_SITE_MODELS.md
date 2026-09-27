@@ -1,9 +1,9 @@
-# Multi-site models
+# Multi-site Models
 
 Which model answers for which site, and why most sites should not have one of
 their own.
 
-## Why not a model per site
+## Why Not a Model Per Site
 
 The obvious multi-site design is one model per website. For most deployments it
 is a bad idea.
@@ -47,7 +47,7 @@ otherwise                                      →  the mathematical engine alon
 
 The feature schema is checked on every resolution, not just at publication. A
 model built against a different feature vector does not fail loudly at
-inference — it produces numbers computed from the wrong columns.
+inference. It produces numbers computed from the wrong columns.
 
 The chain always ends somewhere that works. No model at all is not an outage:
 the deterministic mathematical engine never depended on a classifier.
@@ -72,7 +72,7 @@ Each scope has its own pointer file. That is what makes promotion and rollback
 naturally site-scoped: rolling site A back is a write to site A's pointer and
 cannot touch site B's.
 
-## Wrong-scope models are refused
+## Wrong-scope Models Are Refused
 
 A model for one site published into another's registry is rejected. So is a
 global model published into a site registry, and a site model published into the
@@ -85,16 +85,16 @@ the score is confident and wrong. Nothing downstream can tell.
 The resolver checks again at load time, in case the files were changed
 underneath the registry.
 
-## Fallback is per site
+## Fallback Is Per Site
 
 A site whose model is missing, corrupt, or built for another feature schema
 falls back to the base model **and says so**. A site quietly running on the base
 model because its own failed looks identical, from the outside, to a site
-configured that way — so the difference is recorded and printed.
+configured that way, so the difference is recorded and printed.
 
 One site's model failing never affects another site and never stops the sensor.
 
-## Promotion and rollback
+## Promotion and Rollback
 
 Unchanged from P9, and now scoped:
 
@@ -105,7 +105,7 @@ Unchanged from P9, and now scoped:
 
 Rolling back one site leaves every other site and the global model untouched.
 
-### What changed in P14
+### What Changed in P14
 
 Through P13, this page said there was no setting that could turn automatic
 promotion on. That is no longer true and the sentence has been replaced rather
@@ -124,7 +124,7 @@ Site scope matters here more than anywhere else on this page:
   listed by name in `auto_promote_sites`. One site opting in never enables
   another;
 - `auto_promote_global_enabled` is a **separate** switch, also off by default,
-  because a global model reaches every site on this machine — including ones
+  because a global model reaches every site on this machine, including ones
   whose operator never opted in;
 - a global candidate is judged by its **worst** site, not by an aggregate. An
   average that improves while one small site gets much worse is exactly the
@@ -133,7 +133,7 @@ Site scope matters here more than anywhere else on this page:
 See [AUTO_PROMOTION.md](AUTO_PROMOTION.md) and
 [MODEL_GOVERNANCE.md](MODEL_GOVERNANCE.md).
 
-## Eligibility for a site-specific model
+## Eligibility for a Site-specific Model
 
 Before a site gets its own model, it should have: enough trusted labelled
 groups, both classes where the model is supervised, hard negatives for that
@@ -143,10 +143,10 @@ passes the quality gate.
 There is no sample count here that could honestly be called sufficient. The
 number depends on the site, and anyone quoting one without evidence is guessing.
 
-## Evaluating a global model
+## Evaluating a Global Model
 
 Aggregate accuracy hides the thing you need to know. A model can score well
-overall and fail badly on one site type — usually the smallest one, which
+overall and fail badly on one site type, usually the smallest one, which
 disappears into the average.
 
 Report precision, recall and false-positive rate **per site**, and highlight the
@@ -154,11 +154,11 @@ worst-performing site rather than the mean. Where there are enough sites, train
 on some and test on a site the model has not seen: that measures whether it
 learned behaviour or learned your deployment.
 
-## Sharing one loaded model
+## Sharing One Loaded Model
 
 Every site using the base model shares one loaded instance. Loading the same
 ONNX file once per site would multiply memory by the number of sites for no
-benefit — the file is identical and inference is stateless.
+benefit. The file is identical and inference is stateless.
 
 ## Commands
 
@@ -166,4 +166,4 @@ benefit — the file is identical and inference is stateless.
 eye-for-an-eye sites models main
 ```
 
-Shows which model answers for that site, its scope, and — if it fell back — why.
+Shows which model answers for that site, its scope, and (if it fell back) why.

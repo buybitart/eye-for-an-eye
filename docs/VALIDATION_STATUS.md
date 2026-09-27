@@ -1,23 +1,23 @@
-# Validation status
+# Validation Status
 
 This page says what has been tested and how. It exists so that no other page in
 this repository has to be read generously.
 
 Four words are used, and they mean different things:
 
-* **Implemented** — the code exists and runs.
-* **Controlled-tested** — exercised by this repository's own test suite, on
+* **Implemented**: the code exists and runs.
+* **Controlled-tested**: exercised by this repository's own test suite, on
   synthetic input, in a clean environment, and where marked on a real Linux
   kernel in an isolated network namespace.
-* **Real-world validation pending** — no independent evidence from a long
+* **Real-world validation pending**: no independent evidence from a long
   running deployment on real traffic exists yet.
-* **Lab only** — present, bounded, and not for a production deployment.
+* **Lab only**: present, bounded, and not for a production deployment.
 
 Nothing here is evidence about traffic that has not arrived. A controlled test
 establishes that the software does what it says on the input it was given; it
 does not establish how often that is the right thing to do on the Internet.
 
-## The matrix
+## The Matrix
 
 | Component | Implemented | Unit tested | Integration tested | Clean-clone tested | Controlled-kernel tested | Real-world validated |
 |---|---|---|---|---|---|---|
@@ -44,12 +44,12 @@ does not establish how often that is the right thing to do on the Internet.
 | Model governance and rollback | PASS | PASS | PASS | PASS | N/A | PENDING |
 | Controlled retraining | PASS | PASS | PASS | PASS | N/A | PENDING |
 | Bounded deception | PASS | PASS | PASS | PASS | N/A | PENDING |
-| False-positive rate on real traffic | — | — | — | — | — | **PENDING** |
+| False-positive rate on real traffic | - | - | - | - | - | **PENDING** |
 
 "N/A" means a kernel test would answer nothing about that component; only the
 enforcement path touches the kernel.
 
-## What the controlled-kernel row means
+## What the Controlled-kernel Row Means
 
 On a real Linux kernel, in an isolated network namespace, the test suite
 demonstrates the whole path end to end: input reaches the runtime, the runtime
@@ -65,7 +65,7 @@ Those tests are in this repository and run with
 as root, in an environment you are willing to have a firewall rule created in.
 They are skipped by default.
 
-## The row that is empty, and why
+## The Row That Is Empty, and Why
 
 **False-positive rate on real traffic has no evidence at all.** Every number
 this project has published about detection comes from a synthetic corpus. That
@@ -82,7 +82,7 @@ This is why production Shadow exists and why it is the recommended first
 deployment: it produces exactly that evidence, on your traffic, without
 blocking anybody.
 
-## Distinctions this project keeps
+## Distinctions This Project Keeps
 
 These are not pedantry. Each one is a mistake that would otherwise be easy to
 make while reading a result:
@@ -94,16 +94,16 @@ make while reading a result:
 * drift is not an attack;
 * a bot is not an attacker;
 * an IP address is not a person;
-* a block is not ground truth — the system's own decision is never used as a
+* a block is not ground truth. The system's own decision is never used as a
   label for training or for measuring itself;
 * observation is not attribution.
 
-## See also
+## See Also
 
-* [Shadow validation plan](SHADOW_VALIDATION_PLAN.md) — what real evidence has
+* [Shadow validation plan](SHADOW_VALIDATION_PLAN.md): what real evidence has
   to be, and how much of it
-* [Limitations](LIMITATIONS.md) — what this project does not do, and what has
+* [Limitations](LIMITATIONS.md): what this project does not do, and what has
   not been measured
-* [Autonomous mode](AUTONOMOUS_MODE.md) — the decision path, and how to stop it
-* [Generalization policy](GENERALIZATION_POLICY.md) — what a synthetic result
+* [Autonomous mode](AUTONOMOUS_MODE.md): the decision path, and how to stop it
+* [Generalization policy](GENERALIZATION_POLICY.md): what a synthetic result
   does not say

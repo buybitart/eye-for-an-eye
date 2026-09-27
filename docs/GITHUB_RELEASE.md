@@ -1,4 +1,4 @@
-# Publishing the repository and the release
+# Publishing the Repository and the Release
 
 Everything here is **prepared, not applied**. Nothing in this project can create a
 repository, change a repository setting, or publish a release, and nothing has.
@@ -9,7 +9,7 @@ See [GITHUB_SECURITY.md](GITHUB_SECURITY.md) for the security settings and
 
 ---
 
-## About text
+## About Text
 
 GitHub's **About** field, one sentence, 350 characters maximum:
 
@@ -19,14 +19,14 @@ Open-source protection for Linux websites and servers using mathematical behavio
 
 That is 224 characters. Every clause in it is true of the current build:
 
-* *Linux websites and servers* — Linux is the platform with the complete feature
+* *Linux websites and servers*: Linux is the platform with the complete feature
   set, and the platform table in `README.md` is what it claims.
-* *mathematical behaviour analysis and local machine learning* — the maths engine
+* *mathematical behaviour analysis and local machine learning*. The maths engine
   is the primary path and the ONNX model is optional evidence.
-* *Runs entirely on your own machine* — no cloud AI, no account, no telemetry. The
+* *Runs entirely on your own machine*: no cloud AI, no account, no telemetry. The
   one optional outbound feature, RDAP lookup, is off by default.
-* *Safe Monitoring by default* — the installed profile is `production-shadow`.
-* *automatic blocking is opt-in and Linux only* — it refuses to start until
+* *Safe Monitoring by default*: the installed profile is `production-shadow`.
+* *automatic blocking is opt-in and Linux only*. It refuses to start until
   configured, and the enforcement backends refuse on other platforms.
 
 It does not say *production-proven*, *AI-powered*, *stops every hacker* or *zero
@@ -61,7 +61,7 @@ Deliberately not used: `waf` (this is not a web application firewall),
 **Title**
 
 ```
-Eye for an Eye 0.8.0 RC1 — Public Beta
+Eye for an Eye 0.8.0 RC2: Public Beta
 ```
 
 **Tag**: `v0.8.0rc2`
@@ -113,7 +113,7 @@ badges, chat badges for a chat that does not exist, and style badges.
 
 ---
 
-## Owner actions, in order
+## Owner Actions, in Order
 
 1. Create the repository. Decide public or private first.
 2. Verify the remote URL, then push. Nothing in this project infers permission to
@@ -130,8 +130,8 @@ badges, chat badges for a chat that does not exist, and style badges.
    is repository maintenance, so it belongs in a later commit rather than in the
    tagged source.
 9. Decide the commit-signing policy.
-10. ~~Verify the pinned GitHub Action SHAs.~~ **Done.** All three tags — v4.4.0,
-    v5.6.0 and v4.6.2 — were resolved against their official repositories with
+10. ~~Verify the pinned GitHub Action SHAs.~~ **Done.** All three tags: v4.4.0,
+    v5.6.0 and v4.6.2, were resolved against their official repositories with
     `git ls-remote`, confirmed to be lightweight tags pointing at commits,
     independently resolved by the owner to the same SHAs, and cross-checked
     against the workflow files. See

@@ -3,7 +3,7 @@
 This project is small. This page is short on purpose. There is no committee, and
 inventing one would be dishonest.
 
-## Who maintains it
+## Who Maintains It
 
 One person: the project owner.
 
@@ -12,7 +12,7 @@ One person: the project owner.
 
 Project lead: `[OWNER INPUT REQUIRED]`
 
-## How decisions are made
+## How Decisions Are Made
 
 Today: the owner decides, in public, in the issue tracker and the changelog.
 
@@ -20,7 +20,7 @@ If the project gains regular contributors, the intended next step is simple:
 changes that touch a security boundary need a second reviewer. Nothing more
 formal until the project is large enough to need it.
 
-## What counts as a security-sensitive change
+## What Counts as a Security-sensitive Change
 
 These need extra care whatever the project's size:
 
@@ -36,7 +36,7 @@ These need extra care whatever the project's size:
 A change in this list must state its security impact in the pull request, and
 must include a test that fails without the fix.
 
-## Model changes
+## Model Changes
 
 A model is treated as code, because it changes behaviour. See
 [Model governance](#model-governance) below.
@@ -48,7 +48,7 @@ blockers are in [Release process](RELEASE.md).
 
 There is no signing infrastructure. There is no CI publishing credential.
 
-## Model governance
+## Model Governance
 
 | Term | Meaning |
 | --- | --- |
@@ -89,12 +89,12 @@ See [CONTRIBUTING.md](../CONTRIBUTING.md).
 There is no contributor licence agreement, because there is no licence yet. This
 is one more consequence of the open licence blocker.
 
-## Code of conduct
+## Code of Conduct
 
 There is none. One will be added if the project gets a community that needs it,
 not to fill a checklist. `[OWNER INPUT REQUIRED]`
 
-## See also
+## See Also
 
 * [Sustainability](SUSTAINABILITY.md)
 * [Release process](RELEASE.md)

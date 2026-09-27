@@ -1,4 +1,4 @@
-# Site baselines
+# Site Baselines
 
 A baseline is a statistical description of one site's ordinary traffic: how
 fast, how broad, how many errors, which methods.
@@ -6,7 +6,7 @@ fast, how broad, how many errors, which methods.
 It exists so that "unusual" can mean something different on an API than on a
 blog, without anyone training a model per website.
 
-## The first day is not normal
+## The First Day Is Not Normal
 
 The tempting shortcut is to watch a new site for a day and call whatever it saw
 normal. It is wrong for one reason: **attackers are present during the first
@@ -32,7 +32,7 @@ While a site is `MISSING` or `LEARNING`, the answer to "is this unusual?" is
 `INSUFFICIENT_DATA`. Not "no", which nobody checked. Not "yes", which would make
 every visitor to a new site look like an attack.
 
-## Enough data
+## Enough Data
 
 A candidate needs at least **200 windows** from at least **20 distinct
 sources**.
@@ -40,7 +40,7 @@ sources**.
 The second number matters as much as the first. Two hundred windows from one
 client describe that client's habits, not the site's traffic.
 
-## Where the data came from
+## Where the Data Came From
 
 Recorded, never inferred:
 
@@ -55,7 +55,7 @@ Recorded, never inferred:
 saying nobody has confirmed an attacker was absent, because **no alert is not
 the same as benign**.
 
-## The active baseline does not drift
+## The Active Baseline Does Not Drift
 
 New traffic is never folded into the active baseline. That is the same poisoning
 problem as training on your own decisions: an attacker applying pressure slowly
@@ -97,9 +97,9 @@ eye-for-an-eye sites drift main
 Drift is measured against **this site's** baseline. Another site's traffic
 changing does not make this site drifted.
 
-## What a baseline is not
+## What a Baseline Is Not
 
 Being outside a baseline is not evidence of an attack. It means this site is
 doing something it does not usually do, which happens for many innocent reasons
-— a launch, a link from a popular page, a new integration. It is one input among
+: a launch, a link from a popular page, a new integration. It is one input among
 several, and it is never a label.

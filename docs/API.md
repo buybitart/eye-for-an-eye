@@ -4,7 +4,7 @@ This page explains the local HTTP API (phase P4). The API only reads data. It
 can never change a setting, start a scan or touch a firewall. Read this page if
 you want to look at stored events with `curl` or a small script.
 
-## What it is built from
+## What It Is Built From
 
 The server uses only the Python standard library. It uses `selectors`, which is
 a built-in way to watch many sockets at once. No web framework was added.
@@ -13,7 +13,7 @@ One API thread runs short requests, one after another. A second thread serves
 the metrics endpoint. Both endpoints are **off by default**. Both bind to
 `127.0.0.1`, so only your own machine can reach them.
 
-## Turn it on
+## Turn It On
 
 ```toml
 [storage]
@@ -38,7 +38,7 @@ curl --fail http://127.0.0.1:8777/ready
 curl --fail "http://127.0.0.1:8777/api/v1/events?limit=20&transport=tcp"
 ```
 
-## The endpoints
+## The Endpoints
 
 All of them are `GET`.
 
@@ -54,7 +54,7 @@ All of them are `GET`.
 | /api/v1/detections | Stored classification/score/confidence/reasons/window/supporting_event_ids/limitations |
 | /api/v1/stats | Events last minute/hour, top 10 ports, type/classification counts, queue drops, storage size, fallback count |
 
-## How to read the numbers
+## How to Read the Numbers
 
 * The source classification comes from the **last stored P2 classification** in
   the chosen sample. The API does not run correlation again.
@@ -80,7 +80,7 @@ All of them are `GET`.
 SQLite is the small file database that stores events. WAL is its write-ahead
 log: a second file that holds new writes.
 
-## Filters and paging
+## Filters and Paging
 
 Filters you can use:
 
@@ -102,7 +102,7 @@ page, send `next_cursor` back as `cursor` and keep the same `from` and `to`. A
 page can be smaller than `limit` because of the byte budget. One single record
 that does not fit in the envelope returns **413**.
 
-## What "partial" means
+## What "Partial" Means
 
 Source summaries only aggregate the newest `max_scan_rows` rows in the window.
 `partial=true` means the counts are **lower bounds**. Paging walks the sources
@@ -119,7 +119,7 @@ window and filters. If the client narrows `from`, the missing rows are not
 counted. Live gauges are a snapshot, so they lag a little. The API does not hold
 one long reader transaction across requests.
 
-## Access and HTTP rules
+## Access and HTTP Rules
 
 * `GET` only. HTTP/1.0 or HTTP/1.1. Origin-form URL. No request body, no
   keep-alive, no pipelining.

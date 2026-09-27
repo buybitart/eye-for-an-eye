@@ -5,7 +5,7 @@ and read what it saw. It is for the person who runs the service on a machine.
 
 Read [Install](INSTALL.md) first, then [Quickstart](QUICKSTART.md).
 
-## Before you start
+## Before You Start
 
 * Use CPython 3.12. Use a locked install. See [Install](INSTALL.md).
 * Settings for the API, the metrics port and storage live in
@@ -24,7 +24,7 @@ in Shadow Mode. Shadow Mode means the service watches and scores, but it never
 blocks. The installer never changes the firewall. It never enables or starts a
 service.
 
-## Start the service
+## Start the Service
 
 Check the config, then check the machine, then run:
 
@@ -39,7 +39,7 @@ The command `python -m eye_for_an_eye <command>` does the same thing.
 The service stays in the foreground. It runs until you press Ctrl+C or send
 SIGTERM. SIGTERM is the normal "please stop" signal on Linux.
 
-## Look at the service from a second terminal
+## Look at the Service From a Second Terminal
 
 ```text
 eye-for-an-eye version --config sensor.toml
@@ -61,7 +61,7 @@ If the status file is missing, too old or too big, `status` returns
 `dependency_unavailable` and exits with code 1. It never shows an old snapshot
 as if it were live.
 
-## What doctor checks
+## What Doctor Checks
 
 `doctor` reads and reports. It changes nothing.
 
@@ -91,7 +91,7 @@ grants a capability. On Windows the Linux capability check is marked as not
 checked. A missing optional database makes the report weaker, but it is not a
 reason to stop capture.
 
-## Reading events
+## Reading Events
 
 `events tail` returns one finite, redacted page, newest first, then stops. There
 is no endless follow mode. You can use the API filters, a time range and a
@@ -112,7 +112,7 @@ It does not show the absolute path. An mtime is the last time the file was
 changed on disk. It is not proof of where the file came from, and it is not the
 release date of the database.
 
-## Error types
+## Error Types
 
 CLI errors use a fixed set of names:
 
@@ -130,7 +130,7 @@ and counters. An error never dumps a raw request, a config or a secret. The
 `error_type` field holds the name of the exception class, not its text, because
 the text could be sensitive.
 
-## Running as a service
+## Running as a Service
 
 The systemd analysis and listener templates send stdout and stderr to the
 journal. systemd is the Linux service manager; the journal is its log store.
@@ -149,7 +149,7 @@ operator.
 
 See [systemd](SYSTEMD.md).
 
-## Running in a container
+## Running in a Container
 
 The container writes JSONL logs to stdout. SQLite goes to the
 `/var/lib/eye-for-an-eye` volume. The status file goes to `/run/eye-for-an-eye`.
@@ -174,7 +174,7 @@ permanently stuck output does not hold the process open for ever. A successful
 shutdown does not mean that events rejected by the queue or by storage were
 saved.
 
-## See also
+## See Also
 
 * [Storage, backup and retention](STORAGE.md)
 * [Troubleshooting](TROUBLESHOOTING.md)

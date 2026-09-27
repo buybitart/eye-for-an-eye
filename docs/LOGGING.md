@@ -1,10 +1,10 @@
-# Structured logging and redaction
+# Structured Logging and Redaction
 
 This page explains how Eye for an Eye writes log lines, and how it removes
 secrets from those lines before they are saved. Read this page if you run the
 sensor and want to know what goes into your logs.
 
-## How logging works
+## How Logging Works
 
 The `EventLogger` writes log lines in JSONL format. JSONL means "JSON Lines":
 one JSON object per line, one line per event. Lines are placed on a bounded
@@ -30,7 +30,7 @@ added separately and does not count toward that limit. If writing to stdout
 from coming in. When the logger shuts down, it checks with a time limit
 ("bounded close") and reports if the writer thread is stuck.
 
-## What gets removed (redaction)
+## What Gets Removed (Redaction)
 
 "Redaction" means removing or hiding sensitive data before it is stored or
 shown. One shared piece of code does this job:
@@ -49,7 +49,7 @@ data sent by a client) or a full password.
 There is also a P3 "sanitized preview" feature. It is opt-in, meaning it is
 off unless you turn it on, and it follows its own extra P3 privacy policy.
 
-## Limits on redaction
+## Limits on Redaction
 
 Field names are not the only safety check. The logger also scans the text of
 each string for markers such as `Authorization`, `Cookie`, `Set-Cookie`,
@@ -80,7 +80,7 @@ into a new, unlisted field. The validated event format only carries safe
 things: IP addresses, limited ID values, and timestamps. Never pass full
 configuration files or environment variables into an event's observations.
 
-## Flood control (flood budget)
+## Flood Control (Flood Budget)
 
 ```toml
 [logging]
@@ -109,7 +109,7 @@ There are two small caches to track repeats:
 If the same `parse_error`, `runtime_warning`, or `storage_error` repeats for
 the same source, it is suppressed (hidden after the first one) during the
 `repeated_window`. This also applies to sanitized observations. The event ID
-and timestamp do not stop this grouping — they are ignored for this check.
+and timestamp do not stop this grouping. They are ignored for this check.
 The counts `suppressed_count` and the exported metric `log_suppressed_total`
 track how many repeats were hidden. An event type the system does not
 recognize is rejected.
@@ -128,7 +128,7 @@ started; only `backups` old files are kept. The total disk budget is roughly
 There is no guarantee of free space if another program is also writing to
 the same disk at the same time.
 
-## Recommended setup
+## Recommended Setup
 
 If you run the sensor under systemd (the Linux service manager), leave
 `file = ""`. This sends output to journald, systemd's own logging service,
@@ -139,21 +139,21 @@ stdout and stderr to the journal.
 If you run the sensor in a container, send output to stdout and let your
 container runtime's log rotation and storage driver handle it. Use a
 separate storage volume for the SQLite database. The application itself
-does not set host journal quotas or container log quotas — that is the
+does not set host journal quotas or container log quotas. That is the
 operator's job.
 
 If you run the sensor by itself, without systemd or a container, setting
 `file` turns on a `RotatingFileHandler`. This writes UTF-8 text, keeps files
 under the maximum size, and keeps a limited number of backups. You, the
 operator, must prepare the directory and its permissions (its access
-control list, or ACL) yourself — the application does not create these
+control list, or ACL) yourself. The application does not create these
 permissions automatically.
 
 Existing P1 error details, and the newer fixed error messages, never include
 the raw request, a bearer token, the persistent deception key, or any
 provider credentials.
 
-## See also
+## See Also
 
 * [Observability](OBSERVABILITY.md)
 * [Metrics](METRICS.md)

@@ -1,4 +1,4 @@
-# Dataset generation, collection and validation
+# Dataset Generation, Collection and Validation
 
 Offline tooling that turns controlled scenarios into a labelled, validated, split dataset for
 local risk models. Not part of the production wheel. Nothing here transmits to a public network,
@@ -46,9 +46,9 @@ uv run --frozen python -m dataset review-queue --dataset datasets/processed/data
 uv run --frozen python -m dataset lab-run  --scenario scan/sequential/50-ports
 ~~~
 
-`lab-run` prints the safety context - target, target policy, bounds, expected label, and that it
-transmits nothing - and aborts on any target that is not provably local.
+`lab-run` prints the safety context: target, target policy, bounds, expected label, and that it
+transmits nothing, and aborts on any target that is not provably local.
 
 These are development commands. They live here rather than in `eye-for-an-eye` because the
 production wheel ships the runtime only; see [the dataset report](../reports/DATASET_v1.md) and
-[the data card](../datasets/DATA_CARD_v1.md).
+[the data card](../docs/DATA_CARD_v1.md).

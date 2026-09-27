@@ -1,4 +1,4 @@
-# Trusted local models
+# Trusted Local Models
 
 No active production model is included or configured by default, and nothing here is
 downloaded at runtime. The wheel contains runtime code, not training code or these models.

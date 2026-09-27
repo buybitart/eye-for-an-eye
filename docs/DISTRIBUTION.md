@@ -3,7 +3,7 @@
 How people would find and get the software. Only real channels are listed. No
 partnership is claimed, because none exists.
 
-## Current state
+## Current State
 
 Nothing is published anywhere.
 
@@ -18,7 +18,7 @@ Nothing is published anywhere.
 Nothing invents a URL. What exists is a set of artifacts, built and verified, with
 nowhere yet to put them.
 
-## The artifacts that exist
+## The Artifacts That Exist
 
 Every one is built from the release root that `scripts/build_prod.py` assembles,
 so what is published is what was verified. None is signed, because this project
@@ -41,16 +41,16 @@ Honest limitation: a checksum proves a file did not change between publication a
 download. It does not prove where the file came from. There is no signing
 infrastructure, and none is claimed.
 
-## Planned channels
+## Planned Channels
 
-### 1. A public source repository
+### 1. A Public Source Repository
 
 The main channel. It is where the code, the documentation, the issue tracker and
 the releases live.
 
 `[OWNER INPUT REQUIRED]`: which hosting service, and the URL.
 
-### 2. Release artefacts
+### 2. Release Artefacts
 
 The artifacts listed above, attached to a release rather than committed to the
 repository.
@@ -58,7 +58,7 @@ repository.
 `[OWNER ACTION]`: release signing. Until a key exists, the release page must say
 the artifacts are unsigned and point at `SHA256SUMS`.
 
-### 3. A Python package index
+### 3. A Python Package Index
 
 `pipx install eye-for-an-eye` would be the nicest install path. It requires
 reserving a name and publishing, neither of which has happened.
@@ -66,7 +66,7 @@ reserving a name and publishing, neither of which has happened.
 Until then the documented one-command install is the installer script, which is
 tested.
 
-### 4. A container image
+### 4. A Container Image
 
 The `Dockerfile` and `docker-compose.lab.yml` exist. If an image is published,
 the defaults must stay: non-root where possible, no `--privileged`, no
@@ -91,7 +91,7 @@ the project objectives, with real shadow results, not before.
 **None.** No organisation has agreed to anything. This section stays empty until
 that changes.
 
-## How the software would be promoted
+## How the Software Would Be Promoted
 
 Honestly, and with the limitations first:
 
@@ -103,20 +103,20 @@ Honestly, and with the limitations first:
 An unproven security tool that is promoted as proven is worse than no tool. For
 the intended users it could be dangerous.
 
-## Documentation as distribution
+## Documentation as Distribution
 
 The documentation is in simple English because the intended users often do not
 read English as a first language and are not security engineers. Translation is
 listed as a welcome contribution in [CONTRIBUTING.md](../CONTRIBUTING.md).
 
-## What is deliberately not a channel
+## What Is Deliberately Not a Channel
 
 * No bundling with a hosting control panel that installs it silently.
 * No "curl the internet into a shell" instruction pointing at a URL that does
   not exist.
 * No app store or marketplace listing that hides the project status.
 
-## See also
+## See Also
 
 * [Users](USERS.md)
 * [Sustainability](SUSTAINABILITY.md)

@@ -1,11 +1,11 @@
-# Model validation
+# Model Validation
 
 Before a candidate model is worth anyone's attention, it has to survive a series
 of checks. This page says what they are and why each one exists.
 
 Status: **Beta.** Threshold values are provisional.
 
-## The order
+## The Order
 
 ```text
 dataset validation
@@ -22,7 +22,7 @@ dataset validation
 A failure at any step stops the candidate there. The active model is unaffected
 by every one of them.
 
-## Dataset validation
+## Dataset Validation
 
 Run before any model is fitted. A critical finding aborts training.
 
@@ -39,7 +39,7 @@ The label source check is the important one. A dataset whose labels came from a
 decision this system made is rejected outright: `blocked`, `ml_score`,
 `risk_threshold`, `shadow_decision` and their relatives are all refused.
 
-A dataset may declare several trusted label sources — a controlled corpus plus
+A dataset may declare several trusted label sources. A controlled corpus plus
 reviewed rows, for example. Every one of them must be independently trustworthy;
 one bad source fails the whole dataset.
 
@@ -51,12 +51,12 @@ score that means nothing.
 
 Splits follow groups: scenario group, source group, capture group, and time
 period where it applies. For reviewed observed data a chronological holdout is
-preferred — older rows train, later rows test — because that is what deployment
+preferred (older rows train, later rows test), because that is what deployment
 actually looks like.
 
 The trainer verifies this itself and fails on leakage.
 
-## Training rules
+## Training Rules
 
 * Training uses **TRAIN** only.
 * Hyperparameters are chosen on **VALIDATION** only.
@@ -70,7 +70,7 @@ No automatic oversampling. Class balance is measured and reported first; if
 balancing is applied it happens after the split and only on training data.
 Validation and test distributions are never modified.
 
-## ONNX export and parity
+## ONNX Export and Parity
 
 Every production classifier is exported to ONNX. Pickle and joblib are never
 deployed as production classifier artifacts: loading one executes whatever is
@@ -83,13 +83,13 @@ same rows:
 max_abs_difference    mean_abs_difference
 ```
 
-The tolerance is 1e-5. Beyond that, model validation fails — a model that
+The tolerance is 1e-5. Beyond that, model validation fails. A model that
 computes something different in production than it did in training is not the
 model that was evaluated.
 
 The last measured run: max 2.38e-07, mean 4.54e-08 over 554 test rows.
 
-## Artifact validation
+## Artifact Validation
 
 Before a candidate is registered:
 
@@ -105,7 +105,7 @@ Before a candidate is registered:
 
 A model that fails any of these is not registered at all.
 
-## Offline metrics
+## Offline Metrics
 
 Accuracy alone is not measured, because a model that never blocks anything scores
 well on it.
@@ -117,17 +117,17 @@ PR-AUC         ROC-AUC           calibration
 block precision                   false blocks per 1000 benign sources
 ```
 
-### Block precision
+### Block Precision
 
 The security metric that matters most. Among sources the system **would have
 blocked**, how many are truly positive according to trusted labels?
 
-This is measured by simulating the whole decision path — mathematical risk,
-classifier, anomaly, out-of-distribution, data quality, fusion and policy — not
+This is measured by simulating the whole decision path (mathematical risk,
+classifier, anomaly, out-of-distribution, data quality, fusion and policy), not
 by reading the classifier's score. Production uses the whole system, so the whole
 system is what gets evaluated.
 
-## Hard negatives
+## Hard Negatives
 
 A dedicated set of traffic that must never be blocked:
 
@@ -141,7 +141,7 @@ A candidate that performs worse on these is normally rejected, whatever its
 overall numbers look like. Blocking a legitimate user is not paid for by being
 right more often elsewhere.
 
-## Hard positives
+## Hard Positives
 
 The difficult automation:
 
@@ -153,7 +153,7 @@ multi-stage reconnaissance
 
 A candidate must not buy better precision by ignoring all of these.
 
-## Out-of-distribution behaviour
+## Out-of-distribution Behaviour
 
 A candidate is tested on known in-distribution, borderline and out-of-distribution
 input. A model is not more trustworthy because it produces a higher score on
@@ -162,7 +162,7 @@ input it has never seen.
 A candidate's reference distribution comes from **its own** training data. Judging
 it against the active model's baseline would describe the wrong model.
 
-## The gate result
+## The Gate Result
 
 ```text
 PASS                  every check passed
@@ -172,7 +172,7 @@ FAIL                  a blocking check failed
 
 `PASS` is not a promotion. It is permission to be considered.
 
-## What is measured and what is not
+## What Is Measured and What Is Not
 
 Where trusted labels exist, recent precision, recent false-positive rate and
 recent block precision are tracked.
@@ -183,7 +183,7 @@ never calculated from unlabelled observed traffic. No ground truth means
 
 ## Related
 
-* [MODEL_EVALUATION.md](MODEL_EVALUATION.md) — the metric definitions
-* [MODEL_PROMOTION.md](MODEL_PROMOTION.md) — what the gate feeds into
-* [TRAINING_JOBS.md](TRAINING_JOBS.md) — how a run is bounded
-* [OOD.md](OOD.md) — out-of-distribution detection
+* [MODEL_EVALUATION.md](MODEL_EVALUATION.md): the metric definitions
+* [MODEL_PROMOTION.md](MODEL_PROMOTION.md): what the gate feeds into
+* [TRAINING_JOBS.md](TRAINING_JOBS.md): how a run is bounded
+* [OOD.md](OOD.md): out-of-distribution detection

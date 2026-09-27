@@ -1,4 +1,4 @@
-# Behaviour observability
+# Behaviour Observability
 
 What one Eye for an Eye sensor can actually see, per scenario family.
 Generated from `training/observability.py` - the classification lives in code so
@@ -9,7 +9,7 @@ existed, and never from whether detection currently succeeds. Those are
 different questions, and answering the second while claiming to answer the
 first is how a project excuses its own failures.
 
-## The rule
+## The Rule
 
 1. Do the packets or events constituting this behaviour reach the capture path
    of a single sensor protecting a single host?
@@ -29,7 +29,7 @@ real generalisation failure that must be fixed in the evidence.
 
 **INVALID_TEST_SCENARIO** (0): none
 
-## Per family
+## Per Family
 
 | Family | Class | Enforcement | What the sensor sees | What it cannot see |
 | --- | --- | --- | --- | --- |
@@ -81,20 +81,20 @@ real generalisation failure that must be fixed in the evidence.
 | `withheld-mobile-sync` | IN_SCOPE_PARTIALLY_OBSERVABLE | NO_ACTION_EXPECTED | an app waking, retrying a dropped connection, and authenticating on every call. Attempts and the successes among them are counted | about a third of its outcomes are genuinely unobservable: the reply is an acknowledgement the classifier does not recognise, so the result is UNKNOWN. §7 forbids reading that as failure, and this family is how the rule gets tested at volume rather than in one unit test |
 | `withheld-probe-login` | IN_SCOPE_OBSERVABLE | TEMP_BLOCK_ELIGIBLE | a six-port sweep followed by nine refused logins from the same source. Both halves are individually unremarkable and both are individually visible; whether their co-occurrence is, is the question | - |
 
-## The finding that shaped P15.3
+## The Finding That Shaped P15.3
 
 `scan-horizontal` looked like an architecture limit and is not.
 `dataset/generators/base.SENSOR_ADDRESSES` is eight addresses **of the monitored
 host**, so a horizontal scan across them crosses this sensor-s own capture path
 and `unique_destinations` counts every one. Its P15.2 failure was weighting and
-normalisation, not visibility - recorded in the P15.3 failure matrix, a
+normalisation, not visibility, recorded in the P15.3 failure matrix, a
 development-phase artifact that is not published with this repository.
 
 A horizontal sweep across hosts this sensor does not protect would be a
 different behaviour and genuinely out of scope. The distinction is the whole
 point of classifying before measuring.
 
-## The P15.3 compositions
+## The P15.3 Compositions
 
 Six families were added for the generalisation benchmark and classified here
 before the corpus was generated, which is the only order in which a
@@ -103,7 +103,7 @@ primitives the corpus already contains; three are benign compositions of the
 *same* primitives, present so that each term added to MathRisk v2 has a control
 that would be blocked if that term were sufficient on its own.
 
-## The P15.4 authentication families
+## The P15.4 Authentication Families
 
 Thirteen more, classified before the P15.4 corpora were generated, for the same
 reason and in the same order.
@@ -129,7 +129,7 @@ unobservable, because the reply is an acknowledgement the classifier does not
 recognise. `UNKNOWN` is the honest answer there, and the rule that it is never
 read as failure needs a benign family that produces a great deal of it.
 
-## See also
+## See Also
 
 - [GENERALIZATION_POLICY.md](GENERALIZATION_POLICY.md)
 - [LIMITATIONS.md](LIMITATIONS.md)

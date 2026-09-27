@@ -12,10 +12,10 @@ configure Autonomous Mode deliberately, and only on Linux.
 
 No cloud AI service is required. Nothing is sent anywhere. No account.
 
-> **Status: PUBLIC BETA — version 0.8.0rc2.** Automatic blocking is **off by
+> **Status: PUBLIC BETA, version 0.8.0rc2.** Automatic blocking is **off by
 > default** and has never run in production. On our own generated test data it
-> blocks 120 sources of 203, with **no false blocks** in 546 benign sources —
-> and it detects **nothing at all** in six of the behaviour families it is
+> blocks 120 sources of 203, with **no false blocks** in 546 benign sources. It
+> also detects **nothing at all** in six of the behaviour families it is
 > supposed to cover, which fails our own release gate. Real-world validation of
 > autonomous blocking is pending. See [Project status](#project-status) and
 > [docs/VALIDATION_STATUS.md](docs/VALIDATION_STATUS.md).
@@ -33,7 +33,7 @@ No Python, no Git, no programming.
 
 ---
 
-## Quick start
+## Quick Start
 
 Linux, from a release archive. No Git, no `pip`, no virtual environment, no root.
 
@@ -54,15 +54,15 @@ eye-for-an-eye status
 
 Six commands, in order:
 
-1. **`sha256sum -c SHA256SUMS`** — checks the file you downloaded is the file
+1. **`sha256sum -c SHA256SUMS`**: checks the file you downloaded is the file
    that was published. You want `OK`.
-2. **`tar xzf …`** — unpacks it. The version in the filename is the one you
+2. **`tar xzf …`**: unpacks it. The version in the filename is the one you
    downloaded; `0.8.0rc2` is the current release.
-3. **`cd …`** — the archive unpacks into one directory of that name.
-4. **`sh install.sh`** — installs for your account only. Prints
+3. **`cd …`**: the archive unpacks into one directory of that name.
+4. **`sh install.sh`**: installs for your account only. Prints
    **Installation complete**. Changes no firewall rule and starts nothing.
-5. **`eye-for-an-eye setup`** — asks what to watch, and checks your answer.
-6. **`eye-for-an-eye start`** — begins Safe Monitoring. Leave the terminal open.
+5. **`eye-for-an-eye setup`**: asks what to watch, and checks your answer.
+6. **`eye-for-an-eye start`**: begins Safe Monitoring. Leave the terminal open.
 
 To stop it: `eye-for-an-eye stop`. To remove it: `sh uninstall.sh`.
 
@@ -77,7 +77,7 @@ Everything about installing, including other distributions and what goes where:
 
 ---
 
-## Which platform
+## Which Platform
 
 Linux is the platform with the complete feature set. This table is what is
 actually implemented, not a plan.
@@ -100,14 +100,14 @@ archive works and the Debian package correctly refuses. The full matrix is in
 
 ---
 
-## New to this? Two paths
+## New to This? Two Paths
 
 **I want to use it.** You do not need Python, Git, or any programming.
 
-* **[START_HERE.md](START_HERE.md)** — the shortest path, one screen.
-* **[Beginner guide](docs/BEGINNER_GUIDE.md)** — the same steps, with help at
+* **[START_HERE.md](START_HERE.md)**: the shortest path, one screen.
+* **[Beginner guide](docs/BEGINNER_GUIDE.md)**: the same steps, with help at
   each one.
-* **[Install on Linux](docs/INSTALL_LINUX.md)** — every installation option.
+* **[Install on Linux](docs/INSTALL_LINUX.md)**: every installation option.
 * Windows: double-click `Install-EyeForAnEye.cmd`.
 
 Either installer sets up **Safe Monitoring**: it watches, it writes notes, and it
@@ -155,7 +155,7 @@ The full index is [docs/README.md](docs/README.md).
 
 ---
 
-## Security reports
+## Security Reports
 
 **Do not open a public issue for a security vulnerability.** Use GitHub Private
 Vulnerability Reporting: the repository's **Security** tab, then **Report a
@@ -166,7 +166,7 @@ Everything else, including what to put in a report and what not to send, is in
 
 ---
 
-## What it looks for
+## What It Looks For
 
 A **bot** is a program that visits your server automatically, with no person
 behind it. A **scanner** is a bot that tries many ports or addresses to find
@@ -174,8 +174,8 @@ something open or old.
 
 Eye for an Eye can detect suspicious automated behaviour such as:
 
-* port scanning — one source touches many ports in a short time;
-* service probing — repeated requests looking for known software;
+* port scanning: one source touches many ports in a short time;
+* service probing: repeated requests looking for known software;
 * repeated connection attempts, retries and login-like attempts;
 * unusual protocol behaviour, such as odd packet flags or sizes;
 * a source that keeps coming back over a long time;
@@ -191,7 +191,7 @@ the same. It keeps going after a fake service answers. The risk rises.
 
 ---
 
-## How it works
+## How It Works
 
 ```text
 Network traffic  (live capture helper, or a saved .pcap file)
@@ -223,7 +223,7 @@ defender run out of memory.
 
 ---
 
-## Mathematical risk
+## Mathematical Risk
 
 The system turns behaviour into numbers. How many ports. How many destinations.
 How regular the timing is. How many login-like attempts. How long a source keeps
@@ -238,7 +238,7 @@ score = sigmoid(-4.0 + sum(weight * normalised value))
 The largest weights are port sweeping (3.0) and login-like attempts (3.0). The
 bias is -4.0, so with no evidence the score is near zero.
 
-The score is between 0 and 1. **It is not a probability** — the code marks it as
+The score is between 0 and 1. **It is not a probability**. The code marks it as
 uncalibrated. It only says "more" or "less". Old risk fades: it halves every 60
 seconds by default.
 
@@ -274,7 +274,7 @@ More: [docs/AI.md](docs/AI.md), [model card](models/MODEL_CARD_risk-logreg-v1.md
 
 ---
 
-## Adaptive learning
+## Adaptive Learning
 
 The running service does **not** learn. It contains no training code, no
 automatic retraining and no automatic model replacement.
@@ -313,7 +313,7 @@ for days and read the results first. More: [docs/SHADOW_MODE.md](docs/SHADOW_MOD
 
 ---
 
-## Two production postures
+## Two Production Postures
 
 There are two ways to run this in production. Both use the same software and
 the same decision path. The only difference is whether a decision is carried
@@ -351,8 +351,8 @@ Installing this software does not enable blocking. Selecting that profile and
 filling in its prerequisites is a decision you make, on purpose.
 
 **Real-world validation of autonomous blocking is pending.** The decision path
-has been tested against a real Linux kernel — a real connection blocked by a
-real decision and restored when the block expired — and it has no evidence yet
+has been tested against a real Linux kernel (a real connection blocked by a
+real decision and restored when the block expired), and it has no evidence yet
 from a long run on real traffic. Treat autonomous blocking as experimental and
 as something to validate on your own site, with Shadow, first.
 [docs/VALIDATION_STATUS.md](docs/VALIDATION_STATUS.md) states exactly what has
@@ -360,7 +360,7 @@ and has not been tested.
 
 ---
 
-## Working automatically
+## Working Automatically
 
 Eye for an Eye can work automatically after setup.
 
@@ -406,7 +406,7 @@ Some things it never does automatically. It never blocks for ever. It never
 blocks your management network. It never blocks a shared address such as a CDN
 or an office router, because that would cut off everyone behind it. It never
 blocks because a model score was high and nothing else. It never uses its own
-decisions as training data. And it never attacks back — there is no code in this
+decisions as training data. And it never attacks back. There is no code in this
 project that could.
 
 If too much is blocked at once, or a part of the system breaks, it stops
@@ -414,7 +414,7 @@ blocking by itself and keeps watching. It starts again on its own when things ar
 healthy again. You can also switch it off at any moment with one local command.
 
 Two honest limits. Automatic **blocking** on a real server is new, off by
-default, and tested on a disposable machine rather than in production — see
+default, and tested on a disposable machine rather than in production. See
 [docs/HOST_ENFORCEMENT.md](docs/HOST_ENFORCEMENT.md). And detection is uneven:
 on our own generated test data the system blocked 120 sources of 203 with no
 false blocks in 546 benign sources, and detected **nothing at all** in six of
@@ -438,10 +438,10 @@ More: [docs/AUTONOMOUS_MODE.md](docs/AUTONOMOUS_MODE.md).
 
 Blocking is **off by default**. There are two paths, and each is off separately.
 
-* **Lab namespace** — **experimental and lab-only**. It runs only inside a
+* **Lab namespace**: **experimental and lab-only**. It runs only inside a
   named, throw-away Linux network namespace, and three gates stop it reaching
   your real host firewall. More: [docs/ENFORCEMENT.md](docs/ENFORCEMENT.md).
-* **Real host** — new, `enforcement.host_enabled`, off on a fresh installation,
+* **Real host**: new, `enforcement.host_enabled`, off on a fresh installation,
   and a package upgrade cannot turn it on. It adds a temporary source block to
   **one nftables table this project owns**, never to yours, through a separate
   privileged helper that accepts an address and a lifetime and never a command.
@@ -462,14 +462,14 @@ change first.
 
 ---
 
-## Asking before blocking
+## Asking Before Blocking
 
 A suspicious client is not always an attacker. Instead of blocking one it is
 unsure about, Eye for an Eye can send a small local web challenge.
 
 The challenge is a short-lived signed cookie and a redirect. An ordinary browser
 answers it by itself. There is no CAPTCHA, no puzzle, no JavaScript, no
-fingerprinting and no third-party service — nothing leaves your server.
+fingerprinting and no third-party service. Nothing leaves your server.
 
 The result is evidence, not proof. A failed challenge does not prove an attack:
 plenty of real people block cookies. A passed challenge does not make a client
@@ -481,14 +481,14 @@ This adds one rung to the ladder:
 OBSERVE → WATCH → SOFT_CHALLENGE → RATE_LIMIT → TEMP_BLOCK
 ```
 
-Challenges are **off by default**, and shadow mode — decide everything, send
-nothing — is the recommended way to start.
+Challenges are **off by default**, and shadow mode (decide everything, send
+nothing) is the recommended way to start.
 More: [docs/CHALLENGE.md](docs/CHALLENGE.md) and
 [docs/PROGRESSIVE_DEFENSE.md](docs/PROGRESSIVE_DEFENSE.md).
 
 ---
 
-## More than one website
+## More Than One Website
 
 One Eye for an Eye server can protect several local websites. Each site can have
 its own behaviour baseline and policy.
@@ -497,7 +497,7 @@ This matters because different sites have different normal behaviour. An API
 doing 1200 requests a minute is working; an admin panel doing that is not. One
 threshold cannot describe both.
 
-Web behaviour is kept separate per site — counters, baselines, thresholds,
+Web behaviour is kept separate per site: counters, baselines, thresholds and
 challenge keys. Network behaviour is about the whole server and is shared on
 purpose: a port scan is a fact about the machine.
 
@@ -510,14 +510,14 @@ More: [docs/MULTI_SITE.md](docs/MULTI_SITE.md).
 
 ---
 
-## Testing a new model before it becomes active (optional)
+## Testing a New Model Before It Becomes Active (Optional)
 
 Eye for an Eye can test a new local model before it becomes active.
 
 A new model first runs in Shadow Mode, where it sees real traffic and changes
 nothing. If it passes the safety checks, the system can activate it in a limited
 mode: it starts contributing to decisions, but on its own it may only raise
-attention — it cannot challenge, slow down or block anybody. It gains more
+attention. It cannot challenge, slow down or block anybody. It gains more
 authority only after enough real observations, not after enough time. The old
 model is kept. If the new model has a serious technical problem, Eye for an Eye
 can return to the old model.
@@ -550,7 +550,7 @@ it. More: [docs/AUTO_PROMOTION.md](docs/AUTO_PROMOTION.md).
 
 ---
 
-## Defensive deception
+## Defensive Deception
 
 Eye for an Eye can open decoy TCP ports. A decoy answers like a simple service
 and records what the visitor does. This is **defensive deception**, also called a
@@ -596,7 +596,7 @@ sh uninstall.sh --purge            # remove the data too
 
 None of these changes your firewall, enables blocking, or starts a service.
 
-## Administrator quick start
+## Administrator Quick Start
 
 The [Quick start](#quick-start) at the top is the short path. This one is for an
 administrator who wants to see each component answer for itself.
@@ -634,7 +634,7 @@ what it is doing, and `eye-for-an-eye autonomy evidence <export>` summarises
 what it has seen.
 
 `doctor` only looks; it never repairs or touches the firewall. On a fresh
-install it reports DEGRADED and names what is not configured yet — the access
+install it reports DEGRADED and names what is not configured yet: the access
 log to read, and the calibrator file. That is a list of next steps, not a fault.
 
 `autonomy preflight` builds the real decision path and reports the state of
@@ -656,7 +656,7 @@ More: [docs/QUICKSTART.md](docs/QUICKSTART.md).
 
 ---
 
-## Safe defaults
+## Safe Defaults
 
 Real values written by `eye-for-an-eye setup`:
 
@@ -678,7 +678,7 @@ Real values written by `eye-for-an-eye setup`:
 
 ---
 
-## Project status
+## Project Status
 
 | Component | Status |
 | --- | --- |
@@ -720,7 +720,7 @@ More: [docs/LIMITATIONS.md](docs/LIMITATIONS.md).
 
 ---
 
-## Every page
+## Every Page
 
 The short navigation is [near the top](#documentation); the ordered index is
 [docs/README.md](docs/README.md). This is the flat list.
@@ -743,7 +743,7 @@ The short navigation is [near the top](#documentation); the ordered index is
 
 **Working automatically:** [Autonomous mode](docs/AUTONOMOUS_MODE.md) · [Host enforcement](docs/HOST_ENFORCEMENT.md) · [The decision](docs/AUTONOMOUS_DECISION.md) · [Cost policy](docs/COST_SENSITIVE_POLICY.md) · [Decision uncertainty](docs/DECISION_UNCERTAINTY.md) · [Failure and recovery](docs/AUTONOMOUS_FAILURE_RECOVERY.md) · [Safety invariants](docs/AUTONOMOUS_SAFETY_INVARIANTS.md) · [Data curation](docs/AUTONOMOUS_DATA_CURATION.md) · [Module graduation](docs/MODULE_GRADUATION.md) · [Scientific basis](docs/SCIENTIFIC_BASIS.md)
 
-**Before you rely on any of it:** [What actually works](docs/P0_P12_STATUS.md) — every feature, marked IMPLEMENTED, PARTIAL, EXPERIMENTAL, LAB_ONLY or MISSING, with the evidence.
+**Before you rely on any of it:** [What actually works](docs/P0_P12_STATUS.md): every feature, marked IMPLEMENTED, PARTIAL, EXPERIMENTAL, LAB_ONLY or MISSING, with the evidence.
 
 **Project:** [Threat model](docs/THREAT_MODEL.md) · [Security](SECURITY.md) · [Security review scope](docs/SECURITY_REVIEW_SCOPE.md) · [Schema compatibility](docs/SCHEMA_COMPATIBILITY.md) · [Roadmap](ROADMAP.md) · [Changelog](CHANGELOG.md)
 
@@ -761,7 +761,7 @@ have written permission to test.
 
 ---
 
-## Open source
+## Open Source
 
 All source code, tests, documentation, the data card and the model card are in
 this repository. You can read the decision logic, inspect every weight, keep
@@ -771,8 +771,8 @@ your data local, and train your own model.
 [LICENSE](LICENSE), and the SPDX identifier is `MIT`.
 
 The base package has no dependencies, so a plain install carries nobody else's
-code. Optional extras do, and one of them — scapy, used only for live capture —
-is GPL-2.0-only. That does not relicense this project, and it does change your
+code. Optional extras do, and one of them (scapy, used only for live capture)
+is GPL-2.0-only. That does not relicense this project, but it does change your
 obligations if you bundle it into a container image or a frozen binary. See
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
@@ -784,4 +784,4 @@ for what to do before then.
 
 Bug reports, tests, lab scenarios, dataset review, models and documentation are
 welcome. See [CONTRIBUTING.md](CONTRIBUTING.md). Do not report a security
-problem in a public issue — read [SECURITY.md](SECURITY.md) first.
+problem in a public issue. Read [SECURITY.md](SECURITY.md) first.

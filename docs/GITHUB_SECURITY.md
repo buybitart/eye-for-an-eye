@@ -1,4 +1,4 @@
-# Repository and account hardening
+# Repository and Account Hardening
 
 This page is for whoever administers the published repository. It lists what to
 turn on and what this project has already done, and it keeps those two apart:
@@ -7,10 +7,10 @@ assert.
 
 Every remote setting below is reported as one of:
 
-* **VERIFIED_ENABLED** — checked and on;
-* **VERIFIED_DISABLED** — checked and off;
-* **NOT_VERIFIED** — not checked from here;
-* **OWNER_ACTION_REQUIRED** — cannot exist until the owner does something.
+* **VERIFIED_ENABLED**: checked and on;
+* **VERIFIED_DISABLED**: checked and off;
+* **NOT_VERIFIED**: not checked from here;
+* **OWNER_ACTION_REQUIRED**: cannot exist until the owner does something.
 
 At the time of writing, none of these remote settings has been switched on and
 none has been observed from here. Every one of them is therefore
@@ -27,7 +27,7 @@ setting is not enabled because a file recommends it.
   that can do everything is a token whose loss is unbounded.
 * A password manager, and a different password from anything else.
 
-## Repository settings
+## Repository Settings
 
 * **Private vulnerability reporting.** Settings → Code security → Private
   vulnerability reporting. This is the channel `SECURITY.md` describes, and
@@ -47,7 +47,7 @@ setting is not enabled because a file recommends it.
   GitHub Actions. Review every update; do not enable automatic merge. A
   dependency bot that merges on its own is a supply-chain path.
 
-## Default branch ruleset
+## Default Branch Ruleset
 
 On the default branch, require:
 
@@ -60,7 +60,7 @@ On the default branch, require:
 Apply the ruleset to administrators too. A rule that the owner can bypass
 silently is a rule that protects against nobody who matters.
 
-## Signed commits and tags
+## Signed Commits and Tags
 
 Signing is not configured in this repository and no key was generated for it.
 Enabling it is an owner action: create a signing key, register its public half
@@ -69,7 +69,7 @@ signing method. Release tags are worth signing even if commits are not.
 
 Status: `COMMIT_SIGNING_OWNER_ACTION_REQUIRED`.
 
-## What this repository already does
+## What This Repository Already Does
 
 These are properties of files here, checkable by reading them:
 
@@ -88,7 +88,7 @@ These are properties of files here, checkable by reading them:
 * **An install smoke test** that asserts the documented one-command install
   creates no firewall rule.
 
-## Action pins
+## Action Pins
 
 Three third-party actions are used, each pinned to a full 40-character commit SHA.
 `ACTION_PINS = VERIFIED`.
@@ -103,7 +103,7 @@ Three third-party actions are used, each pinned to a full 40-character commit SH
 because they establish different things.
 
 The *upstream* half was machine-verified. Each tag was resolved directly against
-its official repository — `https://github.com/actions/<name>.git` — with
+its official repository (`https://github.com/actions/<name>.git`) with
 `git ls-remote`, from a build environment with anonymous read access to those
 repositories. Each `refs/tags/<tag>` resolves to the SHA in the table; each was
 fetched and its object type confirmed to be `commit`, and no
@@ -123,8 +123,8 @@ appear, that no fourth external action is used, and that nothing is pinned to a
 tag or left unpinned. A verification list that does not correspond to what the
 files actually contain proves nothing about the files.
 
-Note the precision. What was resolved is patch releases — v4.4.0, v5.6.0,
-v4.6.2 — and the comments beside the pins name those, not the major line. A
+Note the precision. What was resolved is patch releases (v4.4.0, v5.6.0,
+v4.6.2), and the comments beside the pins name those, not the major line. A
 comment reading `# v4` beside a v4.4.0 pin is an invitation for somebody to
 "update to the latest v4" and silently lose the mapping that was verified.
 
@@ -147,11 +147,11 @@ git ls-remote https://github.com/actions/checkout.git 'refs/tags/v4.4.0^{}'
 ```
 
 No output means a lightweight tag, so the SHA above is the commit. Output means
-an annotated tag, and the *peeled* SHA on that second line is the commit to pin —
+an annotated tag, and the *peeled* SHA on that second line is the commit to pin,
 not the first one. If a SHA does not match, update the pin and the comment
 together; a pin whose comment names a different version is worse than no comment.
 
-## Before the first push
+## Before the First Push
 
 * Scan the history, not only the working tree. A secret removed in a later
   commit is still in the history, and publishing the history publishes it.
@@ -162,15 +162,15 @@ together; a pin whose comment names a different version is worse than no comment
   repository-maintenance decision rather than part of a release, so adding one
   belongs in an ordinary later commit and not in the tagged source.
 
-## After publication
+## After Publication
 
 * Enable the settings above in the order listed; push protection first.
 * Watch the security advisories for the pinned dependencies.
 * Re-run `scripts/security_scan.py` and `pip-audit` on a schedule rather than
   only when something prompts it.
 
-## See also
+## See Also
 
-* [Security policy](../SECURITY.md) — how to report a vulnerability
-* [Threat model](THREAT_MODEL.md) — what this software defends against
-* [Release process](../CONTRIBUTING.md) — how a change reaches a release
+* [Security policy](../SECURITY.md): how to report a vulnerability
+* [Threat model](THREAT_MODEL.md): what this software defends against
+* [Release process](../CONTRIBUTING.md): how a change reaches a release

@@ -5,7 +5,7 @@ Shadow Mode is the default and the recommended way to run Eye for an Eye.
 In Shadow Mode the system decides, writes the decision down, and then does
 nothing to the traffic. Nobody is blocked. Nothing is slowed down.
 
-## Why start here
+## Why Start Here
 
 You cannot know how a detector behaves on **your** traffic until you watch it on
 your traffic. Your monitoring service, your backup job, your mobile app and your
@@ -14,7 +14,7 @@ own office network all look a bit like automation.
 Shadow Mode lets you find that out safely. If the system would have blocked one
 of your own users, you see it in a report instead of in a support ticket.
 
-## What a decision looks like
+## What a Decision Looks Like
 
 ```text
 Risk: 0.91
@@ -33,7 +33,7 @@ The decision record also carries:
 
 So you can always answer "why did it say that?".
 
-## The settings
+## The Settings
 
 This is the default state after `eye-for-an-eye setup`:
 
@@ -57,7 +57,7 @@ as `NOT_CONFIGURED`, which is a normal state, not an error.
 
 To try a model, set the two paths and keep `mode = "shadow"`.
 
-## Replaying a capture file
+## Replaying a Capture File
 
 You do not need live traffic to test. `simulate` replays a saved capture through
 the same code path:
@@ -87,7 +87,7 @@ Two honest gaps in a replay report:
 * Packet loss in a capture file is unknown, so the default quality gates hold
   strong actions back.
 
-## Reading a shadow run
+## Reading a Shadow Run
 
 Ask three questions.
 
@@ -102,7 +102,7 @@ uptime checker are the usual surprises.
 recorded as `model_disagreement`. Frequent disagreement means the model does not
 fit your traffic yet.
 
-## The recommended path
+## The Recommended Path
 
 ```text
 Install
@@ -116,7 +116,7 @@ Install
 
 Enforcement today is **lab only**. See [Enforcement](ENFORCEMENT.md).
 
-## What Shadow Mode does not do
+## What Shadow Mode Does Not Do
 
 * It does not retrain anything. See [Controlled self-learning](SELF_LEARNING.md).
 * It does not move a threshold on its own.
@@ -125,11 +125,11 @@ Enforcement today is **lab only**. See [Enforcement](ENFORCEMENT.md).
 * It does not keep a second unbounded "disagreement database". Disagreement is a
   field on the normal, bounded decision record.
 
-## See also
+## See Also
 
 * [Decision engine](DECISION_ENGINE.md)
 * [Model evaluation](MODEL_EVALUATION.md)
-* [Shadow validation plan](SHADOW_VALIDATION_PLAN.md) — what a shadow deployment
+* [Shadow validation plan](SHADOW_VALIDATION_PLAN.md): what a shadow deployment
   has to produce before anyone argues for turning blocking on
-* [Backpressure](BACKPRESSURE.md) — turning the shadow export on, and what it costs
+* [Backpressure](BACKPRESSURE.md): turning the shadow export on, and what it costs
 * [Configuration](CONFIGURATION.md)

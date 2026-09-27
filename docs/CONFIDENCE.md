@@ -58,9 +58,9 @@ To safely change confidence rules in the future, the project would need:
 
 Two labels from synthetic (artificially made) test fixtures are not enough proof to call these rules "calibrated" (tuned and checked against real data). The system does not fit weights automatically. This kind of automatic tuning does not exist at this stage of the project.
 
-## See also
+## See Also
 
-- [CORRELATION.md](CORRELATION.md) — how the system groups events and computes scores
-- [LIMITATIONS.md](LIMITATIONS.md) — known limits of the analysis
-- [MATH_MODEL.md](MATH_MODEL.md) — the math behind scoring and the model
-- [RISKS_AND_LIMITATIONS.md](RISKS_AND_LIMITATIONS.md) — project-wide risks and limits
+- [CORRELATION.md](CORRELATION.md): how the system groups events and computes scores
+- [LIMITATIONS.md](LIMITATIONS.md): known limits of the analysis
+- [MATH_MODEL.md](MATH_MODEL.md): the math behind scoring and the model
+- [RISKS_AND_LIMITATIONS.md](RISKS_AND_LIMITATIONS.md): project-wide risks and limits

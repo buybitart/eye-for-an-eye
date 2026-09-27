@@ -1,8 +1,8 @@
-# Progressive defense
+# Progressive Defense
 
 Why there is a ladder of actions instead of a line between allowed and blocked.
 
-## The problem with two answers
+## The Problem With Two Answers
 
 A system with only "allow" and "block" has to decide, for every client, which
 mistake it prefers. Block too eagerly and real people cannot use the site.
@@ -28,25 +28,25 @@ TEMP_BLOCK
 
 Each rung costs the client a little more and requires a little more evidence.
 
-## What each rung means
+## What Each Rung Means
 
-**OBSERVE** — nothing is happening. The vast majority of traffic.
+**OBSERVE**: nothing is happening. The vast majority of traffic.
 
-**WATCH** — something is worth counting, but not worth doing anything about.
+**WATCH**: something is worth counting, but not worth doing anything about.
 Nothing is sent. The client cannot tell.
 
-**SOFT_CHALLENGE** — the evidence is real and does not settle the question, so
+**SOFT_CHALLENGE**: the evidence is real and does not settle the question, so
 ask one. This is the first action a client can notice, and it is the cheapest
 one that produces new information. It costs an ordinary browser one extra
 request and no attention at all.
 
-**RATE_LIMIT** — slow the client down. Reversible, and it does not take the
+**RATE_LIMIT**: slow the client down. Reversible, and it does not take the
 client off the site.
 
-**TEMP_BLOCK** — refuse, for a bounded time. Only on strong evidence, and never
+**TEMP_BLOCK**: refuse, for a bounded time. Only on strong evidence, and never
 for a client whose address is not the machine that connected to us.
 
-## The rule that matters most
+## The Rule That Matters Most
 
 **Weakening is always allowed. Strengthening needs evidence.**
 
@@ -59,11 +59,11 @@ Three things reduce an action:
 
 - too few requests to judge (fewer than 20),
 - data quality below the configured floor,
-- an address that is not the machine that connected — this one caps at
+- an address that is not the machine that connected. This one caps at
   RATE_LIMIT, because blocking a proxy hits everyone behind it,
 - an unreliable client address.
 
-## Challenge evidence can move an action, within a limit
+## Challenge Evidence Can Move an Action, Within a Limit
 
 Challenge history is the one thing that can push a client *up* the ladder, and
 it is capped.
@@ -75,13 +75,13 @@ it is capped.
 - Repeated recent failures raise it by one. Failures decay with time.
 
 Challenge evidence stops at **RATE_LIMIT**. It can never reach TEMP_BLOCK on its
-own, because the innocent explanations for failing a challenge are ordinary —
-scripting switched off, a privacy browser, a cookie blocker, a bad connection —
+own, because the innocent explanations for failing a challenge are ordinary
+(scripting switched off, a privacy browser, a cookie blocker, a bad connection),
 and "did not complete a challenge" must not become "is malicious" by a side
 door. A client already above that rung got there on behavioural evidence, and
 challenge history neither raises nor lowers it.
 
-## Deploy it in stages
+## Deploy It in Stages
 
 Do not switch everything on at once.
 
@@ -96,10 +96,10 @@ Do not switch everything on at once.
    justify it.
 
 Each stage should run long enough to produce numbers you trust. The measurement
-that decides whether to move on is not the scanner detection rate — it is how
+that decides whether to move on is not the scanner detection rate. It is how
 often ordinary traffic is affected.
 
-## What none of this proves
+## What None of This Proves
 
 A rung on this ladder is a decision about one client's behaviour in one time
 window. It is not a claim about who the client is, whether a person is involved,

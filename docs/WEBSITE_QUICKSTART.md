@@ -1,17 +1,17 @@
-# Website quick start
+# Website Quick Start
 
 Watching a website with Eye for an Eye, in order, with nothing enabled that
 could take your site down.
 
 Status: **Beta.** Shadow Mode only.
 
-## What you need
+## What You Need
 
 * a Linux server running Nginx
 * permission to edit Nginx configuration and reload it
 * Python 3.12 or newer
 
-## What this will and will not do
+## What This Will and Will Not Do
 
 It will read a local access log and tell you which sources look like automated
 probing.
@@ -31,7 +31,7 @@ Or from a checkout:
 python3 -m pip install --user .
 ```
 
-## 2. Create the website profile
+## 2. Create the Website Profile
 
 ```bash
 eye-for-an-eye setup --profile website
@@ -40,7 +40,7 @@ eye-for-an-eye setup --profile website
 This writes a configuration with safe defaults: shadow mode on, blocking off,
 active probing off, local API bound to localhost only.
 
-## 3. Add the log format
+## 3. Add the Log Format
 
 ```bash
 eye-for-an-eye web log-format
@@ -66,7 +66,7 @@ sudo nginx -t && sudo systemctl reload nginx
 
 Never reload without `nginx -t` first.
 
-## 4. Let the log be read
+## 4. Let the Log Be Read
 
 The analyser must not run as root just to read a log.
 
@@ -74,7 +74,7 @@ The analyser must not run as root just to read a log.
 sudo usermod -a -G adm eye-for-an-eye
 ```
 
-## 5. Make a local key
+## 5. Make a Local Key
 
 Lets repeated paths be counted without the path being stored.
 
@@ -97,7 +97,7 @@ secret_file = "/etc/eye-for-an-eye/web.secret"
 trusted_proxy_networks = []
 ```
 
-## 7. Check it
+## 7. Check It
 
 ```bash
 eye-for-an-eye web doctor
@@ -172,7 +172,7 @@ Reduced because:
   - shadow mode: nothing was enforced
 ```
 
-## 9. If you are behind a proxy or CDN
+## 9. If You Are Behind a Proxy or CDN
 
 **Read [REVERSE_PROXY.md](REVERSE_PROXY.md) before this step.** Getting it wrong
 is silent in both directions.
@@ -188,7 +188,7 @@ inside it could then claim to be any address.
 A client behind a proxy is never blocked at the network layer, whatever it does.
 That would hit the proxy and everyone else behind it.
 
-## 10. Run it for a week
+## 10. Run It for a Week
 
 Then read what it *would* have done.
 
@@ -199,7 +199,7 @@ above WATCH, adjust before considering enforcement:
 * an API using PUT or DELETE → add them to `web.expected_methods`
 * monitoring from a known address → add it to `enforcement.allowlist`
 
-## 11. Optional: prepare the challenge, in shadow mode
+## 11. Optional: Prepare the Challenge, in Shadow Mode
 
 Instead of blocking a client the system is unsure about, it can ask it a
 question. See [CHALLENGE.md](CHALLENGE.md) for what that means.
@@ -227,8 +227,8 @@ site_id = "example.com"
 ```
 
 Set `site_id` to something stable that identifies this site. It is not the
-`Host` header — a client controls that, and using it as a cryptographic scope
-would let a client pick its own key.
+`Host` header. A client controls that header, so using it as a cryptographic
+scope would let a client pick its own key.
 
 Check it:
 
@@ -253,9 +253,9 @@ eye-for-an-eye challenge stats
 
 The number that matters is how often ordinary traffic would have been
 challenged. It should be very close to zero. If it is not, the thresholds are
-wrong for your site — fix that before sending a single real challenge.
+wrong for your site. Fix that before you send a single real challenge.
 
-## What next
+## What Next
 
 Enabling automatic blocking is a separate decision with its own risks, and this
 release does not recommend it for a public website. Read
@@ -266,12 +266,12 @@ Sending real challenges is also a separate decision. Read
 [NGINX_CHALLENGE.md](NGINX_CHALLENGE.md) for what wiring one up actually
 involves.
 
-## If something is wrong
+## If Something Is Wrong
 
 | Symptom | Cause |
 | --- | --- |
 | `Access log: UNAVAILABLE` | wrong path, or not readable by the service user |
-| `Log format: UNAVAILABLE` | the log is not JSON — reinstall the log_format |
+| `Log format: UNAVAILABLE` | the log is not JSON, so reinstall the log_format |
 | `sensitive_fields` reported | your log format is writing credentials; remove them |
 | `web status` shows 0 lines | Nginx has not written since the sensor started |
 | every client looks like one address | you are behind a proxy; see step 9 |

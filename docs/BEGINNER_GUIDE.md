@@ -1,4 +1,4 @@
-# Beginner guide
+# Beginner Guide
 
 This guide has five steps. Do them in order.
 
@@ -12,17 +12,17 @@ You do not need to know any programming. You do not need Git. You do not need
 to type Python commands.
 
 Linux is shown first because Linux is where Eye for an Eye does everything it
-can do. Windows is shown too, and does less — [what is different](#what-windows-can-and-cannot-do)
-is at the end.
+can do. Windows is shown too, and it does less.
+[What is different](#what-windows-can-and-cannot-do) is at the end.
 
 ---
 
-## What this program does
+## What This Program Does
 
 Eye for an Eye watches the visitors to a website or a server.
 
-It looks at *how* someone behaves — how fast they ask for pages, how many
-different pages, that sort of thing. It writes notes about what it saw.
+It looks at *how* someone behaves: how fast they ask for pages, and how many
+different pages they ask for. It writes notes about what it saw.
 
 **It does not block anyone.** Not at first. Blocking is a separate thing you
 have to switch on yourself, on purpose, after telling it which addresses it must
@@ -30,15 +30,15 @@ never block.
 
 Two words used below:
 
-* **Safe Monitoring** — watching and writing notes. Nobody is blocked.
-* **Automatic Protection** — actually blocking visitors. Off. Advanced. Later.
-  Linux only.
+* **Safe Monitoring**: watching and writing notes. Nobody is blocked.
+* **Automatic Protection**: really blocking visitors. It is off. It is an
+  advanced step for later, and it is Linux only.
 
 ---
 
-## Step 1 — Install
+## Step 1: Install
 
-### What to do
+### What to Do
 
 **Linux:** open a terminal in the folder you unpacked and run
 
@@ -56,7 +56,7 @@ Use the real filename from the release page.
 
 **Windows:** double-click `Install-EyeForAnEye.cmd`
 
-### What you should see
+### What You Should See
 
 ```
 ==> Installation complete (installer version 2)
@@ -69,7 +69,7 @@ Use the real filename from the release page.
 
 It then tells you the two commands to run next.
 
-### If it does not work
+### If It Does Not Work
 
 | It says | What to do |
 | --- | --- |
@@ -87,9 +87,9 @@ More detail: [Install on Linux](INSTALL_LINUX.md).
 
 ---
 
-## Step 2 — Check the installation
+## Step 2: Check the Installation
 
-### What to do
+### What to Do
 
 **Linux:**
 
@@ -99,7 +99,7 @@ eye-for-an-eye check-install
 
 **Windows:** double-click `Status-EyeForAnEye.cmd`
 
-### What you should see
+### What You Should See
 
 ```
   [yes] the program is installed
@@ -111,7 +111,7 @@ eye-for-an-eye check-install
 
 That last `NO` is expected right now. Step 3 fixes it.
 
-### If it does not work
+### If It Does Not Work
 
 It prints the line that says `NO` and what to do about it. Read that line.
 
@@ -120,12 +120,12 @@ Eye works without it.
 
 ---
 
-## Step 3 — Choose what to watch
+## Step 3: Choose What to Watch
 
 This is the step most people need. Until you do it, the status says
 **NEEDS SETUP**.
 
-### What to do
+### What to Do
 
 ```sh
 eye-for-an-eye setup
@@ -153,7 +153,7 @@ If you already know the path, you can say it all at once:
 eye-for-an-eye setup --watch website-log --access-log /var/log/nginx/eye-for-an-eye.log
 ```
 
-### What you should see
+### What You Should See
 
 ```
 Eye for an Eye will watch:
@@ -163,14 +163,14 @@ Start it when you are ready:
   eye-for-an-eye start
 ```
 
-### If it does not work
+### If It Does Not Work
 
 **"That file is not in the format Eye for an Eye reads."**
 
 This is the most common one, and it is worth reading carefully.
 
 Eye for an Eye reads one JSON line per visit. Most web servers write something
-else by default. A normal Nginx `access.log` will not work — every line would be
+else by default. A normal Nginx `access.log` will not work. Every line would be
 thrown away.
 
 To get a file it can read, run:
@@ -199,7 +199,7 @@ Do not `chmod 777` the log. Do not run Eye for an Eye as root to read it.
 
 **"There is no file at that path."** Check the spelling.
 
-### The other choice — a network sensor
+### The Other Choice: A Network Sensor
 
 This watches network packets directly. It is **Linux only** and it needs a second
 helper program that is allowed to read from the network card. `setup` will record
@@ -210,9 +210,9 @@ This is not a beginner path. If you want it, read
 
 ---
 
-## Step 4 — Start watching
+## Step 4: Start Watching
 
-### What to do
+### What to Do
 
 **Linux:**
 
@@ -222,7 +222,7 @@ eye-for-an-eye start
 
 **Windows:** double-click `Start-EyeForAnEye.cmd`
 
-### What you should see
+### What You Should See
 
 ```
 Eye for an Eye is watching.
@@ -250,7 +250,7 @@ To check from another terminal:
 eye-for-an-eye status
 ```
 
-### If it does not work
+### If It Does Not Work
 
 | It says | What to do |
 | --- | --- |
@@ -258,13 +258,13 @@ eye-for-an-eye status
 | does not know where to watch yet | Go back to Step 3. |
 | This settings file has automatic blocking switched on | You are not in Safe Monitoring. Read [AUTONOMOUS_MODE.md](AUTONOMOUS_MODE.md) before going further. |
 | Watching network packets does not work on this kind of computer | You are on Windows and chose the network sensor. Use a website log instead. |
-| It runs, but `visitors seen` stays at 0 | Usually the log format. See Step 3. Run `eye-for-an-eye web doctor` — it says how many lines it could not read. |
+| It runs, but `visitors seen` stays at 0 | Usually the log format. See Step 3. Run `eye-for-an-eye web doctor`. It says how many lines it could not read. |
 
 ---
 
-## Step 5 — Stop
+## Step 5: Stop
 
-### What to do
+### What to Do
 
 **Linux:**
 
@@ -277,7 +277,7 @@ eye-for-an-eye stop
 Pressing **Ctrl** and **C** together in the *watching* window also works, and so
 does closing that window.
 
-### What you should see
+### What You Should See
 
 ```
 Asking Eye for an Eye to stop.
@@ -285,8 +285,8 @@ Asking Eye for an Eye to stop.
 Stopped. Nothing is blocked.
 ```
 
-It can take a few seconds. Stop asks the watching program to finish, and the
-program notices the next time it looks — which is every few seconds.
+It can take a few seconds. Stop asks the watching program to finish. The program
+notices the next time it looks, which is every few seconds.
 
 Afterwards, the status says:
 
@@ -294,7 +294,7 @@ Afterwards, the status says:
   Protection:         NOT RUNNING
 ```
 
-### If it does not work
+### If It Does Not Work
 
 If Stop says it has not stopped yet, wait a moment and run the status again.
 
@@ -305,7 +305,7 @@ Stop never ends any other program on your computer. It asks only its own.
 
 ---
 
-## Try it without a website — the demo
+## Try It Without a Website: The Demo
 
 You can prove the installation works without any visitors at all.
 
@@ -335,7 +335,7 @@ For everything the demo actually did, add `--advanced`.
 
 ---
 
-## Where your files are
+## Where Your Files Are
 
 On Linux this depends on how you installed. The installer wrote the exact paths
 into `install-report.txt`, and `eye-for-an-eye check-install` prints the settings
@@ -353,7 +353,7 @@ Installed from the Debian package instead? The paths are different and
 
 ---
 
-## Removing it
+## Removing It
 
 **Linux, installed with `install.sh`:**
 
@@ -382,7 +382,7 @@ To remove those as well, use `sh uninstall.sh --purge`, or add
 `--also-remove-my-records` to `easy uninstall`. Deleting them cannot be undone,
 which is why it is a separate thing to ask for.
 
-`apt remove` and `apt purge` both leave your settings and records alone — the
+`apt remove` and `apt purge` both leave your settings and records alone. The
 package does not own those paths.
 
 Uninstalling does not change your firewall. Eye for an Eye never changed it,
@@ -390,7 +390,7 @@ unless you switched Automatic Protection on yourself.
 
 ---
 
-## What Windows can and cannot do
+## What Windows Can and Cannot Do
 
 | | Linux | Windows |
 | --- | --- | --- |
@@ -421,7 +421,7 @@ traffic. Nobody helping you needs those, and Eye for an Eye never asks for them.
 
 ---
 
-## Common questions
+## Common Questions
 
 **Does it need cloud AI or an account?** No. Nothing is sent anywhere. There is
 no account, no API key and no subscription. The optional local model runs on your
@@ -433,9 +433,9 @@ yourself, and that is Linux only.
 **Does it work without the machine-learning part?** Yes. The mathematical engine
 works alone. `check-install` saying the learning part is not available is fine.
 
-**Can it read Nginx and Apache logs?** It reads one JSON object per line. Nginx
-can be configured to write that — `eye-for-an-eye web log-format` prints how.
-Apache can be configured similarly, but only the Nginx recipe is tested.
+**Can it read Nginx and Apache logs?** It reads one JSON object per line. You can
+set up Nginx to write that. `eye-for-an-eye web log-format` prints how. You can
+set up Apache in a similar way, but only the Nginx recipe is tested.
 
 **Does it need root?** No. Installing, setup, starting, status, the demo and
 uninstalling all run as a normal user. Only two things need more: the packet
@@ -456,13 +456,13 @@ This part is not for beginners, and the warning is deliberately not simplified.
 
 Automatic Protection lets Eye for an Eye add temporary blocks to your computer's
 firewall by itself. A wrong block stops a real person from reaching your
-website, silently, with no way for them to appeal. It falls hardest on people on
-unusual networks and on assistive software.
+website, silently, with no way for them to appeal. The people most affected
+are those on unusual networks, and those who use assistive software.
 
 Before it will start, you must tell Eye for an Eye which network addresses it
-must **never** block — the addresses you administer the machine from. Without
-that list it refuses to start, because otherwise it could lock you out of your
-own server. It will not guess the list for you.
+must **never** block. These are the addresses you use to administer the machine.
+Without that list it refuses to start, because it could otherwise lock you out of
+your own server. It will not guess the list for you.
 
 It is Linux only.
 

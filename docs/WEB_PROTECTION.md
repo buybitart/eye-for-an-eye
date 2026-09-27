@@ -1,4 +1,4 @@
-# Web protection
+# Web Protection
 
 Eye for an Eye can watch how sources use your website, and use that as evidence
 alongside network behaviour.
@@ -11,7 +11,7 @@ script working through a list?*
 
 Status: **Beta.** Shadow Mode only is the recommended deployment.
 
-## The short version
+## The Short Version
 
 Eye for an Eye can read safe request data from a local web server.
 
@@ -20,7 +20,7 @@ It does not need the request password or body.
 It looks at behaviour over time. For example, many missing pages and repeated
 probes can increase risk.
 
-## What it can see
+## What It Can See
 
 Behaviour, over three windows: ten seconds, one minute, fifteen minutes.
 
@@ -41,7 +41,7 @@ its own is a busy client. A high rate *and* many distinct paths *and* almost
 everything missing *and* metronomic timing *and* fifteen minutes of it is a
 different claim.
 
-## What it will not do
+## What It Will Not Do
 
 **It never blocks on one URL.** There is no rule anywhere that says
 `if path == "/.env": block()`. One request to a sensitive path is a probe, an
@@ -61,7 +61,7 @@ This matters and is often glossed over elsewhere.
 
 **Packet capture cannot see inside HTTPS.** If traffic is encrypted when it
 reaches the network sensor, there is no path, no method and no status code in it
-— only that a connection happened, and how big and how often.
+, only that a connection happened, and how big and how often.
 
 So web behaviour comes from where the traffic is already decrypted: the web
 server or reverse proxy that terminates TLS, through its access log. That is
@@ -71,7 +71,7 @@ The project does not claim otherwise anywhere. If a tool tells you it inspects
 HTTP inside HTTPS from packet capture alone, it is either terminating TLS
 somewhere or it is wrong.
 
-## How it fits with the network sensor
+## How It Fits With the Network Sensor
 
 ```text
         website traffic
@@ -116,7 +116,7 @@ rate limit.
 will cost the same as sixty-four, because paths are counted in a fixed-size ring
 of digests and never stored. The protection must not become the outage.
 
-## Getting started
+## Getting Started
 
 ```bash
 eye-for-an-eye web log-format     # the Nginx log_format to install
@@ -136,12 +136,12 @@ Full walk-through: [WEBSITE_QUICKSTART.md](WEBSITE_QUICKSTART.md).
 | Shadow Mode | on |
 | network blocking | off |
 | web-layer blocking | not implemented |
-| trusted proxy networks | none — forwarded headers ignored |
+| trusted proxy networks | none, forwarded headers ignored |
 | storing full paths | off |
 | storing query values | off |
 | storing credentials or bodies | never, at any setting |
 
-## Known limits
+## Known Limits
 
 * Only Nginx JSON access logs are read. The event model is generic; Apache and
   Caddy readers are not implemented.
@@ -155,8 +155,8 @@ Full walk-through: [WEBSITE_QUICKSTART.md](WEBSITE_QUICKSTART.md).
 
 ## Related
 
-* [NGINX.md](NGINX.md) — the integration
-* [REVERSE_PROXY.md](REVERSE_PROXY.md) — client identity and CDN safety
-* [HTTP_FEATURES.md](HTTP_FEATURES.md) — every feature and what it means
-* [WEB_PRIVACY.md](WEB_PRIVACY.md) — what is stored and what is not
-* [WEB_ENFORCEMENT.md](WEB_ENFORCEMENT.md) — what can and cannot be acted on
+* [NGINX.md](NGINX.md): the integration
+* [REVERSE_PROXY.md](REVERSE_PROXY.md): client identity and CDN safety
+* [HTTP_FEATURES.md](HTTP_FEATURES.md): every feature and what it means
+* [WEB_PRIVACY.md](WEB_PRIVACY.md): what is stored and what is not
+* [WEB_ENFORCEMENT.md](WEB_ENFORCEMENT.md): what can and cannot be acted on

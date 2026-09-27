@@ -31,10 +31,13 @@ def shell_blocks(heading, *, first_only=False):
     has an ordering to defend, so this helper takes the heading.
     """
     body = README.read_text(encoding='utf-8')
-    section = body.split(heading, 1)
-    if len(section) < 2:
+    # Case-insensitive, because heading capitalisation is a style rule and this
+    # helper is asserting about commands. The callers all check that a block was
+    # found, so a heading this cannot locate fails the test rather than skipping it.
+    found = re.search(re.escape(heading), body, re.IGNORECASE)
+    if not found:
         return []
-    section = section[1].split('\n## ', 1)[0]
+    section = body[found.end():].split('\n## ', 1)[0]
     blocks = re.findall(r'```sh\n(.*?)```', section, re.DOTALL)
     if first_only:
         blocks = blocks[:1]

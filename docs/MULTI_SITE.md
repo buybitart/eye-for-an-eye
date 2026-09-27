@@ -8,7 +8,7 @@ behaviour can still help protect the full server.
 
 Status: **Beta.** Off by default. Shadow mode for every new site.
 
-## Why sites are not all the same
+## Why Sites Are Not All the Same
 
 A blog and an API do not look alike, and neither is doing anything wrong.
 
@@ -25,7 +25,7 @@ uses one will be wrong about at least one of them all the time.
 
 So each site gets its own settings, its own idea of normal, and its own state.
 
-## What is separate, and what is shared
+## What Is Separate, and What Is Shared
 
 **Separate, per site:** web behaviour counters, baselines, thresholds and
 policy, challenge keys, drift, out-of-distribution reference, dataset scope.
@@ -40,23 +40,23 @@ isolation would make a multi-site install worse at detection than a single-site
 one, for no benefit. So evidence is separated by kind rather than discarded:
 
 ```
-HOST_NETWORK_EVIDENCE   about the machine — shared
-SITE_WEB_EVIDENCE       about one site's HTTP traffic — never shared
+HOST_NETWORK_EVIDENCE   about the machine: shared
+SITE_WEB_EVIDENCE       about one site's HTTP traffic: never shared
 ```
 
-## Sites come from your configuration, never from a request
+## Sites Come From Your Configuration, Never From a Request
 
 A `Host:` header is a string the client writes. If a site could be identified
 from it, a client could pick which site's policy applied to it, which site's
 cryptographic key signed its token, and could invent a new site per request.
 
 So the header is used for exactly one thing: looking up an entry in your table.
-A miss is a miss — the request goes to one bounded `unknown-site` bucket, which
+A miss is a miss. The request goes to one bounded `unknown-site` bucket, which
 is a single bucket and not a new site per host.
 
 See [CROSS_SITE_SECURITY.md](CROSS_SITE_SECURITY.md).
 
-## Turning it on
+## Turning It On
 
 Multi-site is off by default, and a single-site owner never needs it. Nothing in
 this page applies until you add a `[sites]` section.
@@ -111,19 +111,19 @@ All of them read. None changes enforcement or reloads anything.
 More sites divide one budget rather than multiplying it. Measured: ten sites and
 twenty sites use the same memory at the same ceiling.
 
-## What this is not
+## What This Is Not
 
 This is not hosting-provider multi-tenancy. It has been tested with up to twenty
 sites on one machine, which is the shape it was built for: a VPS with a handful
 of websites on it. There is no isolation boundary between sites beyond the ones
-described here — they share a process, and an operator who can configure one can
+described here. They share a process, and an operator who can configure one can
 configure all of them.
 
-## Further reading
+## Further Reading
 
-- [Site profiles](SITE_PROFILES.md) — website, API, admin
-- [Site baselines](SITE_BASELINES.md) — what normal means per site
-- [Multi-site models](MULTI_SITE_MODELS.md) — which model answers for which site
-- [Cross-site security](CROSS_SITE_SECURITY.md) — the threats and the limits
-- [Multi-site Nginx](MULTI_SITE_NGINX.md) — server blocks and mapping
-- [Site datasets](SITE_DATASETS.md) — per-site data, and the leakage it invites
+- [Site profiles](SITE_PROFILES.md): website, API, admin
+- [Site baselines](SITE_BASELINES.md): what normal means per site
+- [Multi-site models](MULTI_SITE_MODELS.md): which model answers for which site
+- [Cross-site security](CROSS_SITE_SECURITY.md): the threats and the limits
+- [Multi-site Nginx](MULTI_SITE_NGINX.md): server blocks and mapping
+- [Site datasets](SITE_DATASETS.md): per-site data, and the leakage it invites

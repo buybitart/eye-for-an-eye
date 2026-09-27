@@ -9,7 +9,7 @@
 LAB provides ground truth. PCAP provides packet realism. SHADOW provides observation without
 ground truth. They are used together and never treated as equivalent.
 
-## Feature schema
+## Feature Schema
 
 One implementation, shared with production: `eye_for_an_eye.decision.features`. Every row from
 every source is built by the same parser, the same correlation engine and the same
@@ -142,7 +142,7 @@ Scenario kinds present: {'malicious_automation': 823, 'hard_positive': 189, 'har
 Hard negatives: 14 scenarios. Hard positives:
 5 scenarios.
 
-## Duplicates and conflicts
+## Duplicates and Conflicts
 
 | check | result |
 |---|---|
@@ -160,7 +160,7 @@ Hard negatives: 14 scenarios. Hard positives:
 A conflicting label is critical and stops a build. A cross-source duplicate is the specific case
 where the same lab capture entered the pipeline twice under two names; there are none here.
 
-## Feature validation
+## Feature Validation
 
 | check | result |
 |---|---|
@@ -172,7 +172,7 @@ where the same lab capture entered the pipeline twice under two names; there are
 Constant columns are marked, never dropped: `available_burst_10s`, `available_connections_10s`, `available_connections_60s`, `available_connections_900s`, `available_deception_60s`, `available_destinations_60s`, `available_persistence_900s`, `available_ports_60s`, `available_ports_900s`.
 They are structurally always observable when any event exists.
 
-## Distribution comparison
+## Distribution Comparison
 
 Sources are expected to differ. What matters is the size and the direction of the difference,
 and whether LAB reaches the ranges the other two show.
@@ -216,7 +216,7 @@ and whether LAB reaches the ranges the other two show.
 
 12 of 34 features shift by PSI >= 0.25.
 
-### Range coverage
+### Range Coverage
 
 | source | features LAB does not reach |
 |---|---|
@@ -228,12 +228,12 @@ obviously unrealistic in scale. It is still narrower in shape: shadow observatio
 more destinations and slower inter-arrival than the labelled generator usually produces, which is
 the first thing dataset-v2's generator should widen.
 
-## Leakage analysis
+## Leakage Analysis
 
 Findings: - ports used by only one label: 10, 20, 24, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 65, 81, 82, 83, 84, 85
 - payload lengths exclusive to one label: 10, 17, 36
 
-### Source type
+### Source Type
 
 | source | rows | labels | only one label? | most separating feature | AUC |
 |---|---|---|---|---|---|
@@ -248,7 +248,7 @@ the observation workload spreads across more destinations than the labelled gene
 carries no label, so it cannot leak one, but a future reviewed shadow contribution must be checked
 against this before it is trained on.
 
-### Single feature separation
+### Single Feature Separation
 
 | feature | AUC | correlation |
 |---|---|---|
@@ -276,7 +276,7 @@ Nothing reaches the suspicion threshold (AUC >= 0.99).
 Sweep ranges no ordinary client touches remain single-label, which is realistic. It cannot reach a
 model: feature schema 1 has no port-identity column, only counts of distinct ports.
 
-### Rate and packet size
+### Rate and Packet Size
 
 | measure | AUC | benign median | positive median | range overlap |
 |---|---|---|---|---|
@@ -286,7 +286,7 @@ model: feature schema 1 has no port-identity column, only counts of distinct por
 | distinct_request_sizes | 0.271 | 2 | 0 | 0.50 |
 
 Both classes span fast and slow, small and large. Mean request size points the other way from the
-naive expectation - benign requests are larger - and the ranges fully overlap.
+naive expectation (benign requests are larger), and the ranges fully overlap.
 
 ### Timing
 
@@ -301,7 +301,7 @@ Absolute time and hour of day do not separate the classes. Row order does, at AU
 deterministically shuffles rows before splitting, and row position is metadata that never reaches
 a model.
 
-### Generator fingerprint
+### Generator Fingerprint
 
 | artefact | result |
 |---|---|
@@ -345,7 +345,7 @@ The test split is **frozen** (`frozen: True`) with a SHA-256 per file. If it eve
 influences model selection, the correct response is a new dataset version with a new holdout, not
 a re-split.
 
-## Shadow review queue and out-of-distribution candidates
+## Shadow Review Queue and Out-of-distribution Candidates
 
 | measure | value |
 |---|---|
@@ -378,7 +378,7 @@ The list is a list of candidates for a person and for dataset-v2 scenarios.
 
 **Automatic enforcement readiness: NO.** READY_FOR_BASELINE_TRAINING is not production readiness. Automatic enforcement readiness is NO until a model evaluated on this dataset is also validated in shadow mode against real traffic.
 
-## Known limitations
+## Known Limitations
 
 - Every source is synthetic. LAB and PCAP are generated here; the shadow pool is a stand-in for
   telemetry no deployment has produced yet. Nothing in this dataset is evidence about real traffic.
@@ -396,14 +396,14 @@ The list is a list of candidates for a person and for dataset-v2 scenarios.
 - The dataset cannot express authorisation: an authorised scan and an unauthorised one look
   identical to a behavioural sensor. That belongs to the policy allowlist, not a model.
 
-## Recommended improvements before Logistic Regression
+## Recommended Improvements Before Logistic Regression
 
 1. Nothing blocks the baseline. Train it on the frozen split, report per-source metrics, and do
    not re-tune against the test set.
 2. Report metrics separately for LAB and PCAP rows. If they diverge sharply, the model has learned
    the generator rather than the behaviour.
-3. Widen the LAB generator using the shadow distribution - more destinations per source, slower
-   inter-arrival - without ever using a shadow decision as a label.
+3. Widen the LAB generator using the shadow distribution (more destinations per source, slower
+   inter-arrival) without ever using a shadow decision as a label.
 4. Review the 61 out-of-distribution
    shadow rows and add the behaviours they show as dataset-v2 scenarios.
 5. Add a second, independent scanning tool so positive behaviour is not all from one generator

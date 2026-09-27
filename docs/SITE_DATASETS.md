@@ -1,16 +1,16 @@
-# Site datasets
+# Site Datasets
 
 How per-site data is stored, and the leakage that having a site identifier
 invites.
 
-## Site is metadata, never a feature
+## Site Is Metadata, Never a Feature
 
 A site identifier is the sharpest leakage available to this project.
 
 Hand a model `site_group` and it learns "traffic to the admin site is
 malicious". That is a fact about one deployment's shape, not about behaviour. It
 scores beautifully on the data it was trained on and is worthless on the first
-site it has not seen — and worse, it looks like a good model right up until it
+site it has not seen, and worse, it looks like a good model right up until it
 is deployed somewhere new.
 
 So these fields are registered as never-model-input, each with a recorded
@@ -27,7 +27,7 @@ reason:
 The reasons are stored alongside the exclusions so they survive a future
 contributor asking "why not?".
 
-## One corpus, filtered
+## One Corpus, Filtered
 
 A site dataset is a **view**, not a copy:
 
@@ -37,13 +37,13 @@ dataset-global-v3          every row
 ```
 
 Duplicating rows per site would multiply storage, and would make it possible for
-the same window to appear twice in one training set — which is a subtle way to
+the same window to appear twice in one training set, which is a subtle way to
 break a group split.
 
 The manifest records parent datasets, site scope, feature schema, sample groups,
 labels and time range.
 
-## Schema compatibility
+## Schema Compatibility
 
 `site_group` arrived in dataset schema version 2. Version 1 files still load:
 the column is optional on read, and its absence means "written before sites
@@ -68,7 +68,7 @@ the thing random row splits cannot tell you.
 
 For a site-specific model, use a chronological and source-group holdout.
 
-## Per-site metrics
+## Per-site Metrics
 
 Report per site, not only in aggregate:
 
@@ -82,7 +82,7 @@ A model can score well overall and fail badly on one site type. The smallest
 site is the one that disappears into an average, so highlight the
 worst-performing site rather than the mean.
 
-## Contributions to a global model
+## Contributions to a Global Model
 
 One large site should not dominate a global candidate simply by being large.
 Report per-site contributions so the imbalance is visible.
@@ -91,7 +91,7 @@ Do not fix imbalance by duplicating a small site's samples. Duplicating rows
 does not create information; it creates confidence, which is worse than the
 imbalance was.
 
-## Hard negatives by profile
+## Hard Negatives by Profile
 
 The legitimate traffic most likely to be mistaken for an attack differs by
 profile:
@@ -117,5 +117,5 @@ Full domains are not needed in a dataset. The internal pseudonymous `site_group`
 is enough for filtering, splitting and per-site evaluation, and it does not put
 your customers' hostnames into a file you might later share.
 
-Identifiers are refused if they contain control characters — the shape of CSV
+Identifiers are refused if they contain control characters. The shape of CSV
 and log injection in a field the system generates itself.

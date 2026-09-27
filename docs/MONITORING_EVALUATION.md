@@ -1,9 +1,9 @@
-# Monitoring and evaluation
+# Monitoring and Evaluation
 
 This page defines how the project measures whether it works. It separates
 **measured today** from **not yet measured**.
 
-## Rule: no vanity metrics
+## Rule: No Vanity Metrics
 
 GitHub stars, download counts, lines of code and the number of AI features are
 not evidence of impact. They may be recorded as secondary numbers. They never
@@ -11,7 +11,7 @@ appear as a success indicator.
 
 The indicators below are security outcomes and user outcomes.
 
-## Detection quality
+## Detection Quality
 
 | Indicator | How it is measured | Status |
 | --- | --- | --- |
@@ -26,7 +26,7 @@ The gap in this table is the whole point of Objective 4 in
 the project objectives: every "measured" here means measured on data the
 project generated itself.
 
-## Dataset quality
+## Dataset Quality
 
 | Indicator | Status |
 | --- | --- |
@@ -37,7 +37,7 @@ project generated itself.
 | Share of rows that are unlabelled | Measured. |
 | Reproducibility: identical hashes on a clean rebuild | Verified. |
 
-## Runtime behaviour
+## Runtime Behaviour
 
 | Indicator | How | Status |
 | --- | --- | --- |
@@ -48,7 +48,7 @@ project generated itself.
 | Storage write failures | `storage_write_failures_total`. | Measured live. |
 | Temporary block expiry correctness | Read-back of kernel expiry, plus the namespace lab test. | Measured in the lab. |
 
-## Adoption and usability
+## Adoption and Usability
 
 These need users. The project has none, so none of them has a value yet.
 
@@ -65,7 +65,7 @@ These need users. The project has none, so none of them has a value yet.
 someone choosing to tell the project. That makes these numbers weaker and it is
 the correct trade for this software.
 
-## Security process
+## Security Process
 
 | Indicator | Status |
 | --- | --- |
@@ -75,7 +75,7 @@ the correct trade for this software.
 | Secrets in the repository | Currently 0. Git history not scanned, because there is none. |
 | Dependency vulnerabilities | `pip-audit` in the checks. |
 
-## Test coverage
+## Test Coverage
 
 The suite has 353 passing tests and 3 skipped, which need an authorised Linux
 lab. A percentage coverage number is deliberately not used as a success
@@ -84,14 +84,14 @@ instead is whether each security claim in
 [Security review scope](SECURITY_REVIEW_SCOPE.md) has a test that would fail if
 the claim broke.
 
-## How results get published
+## How Results Get Published
 
 * The data card and the model card carry the dataset and model numbers.
 * Reports in `reports/` carry the evaluation detail.
 * Negative results are published too. A model that fails a gate is reported as
   failing, not quietly retrained until it passes.
 
-## What would make the project a failure
+## What Would Make the Project a Failure
 
 Stated in advance, so it cannot be redefined later:
 
@@ -100,7 +100,7 @@ Stated in advance, so it cannot be redefined later:
 * The model performs no better than the mathematical engine alone.
 * Its own presence makes a server less safe.
 
-## See also
+## See Also
 
 * [Model evaluation](MODEL_EVALUATION.md)
 * [Benchmarking](BENCHMARKING.md)

@@ -1,17 +1,17 @@
-# Web dataset
+# Web Dataset
 
 How web behaviour would become training data, and what exists today.
 
 Status: **Not implemented.** This page describes the design and states plainly
 what has and has not been built, so nobody has to read the code to find out.
 
-## What exists
+## What Exists
 
 | Piece | State |
 | --- | --- |
 | web behavioural features | implemented, 35 features in 9 families |
 | deterministic `web-math-risk-v1` | implemented |
-| LAB web scenarios as **tests** | implemented — 13 scenarios |
+| LAB web scenarios as **tests** | implemented, 13 scenarios |
 | LAB web scenarios as a **dataset generator** | not implemented |
 | web PCAP fixtures | not implemented |
 | shadow web collection | not implemented |
@@ -21,7 +21,7 @@ P10 works with no new machine learning. That is the design, not a shortfall:
 deterministic risk with explanations comes first, and a model only afterwards
 when there is real data to train it on.
 
-## The scenarios that exist as tests
+## The Scenarios That Exist as Tests
 
 These run in `tests/test_web_behaviour.py` and are real request sequences
 replayed through the production feature code.
@@ -48,7 +48,7 @@ Their measured scores are in [HTTP_FEATURES.md](HTTP_FEATURES.md).
 Turning these into a dataset means emitting labelled `DatasetSample` rows from
 the same sequences. The scenarios exist; the emitter does not.
 
-## The design, when it is built
+## The Design, When It Is Built
 
 ### Labels
 
@@ -58,11 +58,11 @@ The same terminology the rest of the project uses:
 BENIGN_LIKE                     SUSPICIOUS_AUTOMATION_LIKE
 ```
 
-Never `human` versus `bot`. **Not every bot is malicious** — monitoring, uptime
+Never `human` versus `bot`. **Not every bot is malicious**: monitoring, uptime
 checkers, search crawlers and API automation are all bots you want. A model
 trained on `bot = bad` learns to block your own infrastructure.
 
-### Where labels may come from
+### Where Labels May Come From
 
 The P9 rules apply unchanged:
 
@@ -82,10 +82,10 @@ Never a random request-level split. Requests from one source in one session are
 correlated, so a random split puts near-copies on both sides and produces a
 score that means nothing.
 
-Split by source group, session, time period and scenario — the same rule the
+Split by source group, session, time period and scenario. The same rule the
 network dataset follows.
 
-### What must not become a feature
+### What Must Not Become a Feature
 
 ```text
 the raw path         the domain or Host name       the source address
@@ -105,7 +105,7 @@ A benign set without monitoring, API clients, crawlers, proxies and
 administrators produces meaningless false-positive numbers. The eight benign
 scenarios above are the minimum, not the target.
 
-### Site profile
+### Site Profile
 
 Different sites have different normal traffic: a blog, an API, a shop and an
 admin panel look nothing alike. Dataset metadata should record a coarse
@@ -114,7 +114,7 @@ admin panel look nothing alike. Dataset metadata should record a coarse
 **Not as a model feature.** It is for reading results, not for the model to
 learn.
 
-## Per-site baseline
+## Per-site Baseline
 
 One global model will not be right for every website, which is what P9's
 controlled retraining is for:
@@ -127,7 +127,7 @@ site shadow telemetry -> reviewed local samples -> candidate dataset
 Each installation stays independent. Nothing is uploaded, no models are shared,
 and there is no federated learning.
 
-## When a web model is built
+## When a Web Model Is Built
 
 It uses the P9 lifecycle without exception: candidate dataset, training job, ONNX
 export, parity check, validation, candidate shadow, promotion recommendation.
@@ -136,10 +136,10 @@ export, parity check, validation, candidate shadow, promotion recommendation.
 Start with logistic regression, then gradient boosting if the metrics justify it.
 No deep learning.
 
-## Feature schema
+## Feature Schema
 
 Adding web features to the network `FeatureVector` would break every existing v1
-model. So the recommended path — and what is built — keeps them separate:
+model. So the recommended path (and what is built) keeps them separate:
 `web-math-risk-v1` produces its own score, which joins the existing fusion as
 another piece of evidence.
 
@@ -148,6 +148,6 @@ model must never be fed v2 input.
 
 ## Related
 
-* [DATASET.md](DATASET.md) — the network dataset pipeline
-* [RETRAINING.md](RETRAINING.md) — the P9 lifecycle any web model must use
-* [HTTP_FEATURES.md](HTTP_FEATURES.md) — what would be in a row
+* [DATASET.md](DATASET.md): the network dataset pipeline
+* [RETRAINING.md](RETRAINING.md): the P9 lifecycle any web model must use
+* [HTTP_FEATURES.md](HTTP_FEATURES.md): what would be in a row

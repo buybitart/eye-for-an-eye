@@ -5,7 +5,7 @@ you. This page explains the settings you are most likely to change.
 
 Every value below is the real default from the code.
 
-## The five settings that matter most
+## The Five Settings That Matter Most
 
 ```toml
 [deployment]
@@ -26,7 +26,7 @@ enabled = false           # never send packets back to a source
 
 If you change nothing else, the system watches and does not block.
 
-## Rules of the file
+## Rules of the File
 
 * One file, strict TOML. An unknown section or key is an error, not a warning.
 * Relative paths are resolved next to the configuration file, not next to your
@@ -181,7 +181,7 @@ they cost and what happens when the disk fills is in
 
 | Key | Default | Meaning |
 | --- | --- | --- |
-| `decision_journal_path` | `""` | The forensic record: one full decision per line. A file of behaviour — keep it local. |
+| `decision_journal_path` | `""` | The forensic record: one full decision per line. A file of behaviour, so keep it local. |
 | `journal_include_source` | `false` | Keep the operational address as well as the pseudonym. |
 | `journal_required_for_action` | `false` | Whether a decision that could not be journalled may still be acted on. Both answers are defensible; [Backpressure](BACKPRESSURE.md) says which failure each one asks you to prefer. |
 | `journal_max_file_bytes` / `_max_files` / `_max_total_bytes` | 8 MiB / 4 / 32 MiB | The journal's disk ceilings. |
@@ -238,13 +238,13 @@ Nothing is ever downloaded for you. You supply the database file.
 Bounds for a listener: 256 connections, 8 per address, 4096 request bytes, 1024
 response bytes, and timeouts of 2 s (first byte), 5 s (idle) and 10 s (total).
 
-## Example files
+## Example Files
 
-* `config.example.toml` — every key with comments.
-* `config.sensor.toml`, `config.honeypot.toml`, `config.lab.toml` — starting points.
-* `eye_for_an_eye/templates/*.toml` — what `setup` writes.
+* `config.example.toml`: every key with comments.
+* `config.sensor.toml`, `config.honeypot.toml`, `config.lab.toml`: starting points.
+* `eye_for_an_eye/templates/*.toml`: what `setup` writes.
 
-## See also
+## See Also
 
 * [Quickstart](QUICKSTART.md)
 * [Service profiles](SERVICE_PROFILES.md)

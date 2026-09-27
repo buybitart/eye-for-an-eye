@@ -14,7 +14,7 @@ you switch on yourself, later, on purpose. Installing cannot switch it on.
 ## Contents
 
 * [Which Linux](#which-linux)
-* [Quick install](#quick-install) — the release archive
+* [Quick install](#quick-install): the release archive
 * [Debian package](#debian-package)
 * [From a checkout](#from-a-checkout)
 * [What gets installed, and where](#what-gets-installed-and-where)
@@ -50,7 +50,7 @@ model needs `onnxruntime`, which is not available for every architecture.
 
 ---
 
-## Quick install
+## Quick Install
 
 This is the recommended path. It does not need `git`, `pip`, a virtual
 environment, or any knowledge of Python.
@@ -62,7 +62,7 @@ Download two files from the release page:
 * `eye-for-an-eye-<version>-linux-x86_64.tar.gz`
 * `SHA256SUMS`
 
-### 2. Check what you downloaded
+### 2. Check What You Downloaded
 
 ```sh
 sha256sum -c SHA256SUMS
@@ -92,7 +92,7 @@ No `sudo`. This installs for your account only. It prints
 If `~/.local/bin` is not on your `PATH`, the installer says so. Add it, or use
 the full path it prints.
 
-### 5. Choose what to watch
+### 5. Choose What to Watch
 
 ```sh
 eye-for-an-eye setup
@@ -120,7 +120,7 @@ For all of it in one place with more help at each step, read
 
 ---
 
-## Debian package
+## Debian Package
 
 For **Ubuntu 24.04 LTS** and derivatives whose system Python is 3.12.
 
@@ -129,7 +129,7 @@ sudo apt install ./eye-for-an-eye_<version>_all.deb
 ```
 
 Use the real filename from the release page. The version in the filename uses a
-tilde — for example `eye-for-an-eye_0.8.0~rc2-1_all.deb` — which is how Debian
+tilde (for example `eye-for-an-eye_0.8.0~rc2-1_all.deb`), which is how Debian
 writes "before the final release".
 
 On Debian 12 or 13 this command will refuse, because the package depends on
@@ -152,7 +152,7 @@ list of installed paths.
 
 ---
 
-## From a checkout
+## From a Checkout
 
 Only if you already have the source tree, and you are not developing on it:
 
@@ -182,11 +182,11 @@ managed by `dpkg`, uses `/usr` instead, as it should.
 
 ---
 
-## Choosing a traffic source
+## Choosing a Traffic Source
 
-There are two, and they are not equally easy.
+There are two, and one of them needs more setup than the other.
 
-### A website log — works everywhere
+### A Website Log: Works Everywhere
 
 Eye for an Eye reads the file your web server writes about visitors. It only
 reads it. It never changes your web server.
@@ -216,7 +216,7 @@ you this command again.
 See [WEB_PROTECTION.md](WEB_PROTECTION.md) for the detail, including trusted
 proxies and CDNs.
 
-### Packet capture — Linux only, and not a beginner path
+### Packet Capture: Linux Only, and Not a Beginner Path
 
 This watches network packets directly. It needs a separate helper program holding
 `CAP_NET_RAW`, which the installer does not set up for you.
@@ -230,9 +230,9 @@ That records your answer and tells you what is still missing. Read
 
 ---
 
-## What gets installed, and where
+## What Gets Installed, and Where
 
-### The release archive or a checkout, `--local` (the default)
+### The Release Archive or a Checkout, `--local` (the Default)
 
 | What | Where |
 | --- | --- |
@@ -247,7 +247,7 @@ The receipt records where everything went. It is how `eye-for-an-eye status`,
 `check-install` and `easy uninstall` know what this machine has, instead of
 guessing.
 
-### The release archive or a checkout, `--system`
+### The Release Archive or a Checkout, `--system`
 
 | What | Where |
 | --- | --- |
@@ -255,7 +255,7 @@ guessing.
 | The command | `/usr/local/bin/eye-for-an-eye` |
 | Settings and data | `/var/lib/eye-for-an-eye/` |
 
-### The Debian package
+### The Debian Package
 
 | What | Where |
 | --- | --- |
@@ -297,7 +297,7 @@ Full detail: [PRIVILEGES.md](PRIVILEGES.md).
 
 ---
 
-## Running as a service
+## Running as a Service
 
 systemd is the production deployment method. The units are real and they are
 hardened; read [SYSTEMD.md](SYSTEMD.md) before enabling one.
@@ -317,13 +317,13 @@ and it needs a configuration and a traffic source first.
 
 ## Upgrading
 
-### Release archive or checkout
+### Release Archive or Checkout
 
 Run the installer again over the same location. It reuses the virtual
-environment, upgrades the program, and **does not touch your configuration** — it
+environment, upgrades the program, and **does not touch your configuration**. It
 says `Configuration already exists. It was not changed.`
 
-### Debian package
+### Debian Package
 
 ```sh
 sudo apt install ./eye-for-an-eye_<newer version>_all.deb
@@ -342,9 +342,9 @@ read by an older version.
 
 ---
 
-## Removing it
+## Removing It
 
-### Release archive or checkout
+### Release Archive or Checkout
 
 ```sh
 sh uninstall.sh
@@ -366,14 +366,14 @@ If you no longer have the archive, `eye-for-an-eye easy uninstall` does the same
 thing using the install receipt, and lists exactly what it will remove before
 removing anything.
 
-### Debian package
+### Debian Package
 
 ```sh
 sudo apt remove eye-for-an-eye     # removes the program
 sudo apt purge  eye-for-an-eye     # the same; does NOT delete your data
 ```
 
-Neither deletes your configuration, database or decision journal — the package
+Neither deletes your configuration, database or decision journal. The package
 does not own those paths. To delete them, do it deliberately:
 
 ```sh
@@ -385,7 +385,7 @@ you switched blocking on yourself.
 
 ---
 
-## Developer setup
+## Developer Setup
 
 This belongs last on purpose. Nobody needs it to use the product.
 
@@ -401,7 +401,7 @@ Then [CONTRIBUTING.md](../CONTRIBUTING.md) and [ARCHITECTURE.md](ARCHITECTURE.md
 
 ---
 
-## If something went wrong
+## If Something Went Wrong
 
 [TROUBLESHOOTING.md](TROUBLESHOOTING.md) lists the common Linux problems with the
 simple fix first.

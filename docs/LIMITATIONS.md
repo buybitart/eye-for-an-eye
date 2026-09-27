@@ -4,11 +4,11 @@ This page lists what the project does not support yet, and what has not been che
 
 ## Support Boundary
 
-For the full platform and status table, see [DEPLOYMENT.md](DEPLOYMENT.md). Linux x86_64, Python 3.12, unprivileged CLI use, demos, and offline regression tests have been checked. WSL2 (Windows Subsystem for Linux) is not the same as a native production capture setup, and it is not the same as a real systemd endurance ("soak") test. There is no local Docker engine available for testing. The namespace tests need `nft` (the nftables firewall tool) and a separate, disposable, privileged test setup. The container image, its healthcheck, and the systemd lifecycle have not yet been accepted as production-ready. A license file is present. The private channel for reporting security issues is documented in [SECURITY.md](../SECURITY.md) and is **not yet available**: it is GitHub Private Vulnerability Reporting, which is a per-repository setting the owner enables once the repository is published, and the repository is not published. That remains a **release blocker**, and the distinction matters — a reporter who follows a channel that does not exist discloses to nobody while believing they have disclosed to someone.
+For the full platform and status table, see [DEPLOYMENT.md](DEPLOYMENT.md). Linux x86_64, Python 3.12, unprivileged CLI use, demos, and offline regression tests have been checked. WSL2 (Windows Subsystem for Linux) is not the same as a native production capture setup, and it is not the same as a real systemd endurance ("soak") test. There is no local Docker engine available for testing. The namespace tests need `nft` (the nftables firewall tool) and a separate, disposable, privileged test setup. The container image, its healthcheck, and the systemd lifecycle have not yet been accepted as production-ready. A license file is present. The private channel for reporting security issues is documented in [SECURITY.md](../SECURITY.md) and is **not yet available**: it is GitHub Private Vulnerability Reporting, which is a per-repository setting the owner enables once the repository is published, and the repository is not published. That remains a **release blocker**, and the distinction matters. A reporter who follows a channel that does not exist discloses to nobody while believing they have disclosed to someone.
 
-The project does not have: hot reload or SIGHUP-based reload, automatic updates, a dashboard or TUI (text user interface), a support bundle (a packaged diagnostics file), or a production host-network container. The source code secret scanner does not scan Git history — this working copy has no Git metadata at all. The application's egress (outbound traffic) policy is not the same as an operating-system firewall. No performance guarantees are made for other hardware or deployment setups beyond what was already measured.
+The project does not have: hot reload or SIGHUP-based reload, automatic updates, a dashboard or TUI (text user interface), a support bundle (a packaged diagnostics file), or a production host-network container. The source code secret scanner does not scan Git history. This working copy has no Git metadata at all. The application's egress (outbound traffic) policy is not the same as an operating-system firewall. No performance guarantees are made for other hardware or deployment setups beyond what was already measured.
 
-## Analysis Limitations from Earlier Testing
+## Analysis Limitations From Earlier Testing
 
 This section covers the fingerprinting and correlation analysis. It was tested on Windows, with CPython 3.12.14, and fixed dependency versions: Scapy 2.7.0, maxminddb 3.1.1, and ipwhois 1.3.0. The Python package version was 0.3.0. No external network capture data sets were downloaded, and no real GeoIP, registry, or ICMP lookups were made.
 
@@ -18,9 +18,9 @@ This section covers the fingerprinting and correlation analysis. It was tested o
 - Guesses based on TTL (IPv4) or Hop Limit (IPv6) depend on a configured "prior" (an assumed starting value). There is no certainty about the real operating system, and the real network path length is not measured.
 - The IPv4 IP ID field is not a counter of someone else's total traffic. Fragmented packets and "atomic" datagrams (which do not normally use this field) are excluded from the statistical history. A result labeled `random_like` does not prove the sender really uses a random number generator.
 - The TCP timestamp rate estimate is limited by the single flow, the number of samples, and how long the capture ran. It cannot give a real boot time, a real IP address, a VPN identity, or match a person across different IP addresses.
-- A p0f match only confirms that a signature is compatible — it does not prove an exact identity. Fuzzy matches, errors, and a missing database are all shown clearly. The accuracy of these signatures in real production traffic has not been measured.
+- A p0f match only confirms that a signature is compatible. It does not prove an exact identity. Fuzzy matches, errors, and a missing database are all shown clearly. The accuracy of these signatures in real production traffic has not been measured.
 - A GeoIP result is only an estimate of where an IP address is. An RDAP result shows the registered network, not a person. The database build time and lookup time do not guarantee that every field is up to date, and none of this describes where a real person lives.
-- The correlation feature's stored state is limited in size. Under overload, eviction, or a sample limit, the system can miss real detections (false negatives). Event counts become only lower-bound estimates, and confidence levels drop. All scoring is a hand-written heuristic — it is not calibrated (tuned and measured) against real data.
+- The correlation feature's stored state is limited in size. Under overload, eviction, or a sample limit, the system can miss real detections (false negatives). Event counts become only lower-bound estimates, and confidence levels drop. All scoring is a hand-written heuristic. It is not calibrated (tuned and measured) against real data.
 - The "credential-like" flag only comes from a limited check of the start (prefix) of the data. Passwords, Authorization headers, and raw payloads are never stored. Encrypted or unusual formats may not be recognized at all. Short-lived, keyed digests are not shared identifiers between different processes.
 - A real TCP 3-way handshake can only be confirmed when both directions of traffic are visible. The incoming-only capture helper cannot guarantee this. A listener that accepts connections only confirms connections it actually accepted. Reactions to a banner message, or a continued conversation, are only visible when that exchange was actually captured.
 - The following are not supported: putting a full TCP stream back together (reassembly), checksum verification, IPv6 fragment reassembly, decrypting ESP (IPsec encrypted traffic), and jumbogram packets (very large IPv6 packets). Unsupported or broken (malformed) data is always clearly marked as such.
@@ -35,11 +35,11 @@ python -m eye_for_an_eye analyze-pcap sample.pcap --output new-results.jsonl
 python -m eye_for_an_eye analyze-pcap sample.pcap --storage-path lab-results.sqlite3
 ```
 
-This CLI command never opens a listener, a raw socket, or worker threads. It never does RDAP lookups, active probing, or applies firewall rules. If a config file has any of these policies turned on, the CLI rejects it. On Linux, the default check still requires running as a non-root user with no special capabilities. The output file must be new — the command never overwrites an existing file. The config file, and the PCAP file's header and first record, are checked before the database even starts.
+This CLI command never opens a listener, a raw socket, or worker threads. It never does RDAP lookups, active probing, or applies firewall rules. If a config file has any of these policies turned on, the CLI rejects it. On Linux, the default check still requires running as a non-root user with no special capabilities. The output file must be new. The command never overwrites an existing file. The config file, and the PCAP file's header and first record, are checked before the database even starts.
 
-The tool supports classic PCAP version 2.4, with either microsecond or nanosecond timing, Ethernet frames (with up to 2 VLAN tags), raw IPv4/IPv6, and Linux "cooked" capture format versions 1 and 2. The newer PCAPNG format is explicitly not supported. The reader limits: total input size (default 512 MiB), each included record (1 MiB), number of packets (100,000), and output size (64 MiB). These limits can be set from the CLI, but each has a hard maximum it cannot exceed. A broken (malformed) packet produces a `parse_error` or a partial result. A file with a broken overall PCAP structure makes the CLI exit with an error. Reaching the packet or output limit gives an incomplete result and exit code 1. Timestamps are stored as floating-point numbers or datetimes, which limits real replay accuracy — nanosecond precision is not guaranteed.
+The tool supports classic PCAP version 2.4, with either microsecond or nanosecond timing, Ethernet frames (with up to 2 VLAN tags), raw IPv4/IPv6, and Linux "cooked" capture format versions 1 and 2. The newer PCAPNG format is explicitly not supported. The reader limits: total input size (default 512 MiB), each included record (1 MiB), number of packets (100,000), and output size (64 MiB). These limits can be set from the CLI, but each has a hard maximum it cannot exceed. A broken (malformed) packet produces a `parse_error` or a partial result. A file with a broken overall PCAP structure makes the CLI exit with an error. Reaching the packet or output limit gives an incomplete result and exit code 1. Timestamps are stored as floating-point numbers or datetimes, which limits real replay accuracy, nanosecond precision is not guaranteed.
 
-Offline labels are deterministic — the same input data and config always produce the same labels. However, event UUIDs (unique IDs) and the short-lived HMAC values differ between runs. An older PCAP command for `ip_id`/`nat`/`uptime` checks still exists, but use `analyze-pcap` for a full, complete evaluation.
+Offline labels are deterministic: the same input data and config always produce the same labels. However, event UUIDs (unique IDs) and the short-lived HMAC values differ between runs. An older PCAP command for `ip_id`/`nat`/`uptime` checks still exists, but use `analyze-pcap` for a full, complete evaluation.
 
 ### Synthetic Test Data and Benchmark
 
@@ -61,8 +61,8 @@ accumulates twenty events in any single window, whatever it does across a whole
 session.
 
 This was measured rather than theorised. On the development corpus a slow port
-scan reaches a conservative probability of 0.981 — past the `public_website`
-cutoff of 0.976 — with five distinct evidence families and three behavioural
+scan reaches a conservative probability of 0.981 (past the `public_website`
+cutoff of 0.976) with five distinct evidence families and three behavioural
 ones, and is still not blocked, because the window carrying that evidence held
 fifteen observations rather than twenty. Every other gate agreed the source was
 malicious. The count gate is what refused, and by the rule as written it refused
@@ -72,7 +72,7 @@ correctly.
 project's stated floor for acting against a stranger, and moving it because a
 scenario sits just underneath would be fitting a safety threshold to a test. The
 real gap is narrower than the number: the floor counts events *in a window*
-while the evidence it guards is already accumulated *across a session* —
+while the evidence it guards is already accumulated *across a session*,
 `persistence_900s` spans fifteen minutes and the count gating it spans one.
 Closing that means accumulating observations per source in the correlation
 engine. That is a design change, and it belongs in a cycle that commits its
@@ -87,7 +87,7 @@ autonomous enforcement.
 
 Eye for an Eye watches traffic arriving at one host and the replies that host
 sends back. For a cleartext protocol the outcome of an authentication attempt is
-right there in one of them — `530 Login incorrect`, `HTTP/1.1 401` — and for
+right there in one of them (`530 Login incorrect`, `HTTP/1.1 401`), and for
 anything inside TLS it is not there at all.
 
 This is not a gap better parsing can close. It is where the sensor stands. A
@@ -107,11 +107,11 @@ credential stuffing there has to be carried by failure volume alone.
 `IN_SCOPE_PARTIALLY_OBSERVABLE` for exactly that reason, written down before the
 corpus was scored rather than after.
 
-### Calibration Volume Decides Which Profiles Can Be Blocked At All (P15.4)
+### Calibration Volume Decides Which Profiles Can Be Blocked at All (P15.4)
 
 A block requires a conservative lower bound on P(malicious), not a point
 estimate, and that bound is a Wilson interval over the calibration data's own
-examples. Its width depends on how many examples land in each score band — a
+examples. Its width depends on how many examples land in each score band. A
 fact about the evidence available, not about the traffic being judged.
 
 P15.4 fits the calibrator on **sources** rather than windows, because the cost
@@ -123,7 +123,7 @@ action it authorised by roughly an order of magnitude.
 
 Correcting the unit divides the example count by however many windows a source
 produces, and that widens every interval. Fitted on two calibration corpora the
-bound saturated at **0.9644** — above the `admin` cutoff of 0.8889 and the
+bound saturated at **0.9644**, above the `admin` cutoff of 0.8889 and the
 `honeypot` cutoff of 0.6667, below `public_website` at 0.9756 and `api` at
 0.9877. With that artifact **no autonomous block was possible on a public website
 or an API at any score**: not because the evidence was weak, but because there
@@ -134,14 +134,14 @@ cutoff. So which profiles a given calibrator can act on is a property of how muc
 calibration data it was fitted on, and an operator refitting on their own traffic
 should expect the same arithmetic: **a small calibration set means the strict
 profiles cannot be blocked at all.** That is the system refusing to act on
-evidence it cannot bound, which is the intended behaviour — and it is much better
+evidence it cannot bound, which is the intended behaviour, and it is much better
 to know that is what is happening than to meet it as an unexplained absence of
 blocks.
 
 ### Every P15 Number Comes From Synthetic Traffic (P15.5, P15.5R)
 
 **The wiring defect this section used to describe is closed.** It is kept here,
-rather than deleted, because it is the reason to distrust a component test — and
+rather than deleted, because it is the reason to distrust a component test, and
 because a limitations page that quietly drops a limitation it once had teaches a
 reader nothing.
 
@@ -150,8 +150,8 @@ What P15.5 found, mechanically, from the call graph rather than from prose
 published here): `DecisionInputs` and `HostEnforcer` were
 constructed **nowhere** in `eye_for_an_eye/`, and `decision/engine.py` did not
 import `autonomy` at all. Every component was correct and every unit test passed;
-the shipped runtime reached the firewall by the older path — `DecisionFusion` →
-`PolicyGuard` → `TemporaryBlocks.block(source, seconds)` — on an uncalibrated
+the shipped runtime reached the firewall by the older path (`DecisionFusion` →
+`PolicyGuard` → `TemporaryBlocks.block(source, seconds)`) on an uncalibrated
 fused risk. `docs/AUTONOMOUS_MODE.md` told an operator to set `[autonomy] enabled
 = true`; `config.py` validated that section and nothing consumed it.
 
@@ -165,7 +165,7 @@ evidence for it.
 **What this means for the numbers, which is the part that has not changed.**
 Everything P15.1 through P15.5 measured is a property of a synthetic corpus. The
 runtime now assembles the path those measurements described, so a shadow
-deployment would produce evidence about the decision path — but no such
+deployment would produce evidence about the decision path, but no such
 deployment has run, and this repository holds no evidence from real traffic about
 false-block rates, hard negatives, profile behaviour on a real site, or
 multi-hour resource behaviour. `docs/SHADOW_VALIDATION_PLAN.md` states what that
@@ -183,7 +183,7 @@ it belonged to.
 
 The per-profile tables in the P15.4 and P15.5 reports are outcomes *grouped* by
 profile rather than *decided* per profile. They still say where a false block
-would have landed — and in P15.5 there were none anywhere — but the cutoff column
+would have landed (and in P15.5 there were none anywhere), but the cutoff column
 is the profile's cutoff and not the one that was applied. The API eligibility
 question P15.5 spent eight calibration corpora on was never actually asked at the
 API cutoff of 0.987654.
@@ -195,12 +195,12 @@ each profile name to itself. No measurement has yet been taken through it.
 
 The following are **NOT VERIFIED IN CURRENT ENVIRONMENT**: Linux `CAP_NET_RAW` and `SO_PEERCRED` permissions, live packet capture with BPF (Berkeley Packet Filter, a packet-filtering technology), systemd and cgroups, real nftables redirect/expiry/rollback behavior, and building or running the Docker image. The opt-in namespace tests from an earlier stage still exist in the test suite, but they are skipped on Windows. The host's firewall was never changed during any of this testing.
 
-Before moving further, the project needs: a realistic, properly authorized data set; a review of the feature thresholds and false-positive rates; a controlled Linux deployment; and real measurements of live capture, packet loss, and memory (RSS) use. None of this starts automatically — it must be done deliberately.
+Before moving further, the project needs: a realistic, properly authorized data set; a review of the feature thresholds and false-positive rates; a controlled Linux deployment; and real measurements of live capture, packet loss, and memory (RSS) use. None of this starts automatically. It must be done deliberately.
 
-## See also
+## See Also
 
-- [DEPLOYMENT.md](DEPLOYMENT.md) — supported platforms and deployment methods
-- [RISKS_AND_LIMITATIONS.md](RISKS_AND_LIMITATIONS.md) — project-wide risks and limits
-- [CONFIDENCE.md](CONFIDENCE.md) — how confidence levels work
-- [CORRELATION.md](CORRELATION.md) — how correlation and scoring work
-- [SECURITY_REVIEW_SCOPE.md](SECURITY_REVIEW_SCOPE.md) — what a security review should cover
+- [DEPLOYMENT.md](DEPLOYMENT.md): supported platforms and deployment methods
+- [RISKS_AND_LIMITATIONS.md](RISKS_AND_LIMITATIONS.md): project-wide risks and limits
+- [CONFIDENCE.md](CONFIDENCE.md): how confidence levels work
+- [CORRELATION.md](CORRELATION.md): how correlation and scoring work
+- [SECURITY_REVIEW_SCOPE.md](SECURITY_REVIEW_SCOPE.md): what a security review should cover

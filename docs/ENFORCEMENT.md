@@ -1,4 +1,4 @@
-# Enforcement: the lab namespace path (lab only)
+# Enforcement: The Lab Namespace Path (Lab Only)
 
 **Read this first: this page is about one of two blocking paths.** The one
 described here, `enforcement.enabled`, works only inside an isolated Linux test
@@ -9,9 +9,9 @@ a fresh installation and each is turned on separately.
 
 The production recommendation is Shadow Mode only.
 
-Status: **Experimental / Lab-only** — for the path on this page.
+Status: **Experimental / Lab-only**, for the path on this page.
 
-## What "lab only" means here
+## What "Lab Only" Means Here
 
 Blocking is done with `nftables`, the Linux firewall system. But the backend
 refuses to run in your machine's main network namespace.
@@ -23,7 +23,7 @@ they are the same, it stops with a permission error.
 So the code cannot block traffic to your real server, even by mistake. That is
 on purpose, and it is the honest state of this feature today.
 
-## What is required to switch it on
+## What Is Required to Switch It On
 
 All four, together:
 
@@ -45,7 +45,7 @@ The redirect firewall (`firewall.enabled`) is a separate P1 feature and does not
 need to be on. No new privileged service is installed. Namespace administration
 needs a separately authorised lab operator.
 
-## What it does, exactly
+## What It Does, Exactly
 
 Each instance creates:
 
@@ -62,7 +62,7 @@ Then, for each block:
 
 Default limit: 1024 live entries. The kernel set size also limits it.
 
-## Blocks are always temporary
+## Blocks Are Always Temporary
 
 ```text
 first offence      ->  5 minutes
@@ -84,7 +84,7 @@ R(t) = R0 * 2^(-t / half_life)
 with a half life of 60 seconds by default. In plain words: **old risk gets
 smaller with time. One old event must not keep an address blocked forever.**
 
-## Who is never blocked
+## Who Is Never Blocked
 
 Before every final block, the code checks the address against:
 
@@ -101,7 +101,7 @@ If the local interface list cannot be read, **no** block is made. The guard also
 runs earlier, inside the decision engine. The final check exists because a stale
 assumption must never be allowed to grant a block.
 
-## What it never does
+## What It Never Does
 
 * No global flush.
 * No change to a table it does not own.
@@ -114,7 +114,7 @@ At shutdown it deletes only its own verified table. If cleanup fails or the
 process dies, kernel entries still expire on their own. An empty owned table may
 be left behind for the lab operator to review. No broad cleanup is attempted.
 
-## What each action really does
+## What Each Action Really Does
 
 | Action | Effect |
 | --- | --- |
@@ -126,11 +126,11 @@ be left behind for the lab operator to review. No broad cleanup is attempted.
 `TEMP_BLOCK` does not affect arbitrary routed traffic and does not affect the
 host.
 
-Any failure — no firewall, a failed command, a failed verification, capacity
-reached, or a refusal — records `enforced = false`. The decision is still
+Any failure (no firewall, a failed command, a failed verification, capacity
+reached, or a refusal) records `enforced = false`. The decision is still
 written down.
 
-## The manual firewall commands
+## The Manual Firewall Commands
 
 There is no `enforcement enable` command. Firewall work is deliberately manual
 and separate, so it can never be a side effect of something else:
@@ -144,7 +144,7 @@ eye-for-an-eye firewall rollback --config lab.toml   # undo it
 
 Always run `dry-run` first and read the output.
 
-## The lab test
+## The Lab Test
 
 An opt-in test creates three disconnected namespaces with private links. It
 checks that shadow mode leaves nftables unchanged, that IPv4 and IPv6 entries
@@ -163,7 +163,7 @@ production blocking quality, and it is not a production architecture.
 This lab also found and fixed a real bug: in libnftables JSON, `timeout` and
 `expires` are in seconds, not netlink milliseconds.
 
-## Before you ever enable this
+## Before You Ever Enable This
 
 1. Run Shadow Mode for days and read every would-be block.
 2. Put your own address and your management network in
@@ -173,7 +173,7 @@ This lab also found and fixed a real bug: in libnftables JSON, `timeout` and
    will look like one address.
 5. Keep a way in that does not depend on this machine's network.
 
-## See also
+## See Also
 
 * [Shadow Mode](SHADOW_MODE.md)
 * [Firewall](FIREWALL.md)

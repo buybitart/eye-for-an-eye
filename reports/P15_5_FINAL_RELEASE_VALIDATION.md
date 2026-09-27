@@ -1,7 +1,7 @@
 # P15.5 FINAL INDEPENDENT RELEASE VALIDATION
 
 Baseline commit:
-`4cf3bc9` — P15.4's HEAD, after the schema-assumption fix. The baseline record is
+`4cf3bc9`: P15.4's HEAD, after the schema-assumption fix. The baseline record is
 `reports/P15_5_BASELINE.json`, committed at `b6cb5b2`.
 
 Freeze commit:
@@ -31,7 +31,7 @@ SCHEMA COMPATIBILITY
 --------------------------------
 
 Current feature schema:
-2 — 23 features, 46 tensor columns.
+2: 23 features, 46 tensor columns.
 
 Supported schemas:
 1 and 2, from `decision.features.MODEL_SCHEMAS`. Every consumer now asks
@@ -41,15 +41,15 @@ question itself.
 Literal schema pins in decision path:
 0 of 9 modules. The audit found a third copy of the P15.4 defect that the P15.4
 tripwire could not see: `FeatureTransformer.project` read `if schema != 1: raise`
-— the one function every model feed passes through. It now resolves the target
+: the one function every model feed passes through. It now resolves the target
 order from `MODEL_SCHEMAS`, verified byte-identical to the old implementation
 over 300 random vectors. `config.py` pinned the deception catalogue to `!= 2` and
 `anomaly.py` pinned the model manifest to `!= 1`; both now ask the contract.
 
 Upgrade simulation:
 PASS. `tests/test_p15_5_compatibility.py` registers schema N+1 as a *reordering*
-of the current columns — a width check alone would pass a reordering and produce
-confident nonsense — and takes a full decision through it to TEMP_BLOCK, with an
+of the current columns (a width check alone would pass a reordering and produce
+confident nonsense), and takes a full decision through it to TEMP_BLOCK, with an
 unservable schema as the negative control.
 
 --------------------------------
@@ -57,38 +57,38 @@ WHOLE-SYSTEM SMOKE
 --------------------------------
 
 Normal browser:
-PASS — 7 windows, 0 blocked.
+PASS: 7 windows, 0 blocked.
 
 Authenticated batch API:
-PASS — 12 windows, 168 authentication outcomes through the ledger, 0 blocked.
+PASS: 12 windows, 168 authentication outcomes through the ledger, 0 blocked.
 Both halves are required: not blocked is trivial to achieve by not looking.
 
 Credential spray:
-PASS — AUTH_BEHAVIOR 1.0.
+PASS: AUTH_BEHAVIOR 1.0.
 
 Brute force:
-PASS — AUTH_BEHAVIOR 1.0, math risk 0.772, and a validated EnforcementRequest.
+PASS: AUTH_BEHAVIOR 1.0, math risk 0.772, and a validated EnforcementRequest.
 
 Scanner/recon:
-PASS — math risk 0.828, calibrated 1.0, TEMP_BLOCK, EnforcementRequest built.
+PASS: math risk 0.828, calibrated 1.0, TEMP_BLOCK, EnforcementRequest built.
 
 AuthLedger wiring:
 PASS.
 
 Auxiliary ML wiring:
-PASS — one projection function, used by the runtime and by replay.
+PASS: one projection function, used by the runtime and by replay.
 
 Calibrator:
-PASS — invoked on every window, finite probability, version recorded.
+PASS: invoked on every window, finite probability, version recorded.
 
 Maturity:
-PASS — evaluated for every window; STANDARD_MATURE reached.
+PASS: evaluated for every window; STANDARD_MATURE reached.
 
 PolicyGuard:
 PASS.
 
 EnforcementRequest:
-PASS — address, TTL 300, decision id, 8 reason codes, and no `command` field in
+PASS: address, TTL 300, decision id, 8 reason codes, and no `command` field in
 the serialised value the privileged helper parses.
 
 §41: this is a wiring result. No number in this section is evidence about
@@ -106,11 +106,11 @@ Calibrator:
 `mathrisk-cal-v4-isotonic`, sha256
 `98a678348623f77368baea00f3ea3161a4cfeea7a16b3af38a6dc9c65d779513` as recorded in
 the test policy. Isotonic on the measurement, not by habit: it wins out of fold
-on both Brier and ECE, and neither method overfits — both score better out of
+on both Brier and ECE, and neither method overfits. Both score better out of
 fold than in it.
 
 Independent sources:
-9072 fitted examples, 3152 positive, twelve corpora — the four from P15.4 plus
+9072 fitted examples, 3152 positive, twelve corpora; the four from P15.4 plus
 eight new ones from an API-enriched matrix. Source unit, not window.
 
 Brier:
@@ -135,7 +135,7 @@ SUPPORTED.
 The plan was committed at `29e3f4c`, before the first of the eight corpora
 existed. It predicted 722 top-band sources; the fit produced 732. The target was
 600 rather than the arithmetic minimum of 308, because a clean band of 308 clears
-the cutoff and a single benign example in it returns the bound to 0.981956 — and
+the cutoff and a single benign example in it returns the bound to 0.981956, and
 the matrix carries 250 benign API sources per corpus precisely to give that
 example every chance. The band came out clean anyway. No cutoff was touched:
 0.987654 is the number it has been since P15.1.
@@ -212,7 +212,7 @@ Seven at 0.0: `composite-decoy-recon`, `composite-paced-breadth`,
 not counted against Gate C.
 
 Critical zero-detection families:
-6 — the list above without `probe-repeated`. This is what fails Gate C, and the
+6: the list above without `probe-repeated`. This is what fails Gate C, and the
 reasons are three different things:
 
 * **The evidence does not reach the bar.** `composite-paced-breadth` (0.925),
@@ -221,15 +221,15 @@ reasons are three different things:
   the cutoff they were judged against. `COST_ALLOW_PREFERRED` and
   `MARGIN_NOT_MET` on every window. Not a defect; the cost model declining to act
   on evidence it cannot bound above the threshold.
-* **The observation floor.** `scan-slow` reaches a bound of 0.994779 — the top
-  band — and is refused by `INSUFFICIENT_OBSERVATIONS` on all 140 windows. This
+* **The observation floor.** `scan-slow` reaches a bound of 0.994779. The top
+  band, and is refused by `INSUFFICIENT_OBSERVATIONS` on all 140 windows. This
   is the largest known coverage gap, documented in `docs/LIMITATIONS.md` since
   P15.3, and the floor was not lowered.
 * **`probe-enumeration`** at 0.925 with 5 sources, the smallest family in the
   corpus.
 
 Withheld benign result:
-`withheld-backup-sweep` — 18 sources, **0 blocked**, maximum conservative bound
+`withheld-backup-sweep`: 18 sources, **0 blocked**, maximum conservative bound
 0.818836. A nightly backup agent producing breadth, volume, regularity and
 persistence at once while authenticating successfully on every service it
 touches: the hardest benign case in the corpus and the first honest benign
@@ -237,7 +237,7 @@ producer of the `(NETWORK_RATE, PORT_BREADTH)` interaction. It was never in any
 fitting corpus.
 
 Withheld positive result:
-`withheld-credential-drift` — 14 sources, **14 blocked**, rate 1.0. One valid
+`withheld-credential-drift`: 14 sources, **14 blocked**, rate 1.0. One valid
 credential walked across services: a success, then breadth, then failures from the
 principal that just succeeded, single-principal so the strongest authentication
 signal is withheld from it. Also never in any fitting corpus.
@@ -250,8 +250,8 @@ PER PROFILE
 PRODUCTION HEALTH: every decision in this benchmark was priced at the
 `public_website` cutoff of 0.975610 regardless of the site it belonged to, because
 `replay_sample` passed a constant scope and an unmapped scope resolves to the
-default profile. The grouping is still informative — it says where the false
-blocks would have landed, and there were none — but the cutoff column below is
+default profile. The grouping is still informative (it says where the false
+blocks would have landed, and there were none), but the cutoff column below is
 the profile's cutoff and *not* the one that was applied.
 
 PUBLIC WEBSITE:
@@ -273,7 +273,7 @@ blocks per 1000.
 PAYMENT WEBHOOK:
 43 sources (36 benign, 7 positive). Recall 0.0, 0.0 false blocks per 1000.
 Predeclared TEMP_BLOCK_NOT_SUPPORTED: the cost policy permits no network block on
-this profile at any probability, a decision taken in P15.1. §29 — zero recall here
+this profile at any probability, a decision taken in P15.1. §29: zero recall here
 is the policy working.
 
 --------------------------------
@@ -288,7 +288,7 @@ service account:
 22 sources, 0 blocked, 0.029545.
 
 stale credential:
-20 sources, 0 blocked, 0.029545. §32 holds — one principal failing repeatedly for
+20 sources, 0 blocked, 0.029545. §32 holds: one principal failing repeatedly for
 ten minutes is not treated as credential spray.
 
 admin login mistakes:
@@ -301,7 +301,7 @@ monitoring:
 28 sources, 0 blocked, 0.029545.
 
 `hard-negative-batch-api` 18 sources 0 blocked, and `withheld-backup-sweep` 18
-sources 0 blocked at 0.818836 — the only benign family anywhere near the scale,
+sources 0 blocked at 0.818836; the only benign family anywhere near the scale,
 and still nowhere near the cutoff.
 
 --------------------------------
@@ -311,7 +311,7 @@ PRODUCTION HEALTH
 Silent component failures:
 0 of 7 audited. NOT_CONFIGURED and UNAVAILABLE are now distinct states and are
 never merged. `ReplayComponents.open` used to set a failed anomaly load back to
-`None` — the value meaning "nobody asked for one" — so a broken artifact and an
+`None` (the value meaning "nobody asked for one"), so a broken artifact and an
 absent one produced identical health; that is fixed, a broken reference
 distribution reports the same way, and a classifier that loads and then fails
 every prediction is reported UNAVAILABLE rather than HEALTHY. The soak confirmed
@@ -321,8 +321,8 @@ model with no artifact and the engine counts `anomaly_model_unavailable_total`.
 Assumption-failure suppression health:
 PASS. `ASSUMPTION_FAILED` suppressed 252 true-positive windows in this benchmark,
 which is the shape P15.4 had, so it was investigated rather than noted. The only
-failed assumption anywhere in the run is `minimum_sample_mature` — the documented
-observation floor — and it fires on benign and malicious alike: 217 windows of
+failed assumption anywhere in the run is `minimum_sample_mature` (the documented
+observation floor), and it fires on benign and malicious alike: 217 windows of
 `hard-negative-connect`, 184 of `hard-negative-admin`, 153 of `benign-web`. §39's
 signal agrees: dominant share 0.234 against a threshold of 0.9, state OK. The same
 signal reports DEGRADED at share 1.0 on a synthetic reproduction of the P15.4
@@ -336,7 +336,7 @@ Wiring only (§41).
 
 Doctor:
 PASS, on the clean clone. It also stopped reporting `feature_schema_version: 1`,
-which it had said since P15.4 while the schema in force was 2 — an operator-facing
+which it had said since P15.4 while the schema in force was 2. An operator-facing
 health field stating something false about its own build.
 
 **Three defects in the measuring instrument, found by this benchmark.** None is a
@@ -349,27 +349,27 @@ checking. Fixed for safety, corpus not rescored (§25, §26), tests added.
    window of every locked benchmark since P15.1 was decided at `public_website`'s
    0.975610 whatever site it belonged to. The API eligibility question this cycle
    spent eight corpora on was never actually asked at the API cutoff.
-2. **The generalisation gate checked the wrong pair** — P15.4's withheld constant
-   — so it failed for a bookkeeping reason while P15.5's own pair sat in the same
+2. **The generalisation gate checked the wrong pair**: P15.4's withheld constant
+, so it failed for a bookkeeping reason while P15.5's own pair sat in the same
    results at 0/18 and 14/14. The gate's FAIL in
    `reports/P15_5_LOCKED_TEST.json` is this, not a substantive finding.
 3. **The withheld pair counted as `seen`.** `familiarity` reads the training-split
    holdout list, which knows nothing about the `withheld.` prefix, so the only two
    families that had never been near a fitting corpus were excluded from the
-   unseen aggregate — understating the number a generalisation claim rests on.
+   unseen aggregate, understating the number a generalisation claim rests on.
 
 **A fourth finding, larger than the three above, and not a measurement problem.**
 `reports/P15_5_BASELINE.json` records it from the call graph rather than from
 prose: `DecisionInputs` and `HostEnforcer` are constructed **nowhere** in
 `eye_for_an_eye/`, `AutonomousDecisionAuthority` only by its own factory, and
 `decision/engine.py` does not import `autonomy` at all. The running sensor reaches
-the firewall through the older P0–P14 ladder — `DecisionFusion` → `PolicyGuard` →
-`TemporaryBlocks.block(source, seconds)` — which uses an uncalibrated fused risk
+the firewall through the older P0–P14 ladder (`DecisionFusion` → `PolicyGuard` →
+`TemporaryBlocks.block(source, seconds)`), which uses an uncalibrated fused risk
 and `config.decision.block_threshold`. There is also no configuration setting for
 the calibrator path.
 
-Everything P15.1 through P15.5 has measured — cost policy, maturity, calibrated
-probability, conservative bound, decision record, TTL ladder, mass-block breaker —
+Everything P15.1 through P15.5 has measured: cost policy, maturity, calibrated
+probability, conservative bound, decision record, TTL ladder, mass-block breaker;
 is reachable from the offline replay harness and the read-only CLI commands, and
 is not assembled by the shipped runtime. `docs/AUTONOMOUS_MODE.md` tells an
 operator to set `[autonomy] enabled = true` and restart the service; `config.py`
@@ -384,7 +384,7 @@ ONNX
 --------------------------------
 
 Parity:
-PASS — 18 passed on the clean clone with the declared `[ml]` extra. One skip:
+PASS: 18 passed on the clean clone with the declared `[ml]` extra. One skip:
 `tests/test_p15_3_onnx_parity.py` records a `math-risk-v3` fixture and the engine
 is v4; the fixture needs rebuilding and that is a known, stated skip rather than a
 silent one.
@@ -407,25 +407,25 @@ Real-kernel tests:
 61 passed, 50301 subtests, with `E4E_RUN_HOST_FIREWALL=1` as root.
 
 Real TCP block/unblock:
-PASS — a real connection succeeds, the block lands, the connection stops, the
+PASS: a real connection succeeds, the block lands, the connection stops, the
 block is released, the connection succeeds again.
 
 TTL:
-PASS — an expiring block restores traffic without anybody acting.
+PASS: an expiring block restores traffic without anybody acting.
 
 Cleanup:
-PASS — no nftables table remains after the suite, and unrelated tables are left
+PASS: no nftables table remains after the suite, and unrelated tables are left
 alone (asserted by two dedicated tests as well as by inspection).
 
 Management safety:
-PASS — unchanged, and `reports/P15_4_BASELINE.json` still enforces the protected
+PASS: unchanged, and `reports/P15_4_BASELINE.json` still enforces the protected
 networks, allowlist and trusted proxies by digest.
 
 CDN/proxy safety:
-PASS — unchanged, enforced in three independent places.
+PASS: unchanged, enforced in three independent places.
 
 Mass-block breaker:
-PASS — and visibly working: it suppressed 360 true-positive windows in the locked
+PASS, and visibly working: it suppressed 360 true-positive windows in the locked
 benchmark, where the replay clock compresses every source into a few minutes.
 
 --------------------------------
@@ -434,7 +434,7 @@ RESOURCE HEALTH
 
 RSS:
 26.0 MB at start, 60.3 MB at end, 4.5% growth between the first and second halves
-of a 90-second run — an allocator that grew once and settled, not one that is
+of a 90-second run. An allocator that grew once and settled, not one that is
 leaking.
 
 FD:
@@ -462,7 +462,7 @@ B Data Quality:
 PASS
 
 C Decision / ML Validity:
-FAIL — six critical observable block-eligible families at zero detection. Score
+FAIL, six critical observable block-eligible families at zero detection. Score
 semantics, schema compatibility, formula/calibrator binding, calibration quality,
 leakage exclusion, non-degeneracy and the whole-system smoke all pass; the
 detection condition does not.
@@ -471,10 +471,10 @@ D Cost Decision:
 PASS, with a stated limitation: the cost model demonstrably drove every decision
 (`COST_BLOCK_PREFERRED`, `COST_ALLOW_PREFERRED`, `MARGIN_SATISFIED`,
 `MARGIN_NOT_MET` throughout) and no block occurred below a cutoff, but per-profile
-cutoffs were not exercised — see PRODUCTION HEALTH.
+cutoffs were not exercised. See PRODUCTION HEALTH.
 
 E False-Positive Safety:
-PASS — 0 false blocks in 546 benign sources, block precision 1.0, 95% upper bound
+PASS: 0 false blocks in 546 benign sources, block precision 1.0, 95% upper bound
 5.495 per 1000, two new withheld hard negatives scored for the first time, every
 authentication hard negative at the bottom of the scale, non-degenerate positive
 detection, and no per-profile false-positive rate above zero.
@@ -515,7 +515,7 @@ Remaining blockers:
    largest finding of this cycle and the one that changes what every earlier
    result means: P15.1 through P15.5 measured a pipeline that exists in the replay
    harness. This is prior to any question about detection quality.
-2. **Six critical families at zero detection**, from three distinct causes — four
+2. **Six critical families at zero detection**, from three distinct causes, four
    whose evidence lands below the cutoff they were judged against, one refused by
    the observation floor despite reaching the top band, and one very small family.
    None is a formula defect and none was chased; §19 held and `math-risk-v4` is
@@ -539,10 +539,10 @@ produce no evidence at all about the decision path this cycle validated.
 
 ---
 
-## What this cycle established, plainly
+## What This Cycle Established, Plainly
 
-The complete product is connected — component to component, packet to firewall
-request — and every seam between two parts is now checked by something that fails
+The complete product is connected (component to component, packet to firewall
+request), and every seam between two parts is now checked by something that fails
 the build when it breaks. That was the objective, and the smoke test, the contract
 matrix, the compatibility contract, the self-check and the suppression alarm are
 what carry it.
@@ -558,7 +558,7 @@ it is worth more than the numbers above it.
 
 ---
 
-## Exact commands
+## Exact Commands
 
 ```bash
 # §1 baseline, before anything was touched
@@ -616,13 +616,13 @@ python3.12 -m venv .venv && .venv/bin/pip install -e ".[capture,enrichment,test,
 .venv/bin/python -m pytest tests/ -q
 ```
 
-## See also
+## See Also
 
-- `reports/P15_5_BASELINE.json` — what was frozen, and what the runtime assembles
-- `reports/P15_5_CALIBRATION_PLAN.json` — how much evidence, decided beforehand
-- `reports/P15_5_CALIBRATION.json` — the single fit
-- `reports/P15_5_TEST_POLICY.json` — the acceptance standard
-- `reports/P15_5_SMOKE.json` — the whole-system wiring result
-- `reports/P15_5_SOAK.json` — ninety seconds of watching for accumulation
-- `reports/P15_5_LOCKED_TEST.json` — the scored run
-- `docs/LIMITATIONS.md` — the observation floor and the calibration-width rule
+- `reports/P15_5_BASELINE.json`: what was frozen, and what the runtime assembles
+- `reports/P15_5_CALIBRATION_PLAN.json`: how much evidence, decided beforehand
+- `reports/P15_5_CALIBRATION.json`: the single fit
+- `reports/P15_5_TEST_POLICY.json`: the acceptance standard
+- `reports/P15_5_SMOKE.json`: the whole-system wiring result
+- `reports/P15_5_SOAK.json`: ninety seconds of watching for accumulation
+- `reports/P15_5_LOCKED_TEST.json`: the scored run
+- `docs/LIMITATIONS.md`: the observation floor and the calibration-width rule

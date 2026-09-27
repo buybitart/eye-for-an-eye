@@ -1,11 +1,11 @@
-# Training jobs
+# Training Jobs
 
 A training job is one bounded, isolated, recorded attempt to build a candidate
 model.
 
 Status: **Beta.**
 
-## Why a job and not just a function call
+## Why a Job and Not Just a Function Call
 
 Because training is the one thing this project does that can use a lot of
 resources for a long time, and the sensor must keep working while it happens. A
@@ -15,7 +15,7 @@ job gives that three properties:
 * **operating-system limits**, so a runaway run is killed rather than tolerated
 * an **audit record**, so months later you can see what produced a model
 
-## The states
+## The States
 
 ```text
 QUEUED -> VALIDATING_DATA -> TRAINING -> EXPORTING
@@ -42,8 +42,8 @@ one, because producing a candidate is the most it is able to do.
 ## Isolation
 
 Training runs as a **separate process**, never inside the process that holds
-capture or enforcement privileges. If the current process is privileged — running
-as root, or holding any effective capability — the job refuses to start and says
+capture or enforcement privileges. If the current process is privileged (running
+as root, or holding any effective capability) the job refuses to start and says
 why.
 
 The reason is simple: training reads a CSV and fits a model. It has no need to
@@ -53,7 +53,7 @@ not inherit those powers.
 The child gets:
 
 * its own workspace directory, which is the only place it writes
-* a minimal environment — no inherited shell variables
+* a minimal environment: no inherited shell variables
 * one thread (`OMP_NUM_THREADS=1` and friends), so it cannot take the machine
 * `nice 10`, so it yields to traffic processing
 * its own session, so a runaway process group can be cleaned up
@@ -95,7 +95,7 @@ not.
 For a dataset directory the SHA-256 is the manifest's hash. The manifest already
 names and hashes every split, so hashing it identifies the dataset exactly.
 
-## What happens when things go wrong
+## What Happens When Things Go Wrong
 
 | Failure | Result |
 | --- | --- |
@@ -113,13 +113,13 @@ a candidate is a separate, later, explicit step.
 A failed job keeps its workspace so you can look at it. A successful one cleans
 up after itself.
 
-## Restart recovery
+## Restart Recovery
 
 A job left mid-flight by a restart is marked `INTERRUPTED` and is **not**
 resumed. Resuming from a half-written workspace is how a corrupted candidate gets
 built. Starting again from zero is slower and correct.
 
-## The audit log
+## The Audit Log
 
 One JSON line per lifecycle event:
 
@@ -135,7 +135,7 @@ job.
 Job records are pruned to the newest 50 by default. The `ACTIVE` model, the
 rollback target and the current candidate are never touched by any of this.
 
-## Where things live
+## Where Things Live
 
 ```toml
 [learning]
@@ -153,6 +153,6 @@ eye-for-an-eye learning job <id>     # one attempt in full, with its versions
 
 ## Related
 
-* [RETRAINING.md](RETRAINING.md) — when a job is worth running
-* [MODEL_VALIDATION.md](MODEL_VALIDATION.md) — what happens to the result
-* [MODEL_REGISTRY.md](MODEL_REGISTRY.md) — where a candidate goes
+* [RETRAINING.md](RETRAINING.md): when a job is worth running
+* [MODEL_VALIDATION.md](MODEL_VALIDATION.md): what happens to the result
+* [MODEL_REGISTRY.md](MODEL_REGISTRY.md): where a candidate goes

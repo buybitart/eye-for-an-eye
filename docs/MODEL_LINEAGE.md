@@ -1,10 +1,10 @@
-# Model and dataset lineage
+# Model and Dataset Lineage
 
 Lineage answers one question: **where did this come from?**
 
 Status: **Beta.**
 
-## Why it matters
+## Why It Matters
 
 A model that starts blocking the wrong traffic is only fixable if you can find
 out what taught it to. Without lineage the answer is a shrug. With it, the chain
@@ -16,7 +16,7 @@ this model  <-  this dataset  <-  this parent dataset + these reviewed rows
 
 Every link is a recorded fact, not a reconstruction.
 
-## Datasets are immutable
+## Datasets Are Immutable
 
 A published dataset version is never modified. New data means a new version:
 
@@ -33,7 +33,7 @@ A new dataset is built as a **candidate** first:
 dataset-v2-candidate  ->  (validation passes)  ->  dataset-v2
 ```
 
-## What a dataset records about its parent
+## What a Dataset Records About Its Parent
 
 ```json
 {
@@ -54,7 +54,7 @@ Beside it, the intake report says what was **refused** and why: per-source limit
 per-day limits, duplicates, rows from a single source over its share. A dataset
 that accepted 214 of 900 offered rows says so.
 
-## What every row records about itself
+## What Every Row Records About Itself
 
 ```text
 source_type            lab, capture, reviewed shadow, unlabelled shadow
@@ -71,7 +71,7 @@ None of this is a model feature. It exists for grouping, splitting, provenance
 and review. The dataset validator refuses a manifest that lists any of it as a
 model input.
 
-## Label confidence
+## Label Confidence
 
 | Confidence | When |
 | --- | --- |
@@ -81,7 +81,7 @@ model input.
 
 A reviewed label is never `HIGH`. `LOW` rows stay out of supervised training.
 
-## What a model records about its parent
+## What a Model Records About Its Parent
 
 ```json
 {
@@ -98,7 +98,7 @@ A reviewed label is never `HIGH`. `LOW` rows stay out of supervised training.
 The training job id ties the model back to the exact library versions, seed and
 dataset hash that produced it.
 
-## Model versions are immutable too
+## Model Versions Are Immutable Too
 
 ```text
 risk-logreg-v1  ->  risk-logreg-v2
@@ -107,7 +107,7 @@ risk-logreg-v1  ->  risk-logreg-v2
 Never an overwrite of `risk-logreg-v1.onnx`. The registry enforces this: a
 version directory that already exists cannot be written again.
 
-## The feature schema lock
+## The Feature Schema Lock
 
 Every dataset and every model states its `feature_schema_version`.
 
@@ -116,7 +116,7 @@ model family, and it needs a compatibility review. A model trained against a
 different feature order would read one number as another, confidently, forever.
 The registry refuses a model whose feature order does not match the build.
 
-## The two dataset formats in this repository
+## The Two Dataset Formats in This Repository
 
 This repository carries two column contracts, from different stages:
 
@@ -134,7 +134,7 @@ manifest it writes records what was dropped.
 This seam is worth knowing about. Unifying the two contracts would be a better
 answer than bridging them, and it has not been done.
 
-## Answering the audit questions
+## Answering the Audit Questions
 
 For any candidate, these are answerable from the recorded lineage alone:
 
@@ -146,7 +146,7 @@ For any candidate, these are answerable from the recorded lineage alone:
 
 ## Related
 
-* [DATASET.md](DATASET.md) — how datasets are built
-* [MODEL_REGISTRY.md](MODEL_REGISTRY.md) — how versions are stored
-* [TRAINING_JOBS.md](TRAINING_JOBS.md) — reproducibility metadata
-* [FEATURE_SCHEMA.md](FEATURE_SCHEMA.md) — the feature contract
+* [DATASET.md](DATASET.md): how datasets are built
+* [MODEL_REGISTRY.md](MODEL_REGISTRY.md): how versions are stored
+* [TRAINING_JOBS.md](TRAINING_JOBS.md): reproducibility metadata
+* [FEATURE_SCHEMA.md](FEATURE_SCHEMA.md): the feature contract

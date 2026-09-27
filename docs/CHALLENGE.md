@@ -1,4 +1,4 @@
-# Web challenge
+# Web Challenge
 
 Eye for an Eye does not always block a suspicious client.
 
@@ -8,7 +8,7 @@ challenge does not make a client trusted forever.
 
 Status: **Beta.** Shadow mode is the recommended deployment. Off by default.
 
-## The short version
+## The Short Version
 
 Some clients look suspicious, but not suspicious enough to block. Blocking them
 would be wrong often. Ignoring them would be wrong too.
@@ -21,7 +21,7 @@ clicking. Most clients never see it at all.
 
 The answer is evidence. It is not proof of anything.
 
-## What a challenge is
+## What a Challenge Is
 
 1. The client asks for a page.
 2. The system decides the evidence is real but not strong enough to act on.
@@ -32,7 +32,7 @@ The answer is evidence. It is not proof of anything.
 That is the whole flow. There is no puzzle, no image, no CAPTCHA, no
 fingerprinting, and no work for the computer to do.
 
-## What a challenge is not
+## What a Challenge Is Not
 
 A challenge does **not** prove:
 
@@ -43,10 +43,10 @@ A challenge does **not** prove:
 
 A capable script can pass this challenge. That is expected, and it is fine,
 because passing is not the point. The point is that behaviour after passing is
-still watched — and a scanner that passes a challenge and then goes back to
+still watched, and a scanner that passes a challenge and then goes back to
 guessing paths has told the system something useful about itself.
 
-## The ladder
+## The Ladder
 
 ```
 OBSERVE  →  WATCH  →  SOFT_CHALLENGE  →  RATE_LIMIT  →  TEMP_BLOCK
@@ -66,13 +66,13 @@ costs the client anything, and it is the cheapest one that does.
 These numbers are defaults for this release. They are not calibrated against
 real traffic, and you should expect to change them.
 
-## When a challenge is not sent
+## When a Challenge Is Not Sent
 
 Most of the time. A challenge is refused when:
 
 - the client already holds a valid token,
-- risk is below the floor — a challenge costs the user something,
-- risk is above the ceiling — there is already enough evidence to act,
+- risk is below the floor; a challenge costs the user something,
+- risk is above the ceiling; there is already enough evidence to act,
 - the method is not safe to redirect (POST, PUT, PATCH, DELETE),
 - the route does not use challenges (API, auth, webhook, health),
 - the client passed one recently,
@@ -85,7 +85,7 @@ Every refusal is recorded with its reason. If you are wondering why a client was
 not challenged, `eye-for-an-eye challenge doctor` and the decision record will
 tell you.
 
-## Shadow mode
+## Shadow Mode
 
 The default when you first switch challenges on.
 
@@ -103,7 +103,7 @@ Look at the challenge rate for ordinary traffic before you change `mode` to
 `"active"`. If it is not very close to zero, the thresholds are wrong for your
 site.
 
-## What it costs
+## What It Costs
 
 Measured locally, on one core, with the LAB fixtures:
 
@@ -129,11 +129,11 @@ eye-for-an-eye challenge test      sign a token locally and check it
 None of these send a request, change Nginx, or change enforcement. None of them
 ever prints a secret or a token.
 
-## Further reading
+## Further Reading
 
-- [Progressive defense](PROGRESSIVE_DEFENSE.md) — why an action ladder
-- [Challenge security](CHALLENGE_SECURITY.md) — threats and what is done about them
-- [Challenge privacy](CHALLENGE_PRIVACY.md) — what is stored and what is not
-- [Nginx integration](NGINX_CHALLENGE.md) — how to wire it up
-- [API clients](API_CLIENTS.md) — routes that must not be challenged
-- [Trusted proxies](TRUSTED_PROXIES.md) — CDNs, and how not to break your site
+- [Progressive defense](PROGRESSIVE_DEFENSE.md): why an action ladder
+- [Challenge security](CHALLENGE_SECURITY.md): threats and what is done about them
+- [Challenge privacy](CHALLENGE_PRIVACY.md): what is stored and what is not
+- [Nginx integration](NGINX_CHALLENGE.md): how to wire it up
+- [API clients](API_CLIENTS.md): routes that must not be challenged
+- [Trusted proxies](TRUSTED_PROXIES.md): CDNs, and how not to break your site

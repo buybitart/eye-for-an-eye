@@ -1,14 +1,14 @@
-# Web privacy
+# Web Privacy
 
 Web telemetry is more sensitive than packet metadata. A URL is not just a
-resource name — it can be a password reset token, an account id, an email
+resource name: it can be a password reset token, an account id, an email
 address, a search term, or the title of a document somebody is reading.
 
 So this page says exactly what is kept.
 
 Status: **Beta.**
 
-## Never stored, at any setting
+## Never Stored, at Any Setting
 
 ```text
 Authorization headers      cookies and Set-Cookie
@@ -21,7 +21,7 @@ containing one of these fields is **dropped whole**, and `web doctor` reports it
 so the operator can fix the log format that is currently writing credentials to
 disk.
 
-## Not stored by default
+## Not Stored by Default
 
 | Thing | Default | Setting |
 | --- | --- | --- |
@@ -31,7 +31,7 @@ disk.
 Turning either on is recorded by `web doctor` as `DEGRADED` with the reason, so
 it is visible rather than forgotten.
 
-## What is kept instead
+## What Is Kept Instead
 
 Derived numbers, which are what behaviour analysis actually needs.
 
@@ -66,11 +66,11 @@ agent_family    declared_browser, declared_bot, declared_tool, other
 agent_digest    for counting changes
 ```
 
-The User-Agent string itself is never kept. Neither is the Host name — only a
+The User-Agent string itself is never kept. Neither is the Host name, only a
 digest, so many different Host values can be counted without the names being
 stored.
 
-## The path key
+## The Path Key
 
 Repeated-path detection needs to know "the same thing again", not "what thing".
 
@@ -90,12 +90,12 @@ memorise a site rather than learn behaviour.
 A client address is kept, because acting on behaviour requires knowing whose
 behaviour it is. Two things follow from that:
 
-* an address is **a source, not a person** — one address can be an office, a
+* an address is **a source, not a person**: one address can be an office, a
   mobile network, a university, or a CDN carrying thousands of people;
 * an address behind a proxy is never blocked at the network layer, precisely
   because of the above ([REVERSE_PROXY.md](REVERSE_PROXY.md)).
 
-## Log injection
+## Log Injection
 
 Every string that comes from a request is stripped of control characters and
 length-bounded before anything is done with it.
@@ -120,7 +120,7 @@ Your web server's own access log is a separate thing with its own retention.
 Eye for an Eye reads it; it does not copy it, and it does not keep a second
 archive of your web traffic.
 
-## What a stored event looks like
+## What a Stored Event Looks Like
 
 ```json
 {
@@ -151,6 +151,6 @@ User-Agent: curl/8.5
 
 ## Related
 
-* [PRIVACY.md](PRIVACY.md) — the project's wider privacy position
-* [NGINX.md](NGINX.md) — what the log format requests
-* [WEB_PROTECTION.md](WEB_PROTECTION.md) — what the data is used for
+* [PRIVACY.md](PRIVACY.md): the project's wider privacy position
+* [NGINX.md](NGINX.md): what the log format requests
+* [WEB_PROTECTION.md](WEB_PROTECTION.md): what the data is used for

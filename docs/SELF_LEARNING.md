@@ -1,9 +1,9 @@
-# Controlled self-learning
+# Controlled Self-learning
 
 Many security tools say they "learn by themselves". This project does something
 narrower, and the difference is the point of this page.
 
-## The rule
+## The Rule
 
 **The running sensor never changes the model it is using.**
 
@@ -25,7 +25,7 @@ Since P9 the system can prepare data and train a candidate model on its own, if
 you configure it to. It still cannot promote one. Model promotion is a command a
 person types.
 
-## Why not full self-learning
+## Why Not Full Self-learning
 
 A defender that learns from its own decisions has one big problem: it has no
 teacher. If it blocks a normal customer today and then learns from that block, it
@@ -44,7 +44,7 @@ A decision is not a label.
 Not a block, not a score, not a threshold, not an anomaly, not an
 out-of-distribution reading. The dataset code refuses all of them by name.
 
-## The loop
+## The Loop
 
 ```text
   1. Shadow Mode         the system watches and writes decisions
@@ -72,7 +72,7 @@ out-of-distribution reading. The dataset code refuses all of them by name.
 
 Steps 4 to 9 can run automatically when configured. Step 11 cannot.
 
-## Step 2: the review queue
+## Step 2: The Review Queue
 
 The sensor puts a window in front of a person when it could **not** settle it:
 the mathematical engine and the model disagree, the risk landed in the middle,
@@ -91,7 +91,7 @@ eye-for-an-eye review list
 eye-for-an-eye review show <entry>
 ```
 
-## Step 3: human review
+## Step 3: Human Review
 
 ```sh
 eye-for-an-eye review answer <entry> --answer benign --note "nightly backup"
@@ -116,7 +116,7 @@ Shadow rows leave the system with **no label**. The system's own action
 `SHADOW_UNLABELED`, and the validator refuses a shadow row that arrives with a
 supervised label.
 
-## Step 4: the candidate dataset
+## Step 4: The Candidate Dataset
 
 New data never edits an old dataset. It makes a new version, and that version
 records its parent:
@@ -134,7 +134,7 @@ Limits apply to how much of the new data any one source, one group or one day
 may be. The report says what was refused and why. See
 [MODEL_LINEAGE.md](MODEL_LINEAGE.md).
 
-## Step 6: training, offline
+## Step 6: Training, Offline
 
 ```sh
 eye-for-an-eye learning train --dataset <prepared dir> \
@@ -145,20 +145,20 @@ No Internet. No cloud service. No external AI API. The job has hard limits on
 time, memory and disk, runs at low priority, and records the library versions and
 dataset hash needed to build it again. See [TRAINING_JOBS.md](TRAINING_JOBS.md).
 
-## Step 7: model validation
+## Step 7: Model Validation
 
 A candidate must pass before it is worth considering:
 
 * block precision on the held-out test set,
 * false blocks per 1000 benign sources,
-* hard-negative performance — traffic that must never be blocked,
+* hard-negative performance: traffic that must never be blocked,
 * leakage checks and a group-based split, never a random row split,
 * ONNX and scikit-learn giving the same answer for the same input.
 
 If a check fails, the report says so and nothing is installed. See
 [MODEL_VALIDATION.md](MODEL_VALIDATION.md).
 
-## Step 8: the candidate runs in shadow
+## Step 8: The Candidate Runs in Shadow
 
 A candidate model scores the same traffic the active model scores, at the same
 moment. It **cannot** change an action and cannot reach the firewall.
@@ -167,7 +167,7 @@ This is worth stating clearly, because "canary" usually means something else.
 Here it means **parallel inference, never parallel enforcement**. No fraction of
 decisions is routed to a candidate.
 
-## Step 11: your decision
+## Step 11: Your Decision
 
 There is a local model registry. Promotion is one atomic pointer write:
 
@@ -185,7 +185,7 @@ auto-update, and nothing to phone home to. See
 `auto_promote` is not a setting. There is no configuration that makes a candidate
 become the active model.
 
-## What the system does keep updating
+## What the System Does Keep Updating
 
 Two things change at run time, and both are short-lived and local:
 
@@ -196,7 +196,7 @@ Two things change at run time, and both are short-lived and local:
 
 Neither touches the model or its weights.
 
-## Fair words for this
+## Fair Words for This
 
 Accurate:
 
@@ -214,7 +214,7 @@ The AI teaches itself from every attacker.
 It does not. It learns from data a person agreed to label, and only after that
 person promotes the result.
 
-## See also
+## See Also
 
 * [Retraining](RETRAINING.md)
 * [Review queue](REVIEW_QUEUE.md)

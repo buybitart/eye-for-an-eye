@@ -1,8 +1,8 @@
-# How the AI works
+# How the AI Works
 
 This page explains the machine-learning part in simple words.
 
-## Short answer
+## Short Answer
 
 * The model is **logistic regression**. It is one of the simplest models there is.
 * It runs on **your CPU**, on **your machine**, with **ONNX Runtime**.
@@ -12,7 +12,7 @@ This page explains the machine-learning part in simple words.
 * It is **optional**. With no model file the maths engine works alone.
 * Today it is for **watching only**. Do not use it to block.
 
-## Why such a small model
+## Why Such a Small Model
 
 A big model would be harder to check. This project needs the operator to be able
 to answer one question: *why did it decide that?*
@@ -23,7 +23,7 @@ score is the sum. Nothing is hidden.
 A small model is also fast. Inference is a few microseconds of CPU time, with a
 200 ms timeout as a hard limit.
 
-## What the model can see
+## What the Model Can See
 
 The shipped model gets 36 numbers:
 
@@ -33,7 +33,7 @@ The shipped model gets 36 numbers:
 That is all. A flag of 0 means the value was missing, so the model can tell the
 difference between "zero connections" and "we did not see".
 
-## What the model can never see
+## What the Model Can Never See
 
 This list is enforced in code, in `dataset/schema.py` (`NEVER_MODEL_INPUT`).
 
@@ -62,12 +62,12 @@ columns. The dataset pipeline defines a **34-column** model feature set
 flag. That 34-column set is the contract for the next model, not for the one
 that ships today.
 
-## The manifest contract
+## The Manifest Contract
 
 A model file alone is not enough. The system needs two files:
 
-* `risk-logreg-v1.onnx` — the model,
-* `risk-logreg-v1.json` — the manifest.
+* `risk-logreg-v1.onnx`: the model,
+* `risk-logreg-v1.json`: the manifest.
 
 Before loading, the system checks:
 
@@ -85,7 +85,7 @@ Before loading, the system checks:
 If any check fails, the model is not loaded. The system keeps running with the
 maths engine. It does not crash and it does not "try anyway".
 
-## Where the model runs
+## Where the Model Runs
 
 The model runs in a **separate process**, not inside the main service.
 
@@ -96,7 +96,7 @@ The model runs in a **separate process**, not inside the main service.
 * Each inference has 200 ms (`ml.inference_timeout_ms`).
 * Results are cached for 10 seconds.
 
-## How much the model is trusted
+## How Much the Model Is Trusted
 
 The model never decides alone. Three rules limit it.
 
@@ -123,7 +123,7 @@ firewall rights.** Enforcement needs the maths engine to agree
 (`decision.minimum_math_risk`, default 0.80). A model file, on its own, can
 never cause a block.
 
-## The current model
+## The Current Model
 
 | Fact | Value |
 | --- | --- |
@@ -139,7 +139,7 @@ Full detail, including how it was measured and where it is weak:
 [Model card](../models/MODEL_CARD_risk-logreg-v1.md) and
 [the model report](../reports/model-risk-logreg-v1.md).
 
-## Checking it yourself
+## Checking It Yourself
 
 ```sh
 eye-for-an-eye model status
@@ -158,7 +158,7 @@ Mode: Shadow
 `Status: Not configured` means there is no model file. That is a normal, safe
 state, not an error.
 
-## See also
+## See Also
 
 * [The maths engine](MATH_MODEL.md)
 * [Feature schema](FEATURE_SCHEMA.md)

@@ -1,4 +1,4 @@
-# Review queue
+# Review Queue
 
 The review queue is where the system puts behaviour it could **not** decide by
 itself, so a person can look at it later.
@@ -9,7 +9,7 @@ answered a question.
 
 Status: **Beta.** Limits and priority values are provisional.
 
-## Why this exists
+## Why This Exists
 
 A system that learns from its own output stops learning. If "the system blocked
 it" became "this is malicious", then every mistake would be taught back to the
@@ -20,7 +20,7 @@ So the queue holds the opposite of what you might expect. A confident decision
 the system already acted on is **not** put in front of a person. What is put in
 front of a person is the traffic the system was unsure about.
 
-## What gets queued
+## What Gets Queued
 
 An entry is admitted only for one of these reasons:
 
@@ -38,7 +38,7 @@ usually not worth anyone's time.
 A window that was blocked with high confidence earns nothing. Being acted on is
 not a reason to review.
 
-## What is stored
+## What Is Stored
 
 Behaviour numbers only. The same 16 behaviour features the model itself sees:
 
@@ -83,7 +83,7 @@ Two more rules matter:
 Together these mean an attacker who can make the sensor unsure still cannot
 choose what the next dataset looks like.
 
-## Review states
+## Review States
 
 | State | Meaning |
 | --- | --- |
@@ -102,7 +102,7 @@ A reviewed answer is `MEDIUM` confidence at best. `HIGH` is reserved for
 deterministic controlled ground truth, which a person reading a summary does not
 have.
 
-## Turning it on
+## Turning It On
 
 The queue is **off by default**. It writes to disk and needs a local secret, so
 an operator has to ask for it.
@@ -122,7 +122,7 @@ review_queue_secret_file = "/etc/eye-for-an-eye/review.secret"
 A missing or short secret leaves the queue closed and counts
 `review_queue_unavailable_total`. It never stops the sensor.
 
-## Using it
+## Using It
 
 ```bash
 eye-for-an-eye review status              # how much is waiting
@@ -143,7 +143,7 @@ created, and a person has to type it.
 train anything, and does not promote anything. Those are separate steps you
 start yourself.
 
-## What this does not do
+## What This Does Not Do
 
 * It does not train. Answering an entry changes a file, nothing else.
 * It does not block anything, ever. The queue is written after the decision is
@@ -151,7 +151,7 @@ start yourself.
 * It does not send anything anywhere. No cloud, no upload, no telemetry.
 * It does not identify a person. A label describes behaviour in one window.
 
-## When it fails
+## When It Fails
 
 A failure to write the queue is counted (`review_queue_failures_total`) and
 dropped. Collecting material for later training is a convenience. It is never
@@ -168,7 +168,7 @@ allowed to interrupt defending.
 
 ## Related
 
-* [SELF_LEARNING.md](SELF_LEARNING.md) — what the project does and does not learn
-* [DATASET.md](DATASET.md) — how a dataset is built from labelled rows
-* [MODEL_REGISTRY.md](MODEL_REGISTRY.md) — where a trained model goes afterwards
-* [PRIVACY.md](PRIVACY.md) — what is stored and what is not
+* [SELF_LEARNING.md](SELF_LEARNING.md): what the project does and does not learn
+* [DATASET.md](DATASET.md): how a dataset is built from labelled rows
+* [MODEL_REGISTRY.md](MODEL_REGISTRY.md): where a trained model goes afterwards
+* [PRIVACY.md](PRIVACY.md): what is stored and what is not

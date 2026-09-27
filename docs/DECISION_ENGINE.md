@@ -1,8 +1,8 @@
-# Math risk score, fusion, and decision policy
+# Math Risk Score, Fusion, and Decision Policy
 
 This page explains how Eye for an Eye turns raw numbers about a source into a risk score, and how it turns that score into an action. It is for developers and reviewers who want to check or extend the decision logic.
 
-## The math risk score (math-risk-v1)
+## The Math Risk Score (math-risk-v1)
 
 Eye for an Eye has a small math model called `math-risk-v1`. It does not need the ONNX machine-learning model. It can work alone.
 
@@ -35,7 +35,7 @@ The contributions are **logit terms**. This means they are added together before
 
 The score from `math-risk-v1` is **uncalibrated**. This is an honesty marker you will see again in this project. It means the score is not a real probability. A score of 0.80 does not mean "80% chance of an attack." It only means the math model found more or stronger signals than at 0.40.
 
-## Combining math and the machine-learning model (fusion)
+## Combining Math and the Machine-learning Model (Fusion)
 
 Eye for an Eye can also use an ONNX machine-learning model (see [ONNX_MODEL.md](ONNX_MODEL.md)). The decision engine mixes the math score and the model score together. This mixing step is called **fusion**.
 
@@ -70,7 +70,7 @@ Two safety rules protect against a bad or wrong model:
 
 A high ML score alone can never unlock a strong action. It must still pass the math confirmation gate, described later on this page.
 
-## Risk score over time (decay)
+## Risk Score Over Time (Decay)
 
 A source's risk score does not disappear right after a decision. It fades over time. The formula is:
 
@@ -84,7 +84,7 @@ Eye for an Eye keeps a bounded history of past risk values per source. It does n
 
 Eye for an Eye does not use an **EMA** (exponential moving average, a common way to smooth a value over time) here. The reason is that the fixed time windows already used in the features (10s, 60s, 900s) would overlap with what an EMA does, without adding new supporting evidence.
 
-## Turning a risk score into an action
+## Turning a Risk Score Into an Action
 
 There are four possible actions: `OBSERVE`, `WATCH`, `RATE_LIMIT`, and `TEMP_BLOCK` (temporary block).
 
@@ -108,7 +108,7 @@ Once a source is in a stricter state (for example `WATCH`), Eye for an Eye does 
 
 Hysteresis just means: it takes a bigger drop to leave a state than it took to enter it. This stops the action from flapping back and forth on small score changes. Even while a source stays in a stricter state because of hysteresis, the gates in the next section still apply.
 
-## Data quality score
+## Data Quality Score
 
 Before Eye for an Eye trusts a decision enough to act strongly, it checks the quality of the evidence behind it. The quality formula is:
 
@@ -137,7 +137,7 @@ These four categories are just four different kinds of evidence. They are not a 
 
 Eye for an Eye does not use P0 fingerprint or enrichment data (extra network fingerprinting features) in this quality score, because those inputs are not validated for this FeatureVector. The listener component reports how many events it dropped at the application level, so that count is known. But loss caused by packet capture or the kernel, or loss in a PCAP replay file, stays unknown. Unknown loss prevents a strong action by default (through the 0.65 multiplier above).
 
-## Requirements for a strong action
+## Requirements for a Strong Action
 
 A strong action (`RATE_LIMIT` or `TEMP_BLOCK`) needs **all** of these to be true:
 
@@ -155,9 +155,9 @@ A machine-learning model can **never** skip these checks by itself. The checks a
 
 **`RATE_LIMIT` is recorded as a decision today, but it is not actually applied by this implementation yet.**
 
-## Blocking history (the offense counter)
+## Blocking History (the Offense Counter)
 
-Eye for an Eye keeps a small offense counter per source. This counter only goes up when an enforcement action (a real, successful block) actually happens — not just when a `TEMP_BLOCK` decision is proposed.
+Eye for an Eye keeps a small offense counter per source. This counter only goes up when an enforcement action (a real, successful block) actually happens, not just when a `TEMP_BLOCK` decision is proposed.
 
 Block durations get longer each time, in this order: 300, 1800, 7200, then 43200 seconds. There is no permanent ban.
 
@@ -165,7 +165,7 @@ If 21600 seconds (6 hours) pass since the last successful block on a source, the
 
 This state is temporary. It lives only in memory, it is bounded in size, and it is tied to one source IP address. It is never a judgement about who that source "really is." Also, the underlying firewall rule expiry (in the kernel) does not depend on whether the Eye for an Eye process is still running.
 
-## Looking at a decision record
+## Looking at a Decision Record
 
 Every decision is saved as a structured record, so it can be reviewed later. This uses event schema version 3, with `decision_version = 1`. No database migration is needed for this.
 
@@ -188,13 +188,13 @@ eye-for-an-eye decision explain EVENT_ID --storage-path /path/events.sqlite3 --j
 
 Normal storage retention rules apply to these records (see [STORAGE.md](STORAGE.md)). Under heavy storage pressure, some metadata can be trimmed. So if you cannot find a stored explanation for a decision, that is not proof that no decision was made.
 
-## See also
+## See Also
 
-* [FEATURE_SCHEMA.md](FEATURE_SCHEMA.md) — the input numbers this page's formulas use.
-* [MATH_MODEL.md](MATH_MODEL.md) — more detail on the math risk model.
-* [ML_ARCHITECTURE.md](ML_ARCHITECTURE.md) — how the machine-learning path fits around this logic.
-* [ONNX_MODEL.md](ONNX_MODEL.md) — the machine-learning model itself.
-* [ENFORCEMENT.md](ENFORCEMENT.md) — what happens when a block is enforced.
-* [SHADOW_MODE.md](SHADOW_MODE.md) — running decisions without enforcing them.
-* [MODEL_EVALUATION.md](MODEL_EVALUATION.md) — measured results for these thresholds.
-* [RISKS_AND_LIMITATIONS.md](RISKS_AND_LIMITATIONS.md) — known limits of this approach.
+* [FEATURE_SCHEMA.md](FEATURE_SCHEMA.md): the input numbers this page's formulas use.
+* [MATH_MODEL.md](MATH_MODEL.md): more detail on the math risk model.
+* [ML_ARCHITECTURE.md](ML_ARCHITECTURE.md): how the machine-learning path fits around this logic.
+* [ONNX_MODEL.md](ONNX_MODEL.md): the machine-learning model itself.
+* [ENFORCEMENT.md](ENFORCEMENT.md): what happens when a block is enforced.
+* [SHADOW_MODE.md](SHADOW_MODE.md): running decisions without enforcing them.
+* [MODEL_EVALUATION.md](MODEL_EVALUATION.md): measured results for these thresholds.
+* [RISKS_AND_LIMITATIONS.md](RISKS_AND_LIMITATIONS.md): known limits of this approach.

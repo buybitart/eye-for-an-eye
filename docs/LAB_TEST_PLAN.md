@@ -1,4 +1,4 @@
-# Historic lab test plan (P0)
+# Historic Lab Test Plan (P0)
 
 This page keeps the test plan from an early development phase called "P0." It is history, not a current task list. Read it if you want to know which checks were planned back then, and what evidence each one asked for.
 
@@ -10,7 +10,7 @@ The status of this whole plan is: **NOT VERIFIED IN CURRENT ENVIRONMENT**.
 
 During P0, nobody actually ran live packet capture, raw ICMP (the network protocol used for tools like "ping"), real firewall changes, external scanning, or real RDAP (domain and address lookup) queries. The checks below were written for a separate, clearly marked-off lab: a virtual machine, a container, or a Linux network namespace, with test peers you fully control yourself.
 
-## Where the current information lives
+## Where the Current Information Lives
 
 The current commands and limits are described in [DEPLOYMENT.md](DEPLOYMENT.md), [PRIVILEGES.md](PRIVILEGES.md), and [FIREWALL.md](FIREWALL.md).
 
@@ -21,7 +21,7 @@ Two things changed after this plan was first written:
 
 Any mention of "future P1" below is now historic. It does not describe a current backlog of work.
 
-## What you need before starting
+## What You Need Before Starting
 
 The operator must supply:
 
@@ -37,7 +37,7 @@ Minimal packet-capture permissions must be set up in advance by the operator. Th
 
 Do not use the real host's firewall, and do not use production network interfaces for this. If a redirect test is needed, the operator sets those rules up separately, inside a disposable lab. This page itself contains no runnable firewall commands.
 
-## Checks and what counts as a pass
+## Checks and What Counts as a Pass
 
 | Scenario | Action inside the isolated lab | Expected result / evidence |
 | --- | --- | --- |
@@ -58,22 +58,22 @@ Do not use the real host's firewall, and do not use production network interface
 | Real MMDB (a common file format for GeoIP location databases) | Use the operator's own real test database file, with one entry known to exist and one known to be missing. | Fields come back normalised, or as `not_found`. A missing locale (language setting) does not crash the process. The file handle is properly closed afterward. |
 | RDAP contract (RDAP looks up who owns a domain or IP address, like a modern WHOIS) | Start with the fake test provider already used in the automated tests. Only reach a real, live registry after getting explicit permission. | The base event is written before enrichment happens. Measure the DNS and HTTP behaviour, and the full end-to-end time limit. The result must never be read as revealing a real person's identity. |
 
-## What to record
+## What to Record
 
 For every check: the operating system and kernel version, the Python version, the packet-capture driver (Scapy or otherwise), the configuration used (with secrets removed), hashes of the test input files, the standard output and error text, the exit code, the shutdown time, memory (RSS), file-descriptor and process counts, and a separate, independent packet capture (pcap) file of the test.
 
-## Keep it honest
+## Keep It Honest
 
-Keep losses, budget overruns, and "unknown" statuses as real test results — do not throw them away. Do not mark any of these checks as "passed" before it has actually been run.
+Keep losses, budget overruns, and "unknown" statuses as real test results. Do not throw them away. Do not mark any of these checks as "passed" before it has actually been run.
 
-## What came next (as written at the time)
+## What Came Next (as Written at the Time)
 
 After running this plan, the team planned to decide separately about "P1" work: a persistent capture handle, IPv6 and original-destination checks, an operating-system-level sandbox and resource limits, a continuous-integration (CI) test matrix across platforms, and delivering operational logs somewhere central. The firewall manager, and any deployment on a public-facing network, were both explicitly out of scope for P0.
 
-## See also
+## See Also
 
-* [DEPLOYMENT.md](DEPLOYMENT.md) — the current, up-to-date deployment commands and limits.
-* [PRIVILEGES.md](PRIVILEGES.md) — what system permissions each component needs today.
-* [FIREWALL.md](FIREWALL.md) — the firewall manager and its own lab-only tests, added after this plan.
-* [history/README.md](history/README.md) — why the phase completion records are not published.
-* [RISKS_AND_LIMITATIONS.md](RISKS_AND_LIMITATIONS.md) — known limits of this project as a whole.
+* [DEPLOYMENT.md](DEPLOYMENT.md): the current, up-to-date deployment commands and limits.
+* [PRIVILEGES.md](PRIVILEGES.md): what system permissions each component needs today.
+* [FIREWALL.md](FIREWALL.md): the firewall manager and its own lab-only tests, added after this plan.
+* [history/README.md](history/README.md): why the phase completion records are not published.
+* [RISKS_AND_LIMITATIONS.md](RISKS_AND_LIMITATIONS.md): known limits of this project as a whole.

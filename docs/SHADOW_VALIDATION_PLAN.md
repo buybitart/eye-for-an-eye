@@ -1,4 +1,4 @@
-# Shadow validation plan
+# Shadow Validation Plan
 
 What a real shadow deployment has to produce before anyone argues that
 autonomous host blocking should be turned on, how much of it is needed, and how
@@ -7,7 +7,7 @@ it will be read.
 Written before the data exists. That is the point: a plan written afterwards is
 a description of whatever happened, and a bar you can move is not a bar.
 
-## The standing position
+## The Standing Position
 
 **Production autonomous host blocking stays disabled.** Nothing in this
 document changes that, and running this plan does not change it either. It ends
@@ -19,7 +19,7 @@ staging area on the way to something better; for most deployments it is the
 final state, and a shadow deployment that never enables blocking has lost
 nothing.
 
-## The question this plan answers
+## The Question This Plan Answers
 
 Every accuracy number this project has comes from traffic it generated itself.
 `docs/GENERALIZATION_POLICY.md` says so plainly: holding out a behaviour family
@@ -46,7 +46,7 @@ Three questions this plan explicitly does **not** answer:
 * **Whether the thresholds are right.** The cost model is a judgement about a
   particular deployment and stays the operator's (`docs/COST_SENSITIVE_POLICY.md`).
 
-## Where it may run
+## Where It May Run
 
 Owned systems only:
 
@@ -55,11 +55,11 @@ Owned systems only:
 * a site the operator is responsible for, running in shadow mode.
 
 No arbitrary Internet target, no third-party system, no traffic solicited from
-anyone. The sensor is passive in shadow mode — it watches traffic that was
-already arriving — and nothing in this plan generates traffic towards a machine
+anyone. The sensor is passive in shadow mode (it watches traffic that was
+already arriving), and nothing in this plan generates traffic towards a machine
 the operator does not own.
 
-## What is collected
+## What Is Collected
 
 The shadow export, one row per decision, written by the running sensor
 (`docs/BACKPRESSURE.md` says how to turn it on and what it costs). Each row
@@ -74,7 +74,7 @@ carries, derived from the decision the runtime already made:
 | cost | threshold, decision margin, `loss_allow`, `loss_block`, cost policy digest |
 | outcome | `would_action`, `actual_action`, `shadow`, `enforcement_withheld`, `reason_codes` |
 | context | `component_health` at the moment of the decision |
-| ground truth | `review.label`, `review.label_source`, `review.label_confidence` — always empty |
+| ground truth | `review.label`, `review.label_source`, `review.label_confidence`: always empty |
 
 Not collected, at any setting: addresses, payloads, request bodies, headers,
 credentials, cookies, tokens. The export is local, and moving it anywhere is
@@ -84,7 +84,7 @@ Timestamps are coarsened to the hour because an exact time and a stable
 pseudonym together are a re-identification tool even though neither is one
 alone, and nothing in the analysis below needs better than an hour.
 
-## Ground truth comes from a person, and never from the system
+## Ground Truth Comes From a Person, and Never From the System
 
 The three `review` fields ship empty and this software never fills them. The
 reason is stated in `eye_for_an_eye/autonomy/evaluation.py` and it is the single
@@ -111,7 +111,7 @@ For a shadow deployment on live traffic there is one realistic source:
 to make the amount of it proportional to the number of blocks rather than to
 the volume of traffic.
 
-### The review must be blinded
+### The Review Must Be Blinded
 
 A reviewer shown `would_action`, `reason_codes` or `evidence_band` before
 deciding is a reviewer whose label is partly the system's decision. Labels
@@ -121,13 +121,13 @@ in exactly the direction the metric is meant to test.
 So before any review begins, the rows must be projected into a **blinded view**
 that carries the evidence and drops the decision:
 
-* **kept** — `source_pseudonym`, `timestamp_bucket`, `scope`, `profile_type`,
+* **kept**: `source_pseudonym`, `timestamp_bucket`, `scope`, `profile_type`,
   observation count and seconds, data quality, per-feature contributions,
   evidence families and diversity counts, OOD and drift status;
-* **removed** — `would_action`, `actual_action`, `enforcement_withheld`,
+* **removed**: `would_action`, `actual_action`, `enforcement_withheld`,
   `reason_codes`, `evidence_band`, `math_risk`, every probability, every cost
   field, `failed_assumptions`, `component_health`;
-* **order** — rows shuffled, so position carries nothing.
+* **order**: rows shuffled, so position carries nothing.
 
 The reviewer writes `BENIGN`, `MALICIOUS_AUTOMATION` or `UNLABELED` and a
 confidence, and labels are joined back to decisions by `decision_id`
@@ -151,9 +151,9 @@ are indistinguishable in the view.
 Joining the labels back, and the sampling frame in the analysis below, remain
 the operator's own step.
 
-## How much evidence, and where that number comes from
+## How Much Evidence, and Where That Number Comes From
 
-The release gate in `autonomy/evaluation.py` already states the bar — it was
+The release gate in `autonomy/evaluation.py` already states the bar. It was
 written before this cycle and is not being chosen now to fit a result:
 
 | Threshold | Value |
@@ -167,7 +167,7 @@ The two sample floors are floors for **computing** a number, not sample sizes
 that can **establish** the two thresholds above them. That distinction is
 where most validation plans quietly go wrong, so here is the arithmetic.
 
-### Benign sources
+### Benign Sources
 
 Suppose the true false-block rate is *p* and the deployment observes *n*
 independent benign sources with **zero** false blocks. The probability of that
@@ -190,7 +190,7 @@ smallest number at which a clean run actually supports the claim the threshold
 makes. Any observed false block widens the interval, and the plan does not get
 to round it back down.
 
-### Blocked sources
+### Blocked Sources
 
 The same arithmetic on the other side. With *k* blocked sources and zero of
 them wrong, the 95% lower bound on block precision is 0.05^(1/*k*):
@@ -202,8 +202,8 @@ them wrong, the 95% lower bound on block precision is 0.05^(1/*k*):
 | **59** | **0.950** |
 | 100 | 0.970 |
 
-**The validation target is 60 blocked sources**, reviewed in full. Fifty — the
-gate's floor — cannot reach 0.95 even with a flawless result.
+**The validation target is 60 blocked sources**, reviewed in full. Fifty (the
+gate's floor) cannot reach 0.95 even with a flawless result.
 
 ### Duration
 
@@ -238,7 +238,7 @@ Three conditions apply to whatever window that produces:
 4. **The export must not rotate away its own evidence.** See below; this is the
    condition most easily missed, because nothing announces it.
 
-### The export is a ring, and a long window can outlive it
+### The Export Is a Ring, and a Long Window Can Outlive It
 
 The shadow export is written through the bounded writer in
 `eye_for_an_eye/autonomy/bounded_jsonl.py`, which exists to stop evidence
@@ -249,7 +249,7 @@ That is correct behaviour for a log and a hazard for a validation window. An
 export row carries feature contributions, gates, uncertainty and cost detail, so
 it runs to a few kilobytes; the byte ceiling is reached well before the record
 ceiling, at roughly ten thousand rows. A window long enough to see 3,000
-distinct sources will often produce more than that — and when it does, the
+distinct sources will often produce more than that, and when it does, the
 earliest part of the window is deleted, the analysis counts what survived, and
 every number it prints is arithmetically perfect and about the wrong period.
 
@@ -271,7 +271,7 @@ A window whose evidence is known to be incomplete is a FAIL and not an
 INSUFFICIENT_EVIDENCE. The two describe different remedies: a short window is
 answered by collecting more, and a window that lost part of itself cannot be.
 
-## What counts as a result
+## What Counts as a Result
 
 Four outcomes, and three of them are not a pass.
 
@@ -283,7 +283,7 @@ and the most likely outcome of a first window. It is not a pass with a caveat.
 
 * the 95% upper bound on false blocks per 1000 benign sources exceeds 1.0;
 * the 95% lower bound on block precision falls below 0.95;
-* the decision is degenerate — everything blocked, or nothing blocked. An
+* the decision is degenerate: everything blocked, or nothing blocked. An
   allow-all system scores a perfect false-block rate and has protected nobody;
   `non_degenerate_gate` fails it and this plan does too;
 * a component was DEGRADED or UNAVAILABLE for a material part of the window and
@@ -300,13 +300,13 @@ about another site, or about traffic that did not arrive.
 labels were derived from system output, or the review was not blinded. There is
 no partial credit here; the evidence is discarded and the window is rerun.
 
-### On pre-declaring a convenient threshold
+### On Pre-declaring a Convenient Threshold
 
 The thresholds above are not new. They are in `ReleaseThresholds` and have been
 since the decision authority was written, with their own docstring saying they
 are operator policy and that none of them is a measured value. What this plan
 adds is the **sample size required to decide them**, and that number is derived
-from the thresholds rather than chosen to be reachable — which is why it is
+from the thresholds rather than chosen to be reachable, which is why it is
 three thousand and not five hundred.
 
 If 3,000 benign sources cannot be reached at a deployment, the honest outcome
@@ -314,7 +314,7 @@ is INSUFFICIENT_EVIDENCE and autonomous blocking stays off there. Lowering the
 requirement so a particular site can pass would make the bar a function of the
 site, which is the opposite of a bar.
 
-## The analysis
+## The Analysis
 
 Given the labelled rows:
 
@@ -338,7 +338,7 @@ Given the labelled rows:
    is, so the report carries the prevalence sweep rather than a single number
    (`prevalence_sweep`, §168).
 
-### The commands that do it
+### The Commands That Do It
 
 The analysis is committed code, run from the command line, against files whose
 hashes are written down first. A result that exists only in somebody's notebook
@@ -363,12 +363,12 @@ enforcer, which cost profile each configured site actually resolves to, and
 whether the evidence directories are writable. A configured site that resolves
 to the deployment default is warned about: that is correct behaviour for a site
 nobody priced, and indistinguishable from a site somebody meant to price and did
-not — and it would put that site's decisions under the wrong heading in the
+not, and it would put that site's decisions under the wrong heading in the
 per-profile breakdown below without anything saying so.
 
 `crosscheck` joins the decision journal and the shadow export by `decision_id`
 and reports where they describe the same decision differently. Both are written
-from one outcome in one call, so they cannot disagree — which is the reason to
+from one outcome in one call, so they cannot disagree, which is the reason to
 check, because that was equally true of every component the P15.5 finding was
 about. Run it periodically during the window with `--sample`; a sampled result
 says it was one.
@@ -379,7 +379,7 @@ collecting when it looks right. `review` produces the blinded pack a person
 labels from. `freeze` hashes the files and records the build, the configuration
 and the counts at that instant. `result` re-hashes everything the freeze named
 before it counts anything, so a number computed from evidence that changed after
-it was frozen fails the window instead of appearing beside a PASS — and it exits
+it was frozen fails the window instead of appearing beside a PASS, and it exits
 non-zero on anything that is not a PASS, so a script cannot walk past
 INSUFFICIENT_EVIDENCE by not reading the text.
 
@@ -387,7 +387,7 @@ INSUFFICIENT_EVIDENCE by not reading the text.
 machine that wrote it; it re-bases the manifest's paths without changing what is
 being checked.
 
-### Assumptions, stated because the interval depends on them
+### Assumptions, Stated Because the Interval Depends on Them
 
 The intervals above assume sources are independent, that a reviewer's label is
 correct, and that behaviour is stationary across the window. All three are
@@ -397,7 +397,7 @@ most; traffic is not stationary across a month. Each of these makes the true
 uncertainty wider than the stated interval, none makes it narrower, and the
 report must say so rather than presenting the arithmetic as the whole answer.
 
-## The review
+## The Review
 
 The evidence pack is:
 
@@ -415,22 +415,22 @@ analysis from the rows. A review that only reads the summary is not one.
 Nothing in the pack should require trusting the runtime's own arithmetic: every
 number in it is recomputable from the exported rows.
 
-## What this can never establish
+## What This Can Never Establish
 
 * That the system is safe on a deployment it has not run on.
 * That it will stay within the bound after the traffic changes, the model
-  changes, or a new site is added — `docs/MODEL_GOVERNANCE.md` governs those,
+  changes, or a new site is added: `docs/MODEL_GOVERNANCE.md` governs those,
   and each is a new window.
 * That the reviewer's labels are right. They are the best available ground
   truth and they are not truth.
 * That blocking is a good idea at this deployment. That remains a judgement
   about what a false block costs there, and it stays with the operator.
 
-## See also
+## See Also
 
-* [Shadow mode](SHADOW_MODE.md) — how to run it
-* [Backpressure](BACKPRESSURE.md) — turning the export on, and what it costs
-* [Autonomous mode](AUTONOMOUS_MODE.md) — the readiness gate and the kill switch
-* [Model evaluation](MODEL_EVALUATION.md) — the metrics and why accuracy is not one
-* [Generalization policy](GENERALIZATION_POLICY.md) — what a synthetic result does not say
-* [Cost-sensitive policy](COST_SENSITIVE_POLICY.md) — why the cutoff is not 0.5
+* [Shadow mode](SHADOW_MODE.md): how to run it
+* [Backpressure](BACKPRESSURE.md): turning the export on, and what it costs
+* [Autonomous mode](AUTONOMOUS_MODE.md): the readiness gate and the kill switch
+* [Model evaluation](MODEL_EVALUATION.md): the metrics and why accuracy is not one
+* [Generalization policy](GENERALIZATION_POLICY.md): what a synthetic result does not say
+* [Cost-sensitive policy](COST_SENSITIVE_POLICY.md): why the cutoff is not 0.5

@@ -1,4 +1,4 @@
-# Backup, restore and data removal
+# Backup, Restore and Data Removal
 
 This page shows how to copy the event database, how to put a copy back, and how
 to delete old data. Read it before you change a config, upgrade, or hand the
@@ -8,7 +8,7 @@ The data lives in SQLite. SQLite is a small database kept in one file. WAL is
 its write-ahead log: a second file that holds new writes before they move into
 the main file.
 
-## Make a backup
+## Make a Backup
 
 The tool uses the SQLite online backup API. It makes a copy that is consistent,
 and it includes the WAL. The backup command only reads the source, so a live
@@ -59,7 +59,7 @@ To check the copy offline, compare the row count and the event IDs, and run
 and a checksum check. Point the service at the restored config only after these
 checks pass. Keep the old database until you accept the result.
 
-## Delete old data
+## Delete Old Data
 
 Retention limits in the starter config:
 
@@ -82,7 +82,7 @@ to be stopped. It then does one bounded maintenance pass against the configured
 retention and row budget. There is no arbitrary SQL and no delete-all. If the
 backlog is large, you must run several passes on purpose.
 
-## What prune does not do
+## What Prune Does Not Do
 
 Prune does not promise that the bytes are physically gone. Data can stay in the
 SQLite freelist, in filesystem snapshots and in your backups.
@@ -92,7 +92,7 @@ deployment (database, WAL, SHM, status, log, backups) and delete them with your
 operating system tools, following your own policy. The tool never deletes other
 directories on its own.
 
-## See also
+## See Also
 
 * [Storage](STORAGE.md)
 * [Docker/Compose lab](DOCKER.md)
