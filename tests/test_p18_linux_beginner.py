@@ -1066,5 +1066,59 @@ class TestContinuousIntegrationExpectsTheSafeProfilesRealAnswer(unittest.TestCas
         self.assertIn('HEALTHY', step)
 
 
+class TestContinuousIntegrationRunsPytestSoTheRepositoryIsImportable(unittest.TestCase):
+    """Why every CI pytest invocation must be `python -m pytest`.
+
+    Python prepends the *script's* own directory to `sys.path` when it runs a
+    script, and the *working* directory when it runs `-m`. A console-script entry
+    point such as `<venv>/bin/pytest` is a script living in the environment, so
+    under it the repository root is not on `sys.path`.
+
+    This suite imports repository-local top-level modules that exist nowhere else:
+    `dataset`, `training`, `benchmarks`, and `tests.<module>` for fixtures shared
+    between test files. None of them is packaged - `pyproject.toml` installs
+    `eye_for_an_eye*` and nothing more - so under the console script they are
+    unimportable and collection fails wholesale. `eye_for_an_eye` itself is
+    installed, which is why such a failure names those modules and not the
+    package, and why it looks like many separate failures rather than one.
+
+    The first public rc2 commit failed this way, with 32 collection errors. The
+    fix is one word in the invocation; this test is what keeps the word there.
+    """
+
+    def workflows(self):
+        found = sorted((ROOT / '.github' / 'workflows').glob('*.yml'))
+        self.assertTrue(found, 'no workflow files were found to check')
+        return found
+
+    def test_no_workflow_runs_the_pytest_console_script(self):
+        for path in self.workflows():
+            for number, line in enumerate(path.read_text(encoding='utf-8').splitlines(), 1):
+                if 'pytest' not in line or line.lstrip().startswith('#'):
+                    continue
+                with self.subTest(file=path.name, line=number):
+                    self.assertIn('-m pytest', line,
+                                  f'{path.name}:{number} runs pytest without `-m`, so '
+                                  f'the repository root would not be on sys.path and '
+                                  f'`dataset`, `training`, `benchmarks` and '
+                                  f'`tests.<module>` would not import')
+
+    def test_the_suite_really_does_import_those_repository_local_modules(self):
+        """The reason the rule exists, asserted rather than assumed.
+
+        If this stopped being true the rule above would be cargo cult, so it is
+        checked: at least one test module imports each of these by name.
+        """
+        bodies = {path: path.read_text(encoding='utf-8')
+                  for path in sorted((ROOT / 'tests').glob('test_*.py'))}
+        for module in ('dataset', 'training', 'benchmarks', 'tests.'):
+            with self.subTest(module=module):
+                importers = [path.name for path, body in bodies.items()
+                             if re.search(rf'(?m)^\s*(from|import)\s+{re.escape(module)}', body)]
+                self.assertTrue(importers,
+                                f'nothing imports {module!r} any more; the sys.path '
+                                f'rule above may no longer be needed')
+
+
 if __name__ == '__main__':
     unittest.main()

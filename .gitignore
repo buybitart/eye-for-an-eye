@@ -101,3 +101,10 @@ datasets/unlabeled/
 # (`sudo nft list ruleset > after.txt`). Harmless on a throwaway runner; on a
 # working tree it is a stray file that a careless `git add -A` will commit.
 /after.txt
+
+# The two reports the python-linux job writes into the checkout root: the pytest
+# JUnit XML and the pip-audit JSON. `release-artifacts/` above is ignored for the
+# same reason. Throwaway on a runner; on a working tree they are stray files that
+# a careless `git add -A` will commit.
+/validation-tests.xml
+/dependency-audit.json

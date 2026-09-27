@@ -15,7 +15,18 @@ jobs:
       - run: uv sync --frozen --extra capture --extra enrichment --extra test --extra lint --extra quality --extra ml --extra ml-training
       - run: uv run --frozen ruff check eye_for_an_eye tests benchmarks scripts training dataset --no-cache
       - run: uv run --frozen mypy eye_for_an_eye
-      - run: uv run --frozen pytest -q -m "not linux_lab" --junitxml=validation-tests.xml
+      # `python -m pytest`, not the `pytest` console script. The two differ in one
+      # way that matters here: Python prepends the *script's* directory to
+      # sys.path for a script, and the *working* directory for `-m`. A console
+      # script lives in the environment's bin/, so under it the repository root is
+      # not importable - and this suite imports repository-local top-level modules
+      # (`dataset`, `training`, `benchmarks`, and `tests.<module>` for shared
+      # fixtures) that only exist there. `eye_for_an_eye` itself is installed by
+      # `uv sync`, so the console script failed on exactly the modules that are not
+      # packaged, which is why the error list named those four and not the package.
+      # Every other step here already uses `python` or `python -m`; this line was
+      # the outlier.
+      - run: uv run --frozen python -m pytest -q -m "not linux_lab" --junitxml=validation-tests.xml
       - run: uv run --frozen python scripts/security_scan.py
       - run: uv run --frozen pip-audit -r requirements/runtime.txt --disable-pip --no-deps -f json -o dependency-audit.json
       - run: uv run --frozen python scripts/verify_systemd.py
