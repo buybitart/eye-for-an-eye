@@ -103,7 +103,7 @@ limitation is reported.
 
 ## Versions
 
-`version` reports the application version 0.8.0rc1, event schema 3, catalogue 2
+`version` reports the application version 0.8.0rc2, event schema 3, catalogue 2
 and database schema 2.
 
 For the operator's own p0f and MMDB files, the data version is unknown by

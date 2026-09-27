@@ -28,7 +28,6 @@ instead, which is the tested half.
 unexpected internal failure (the traceback goes to the log, not the screen).
 """
 import argparse
-import json
 import os
 from pathlib import Path
 import platform
@@ -281,7 +280,7 @@ def main(argv=None):
         report.say(f'  It would install into: {target}')
         report.say(f'  It would write this configuration: {config_path}')
         report.say(f'  Mode it would choose: Safe Monitoring ({SAFE_PROFILE})')
-        report.say(f'  Automatic blocking: OFF')
+        report.say('  Automatic blocking: OFF')
         report.save()
         return 0
 

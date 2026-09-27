@@ -324,7 +324,7 @@ def render_preflight(document):
     enforcement = document['enforcement']
     mapping = document['profile_mapping']
     lines = ['SHADOW PREFLIGHT', '',
-             f'Mode (from the constructed pipeline, not the file):',
+             'Mode (from the constructed pipeline, not the file):',
              f'  {runtime["mode"]}  shadow={runtime["shadow"]}  '
              f'enabled={runtime["enabled"]}', '',
              'Components:']

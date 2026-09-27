@@ -47,7 +47,6 @@ throughout P15.4, which is the precise failure it exists to catch. What it
 asserts instead is that nothing was enforced: `record.enforced` is `False`,
 because an authority is not a thing that can enforce.
 """
-from pathlib import Path
 import json
 import math
 

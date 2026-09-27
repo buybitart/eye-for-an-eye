@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "eye-for-an-eye"
-version = "0.8.0rc1"
+version = "0.8.0rc2"
 description = "Bounded defensive network observation and finite deception profiles"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"

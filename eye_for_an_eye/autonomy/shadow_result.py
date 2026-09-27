@@ -39,7 +39,6 @@ interval printed, none makes it narrower.
 """
 from dataclasses import dataclass
 import math
-from pathlib import Path
 
 from . import shadow_evidence as ev
 from .evaluation import ReleaseThresholds

@@ -1,6 +1,6 @@
 # Release notes
 
-## Eye for an Eye 0.8.0 RC1 — Public Beta
+## Eye for an Eye 0.8.0 RC2 — Public Beta
 
 **Mark this release as a pre-release.** The version is a release candidate and
 the posture is public beta. It is not stable, and the reason is in
@@ -59,12 +59,54 @@ healthy, and the readiness checks pass. It is Linux only.
 
 ---
 
-### New in this release
+### What changed since 0.8.0 RC1
 
-* A Linux release archive, `eye-for-an-eye-0.8.0rc1-linux-x86_64.tar.gz`, usable
+0.8.0 RC1 was the first push to a public repository, and publishing it ran this
+project's own continuous integration in public for the first time. Two jobs went
+red. Nothing they found was a defect in detection, in the decision path, or in any
+safety control; all of it was source hygiene and one stale assertion in the
+workflow itself. RC2 is that work, and nothing else.
+
+RC1 remains published, and its failed CI run remains visible. It is the evidence
+that these problems were real, and removing it would only make the record less
+useful.
+
+**What was wrong, exactly:**
+
+* **The `install-smoke` job asserted the opposite of the correct answer.** It ran
+  `eye-for-an-eye doctor` as a plain command, which asserts exit 0. `doctor` exits
+  7 when any component is degraded, and on a fresh install of the safe profile
+  that is the required answer: no calibrator, no access log and no web secret are
+  configured yet, because the installer does not invent deployment-specific
+  artifacts. The job's expectation was written when the installed profile was
+  `website`, which has no `[autonomy]` section and so had nothing to be degraded
+  about; when the installed default became `production-shadow`, the expectation
+  was not updated with it. The job now asserts exit 7 *and* which components are
+  degraded, so a real regression elsewhere still fails it.
+* **22 lint findings**, all unused imports and two redundant f-string prefixes,
+  plus one duplicate test method and one genuine fragility in a benchmark, where a
+  timed callable closed over a variable the enclosing function later deleted.
+* **One missing type annotation** that `mypy` reports. It had never been seen
+  because the lint step runs first and stopped the job before `mypy` ran.
+* **Line endings.** 40 files were stored in Git with LF, as `.gitattributes`
+  requires, while the release archives carried CRLF for the same files, because
+  the archives were built from a working copy that had been checked out on
+  Windows. Two people on the same version received different bytes. The release
+  root, the repository and a fresh clone are now byte-identical.
+
+**What did not change:** no detection logic, no threshold, no calibration, no
+model, no policy guard, no enforcement path, no configuration default, and no
+validation claim. Real-world validation of autonomous blocking is still pending
+and automatic blocking is still off after installation.
+
+---
+
+### New in the 0.8.0 release candidates
+
+* A Linux release archive, `eye-for-an-eye-0.8.0rc2-linux-x86_64.tar.gz`, usable
   without the development repository, with `START_HERE.md` and `install.sh` at the
   top of it.
-* A Debian package, `eye-for-an-eye_0.8.0~rc1-1_all.deb`, installing under `/usr`
+* A Debian package, `eye-for-an-eye_0.8.0~rc2-1_all.deb`, installing under `/usr`
   with the systemd units present and disabled and no configuration under `/etc`.
 * `SHA256SUMS` for every artifact, and a CycloneDX 1.6 SBOM.
 * The installer records what it installed, so `status`, `check-install` and
@@ -110,8 +152,8 @@ database or decision journal.
 
 ```sh
 sha256sum -c SHA256SUMS
-tar xzf eye-for-an-eye-0.8.0rc1-linux-x86_64.tar.gz
-cd eye-for-an-eye-0.8.0rc1
+tar xzf eye-for-an-eye-0.8.0rc2-linux-x86_64.tar.gz
+cd eye-for-an-eye-0.8.0rc2
 sh install.sh
 eye-for-an-eye setup
 eye-for-an-eye start
@@ -120,7 +162,7 @@ eye-for-an-eye start
 Ubuntu 24.04 can use the package instead:
 
 ```sh
-sudo apt install ./eye-for-an-eye_0.8.0~rc1-1_all.deb
+sudo apt install ./eye-for-an-eye_0.8.0~rc2-1_all.deb
 ```
 
 Full instructions: [INSTALL_LINUX.md](INSTALL_LINUX.md). First steps:

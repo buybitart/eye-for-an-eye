@@ -28,7 +28,6 @@ import json
 import os
 from pathlib import Path
 import re
-import shutil
 import stat
 import subprocess
 import sys
@@ -964,6 +963,107 @@ class TestTheSystemdUnitsStayHardened(unittest.TestCase):
                        ROOT / 'scripts' / 'install_windows.py'):
             self.assertNotIn('systemctl enable',
                              script.read_text(encoding='utf-8'))
+
+
+def install_smoke_job():
+    """The `install-smoke` job's text, read out of the workflow file.
+
+    Read textually rather than with a YAML parser, because PyYAML is not a
+    declared dependency of this project and a test that needed it would fail in a
+    clean clone -- the environment these tests exist to speak for.
+    """
+    body = (ROOT / '.github' / 'workflows' / 'ci.yml').read_text(encoding='utf-8')
+    lines = body.splitlines()
+    start = next(i for i, line in enumerate(lines) if line == '  install-smoke:')
+    end = next((i for i in range(start + 1, len(lines))
+                if re.match(r'^  \S', lines[i])), len(lines))
+    return '\n'.join(lines[start:end])
+
+
+def install_smoke_step(fragment):
+    """One step of that job, chosen by a fragment of the command it runs.
+
+    Scoped to a single step on purpose. The job legitimately contains
+    `sudo nft list ruleset ... || true`, because a runner without nftables must
+    not fail the firewall check, and a test that scanned the whole job for `||
+    true` would read that as an evasion.
+    """
+    chunks = install_smoke_job().split('      - name: ')
+    matching = [chunk for chunk in chunks if fragment in chunk]
+    if len(matching) != 1:
+        raise AssertionError(f'{len(matching)} install-smoke steps mention '
+                             f'{fragment!r}; expected exactly one')
+    return matching[0]
+
+
+def commands_of(step):
+    """A step with its YAML comments removed, so prose is not read as script.
+
+    The doctor step's comment explains what a `|| true` would have hidden. A
+    check for that string has to look at what the runner executes, not at the
+    paragraph saying why it is absent.
+    """
+    return '\n'.join(line for line in step.splitlines()
+                     if not line.lstrip().startswith('#'))
+
+
+class TestContinuousIntegrationExpectsTheSafeProfilesRealAnswer(unittest.TestCase):
+    """Why the first public CI run failed, and what stops it happening again.
+
+    `doctor` exits 7 when any component is DEGRADED. The `install-smoke` job ran
+    `eye-for-an-eye doctor` as a bare command under `set -e`, which asserts exit
+    0, and that held only while the profile the installer writes was `website`:
+    that profile has no `[autonomy]` section, so there was nothing to be degraded
+    about. P18 changed the installed default to `production-shadow`, which runs
+    the decision authority and therefore reports a missing calibrator on a fresh
+    machine. From that moment the job asserted the opposite of the correct
+    answer, and the first public push proved it.
+
+    Two facts had to be read together to see it: which profile the installer
+    writes, and what the CI step expects of it. Nothing connected them, so
+    nothing failed until GitHub ran the job. These tests are that connection, in
+    one place, so the next person to change either half hears it from a test run
+    instead of from a public red build.
+    """
+
+    def test_the_installer_writes_a_profile_whose_fresh_doctor_is_degraded(self):
+        self.assertIn('PROFILE="production-shadow"',
+                      INSTALLER.read_text(encoding='utf-8'),
+                      'the installed profile changed; the CI expectation below '
+                      'has to be rechecked against it')
+        template = (ROOT / 'eye_for_an_eye' / 'templates'
+                    / 'production-shadow.toml').read_text(encoding='utf-8')
+        self.assertIn('[autonomy]', template,
+                      'the safe profile no longer constructs the authority, so a '
+                      'fresh doctor may no longer be degraded')
+        self.assertRegex(template, r'(?m)^\s*calibrator_path\s*=\s*""\s*$',
+                         'the profile no longer ships an empty calibrator path, so '
+                         'a fresh doctor may no longer report it as degraded')
+
+    def test_the_install_smoke_job_expects_exit_seven_and_does_not_swallow_it(self):
+        commands = commands_of(install_smoke_step('eye-for-an-eye doctor'))
+        self.assertIn('-eq 7', commands,
+                      'install-smoke does not assert the exit code a fresh '
+                      'install of the safe profile actually produces')
+        for evasion in ('|| true', '|| :', 'continue-on-error'):
+            with self.subTest(evasion=evasion):
+                self.assertNotIn(evasion, commands,
+                                 'the doctor step tolerates a failure instead of '
+                                 'asserting the outcome')
+
+    def test_the_job_still_asserts_the_things_that_must_not_degrade(self):
+        """Accepting exit 7 must not become accepting anything.
+
+        A degraded database, configuration, security policy or config permission
+        on a fresh install would be a real defect, so the step names each one it
+        requires to be HEALTHY and exit 7 cannot become a blanket pass.
+        """
+        step = install_smoke_step('eye-for-an-eye doctor')
+        for component in ('configuration', 'database', 'security_policy',
+                          'config_permissions', 'decision_pipeline'):
+            with self.subTest(component=component):
+                self.assertIn(f"'{component}'", step)
+        self.assertIn('HEALTHY', step)
 
 
 if __name__ == '__main__':

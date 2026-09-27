@@ -82,7 +82,15 @@ def _one(case, directory, *, count, interval_ms):
     analysis.start()
     try:
         before = resources()
-        timing = measure(count, lambda i: list(analysis.process(event(i, SOURCES))))
+        # `analysis` is bound as a default argument rather than closed over,
+        # because `del analysis` below unbinds the name in this scope. The
+        # callable works today only because `measure` calls it eagerly inside
+        # its own loop; a `measure` that stored it and called it later would
+        # raise `NameError`. Binding it here at definition time - where
+        # `analysis` is certainly live - makes the callable self-contained and
+        # removes that unwritten dependency.
+        timing = measure(count,
+                         lambda i, analysis=analysis: list(analysis.process(event(i, SOURCES))))
         pipeline = analysis.decisions.autonomy
         row = {
             'case': case,

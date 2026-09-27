@@ -96,3 +96,8 @@ datasets/unlabeled/
 # The curated public release root, rebuilt by scripts/build_prod.py.
 # It is a derived artifact of this tree and is not tracked here.
 /prod/
+
+# Scratch left in the checkout root by the install-smoke job's firewall check
+# (`sudo nft list ruleset > after.txt`). Harmless on a throwaway runner; on a
+# working tree it is a stray file that a careless `git add -A` will commit.
+/after.txt

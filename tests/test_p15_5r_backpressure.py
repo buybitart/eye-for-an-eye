@@ -50,7 +50,6 @@ import unittest
 from eye_for_an_eye.autonomy.bounded_jsonl import BoundedJsonlWriter, WriterLimits
 from eye_for_an_eye.autonomy.journal import DecisionJournal
 from eye_for_an_eye.autonomy.shadow_export import ShadowExport
-from eye_for_an_eye.event_types import EventType
 
 from tests.test_p15_5r_journal import FakeOutcome
 

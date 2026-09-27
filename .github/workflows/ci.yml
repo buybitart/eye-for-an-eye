@@ -20,7 +20,7 @@ jobs:
       - run: uv run --frozen pip-audit -r requirements/runtime.txt --disable-pip --no-deps -f json -o dependency-audit.json
       - run: uv run --frozen python scripts/verify_systemd.py
       - run: uv run --frozen python scripts/build_release.py --output release-artifacts
-      - run: uv run --frozen python scripts/package_smoke.py release-artifacts/eye_for_an_eye-0.8.0rc1-py3-none-any.whl
+      - run: uv run --frozen python scripts/package_smoke.py release-artifacts/eye_for_an_eye-0.8.0rc2-py3-none-any.whl
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()
         with:
@@ -56,7 +56,21 @@ jobs:
           test -x "$HOME/.local/bin/eye-for-an-eye"
           test -f "$HOME/data/eye-for-an-eye.toml"
           test -f "$HOME/data/events.sqlite3"
-      - name: The installed program works and doctor is clean
+      - name: The installed program works, and doctor names exactly the fresh-install gaps
+        # `doctor` exits 7 when any component is DEGRADED, and on a fresh install
+        # of the safe profile that is the required answer rather than a fault: no
+        # calibrator, no access log and no web secret are configured yet, because
+        # the installer does not invent deployment-specific artifacts. This step
+        # asserted exit 0, which held only while the installed default profile was
+        # `website` - a profile with no [autonomy] section, so nothing could be
+        # degraded. P18 changed the default to `production-shadow` and this step was
+        # not updated with it.
+        #
+        # The fix asserts the real contract rather than tolerating a non-zero exit:
+        # the code must be exactly 7, and the degraded set exactly those three gaps.
+        # A regression that degrades anything else - the database, the configuration,
+        # the security policy, file permissions - still fails the job, which a
+        # `|| true` would have hidden.
         shell: bash
         run: |
           set -euo pipefail
@@ -64,7 +78,31 @@ jobs:
           cd "$HOME/data"
           eye-for-an-eye --version
           eye-for-an-eye config validate --config eye-for-an-eye.toml
-          eye-for-an-eye doctor --config eye-for-an-eye.toml
+          rendered=0
+          eye-for-an-eye doctor --config eye-for-an-eye.toml || rendered=$?
+          test "$rendered" -eq 7
+          structured=0
+          eye-for-an-eye doctor --json --config eye-for-an-eye.toml > doctor.json || structured=$?
+          test "$structured" -eq 7
+          python - <<'PY'
+          import json
+          report = json.load(open('doctor.json'))
+          degraded = sorted(name for name, part in report.items()
+                            if isinstance(part, dict) and part.get('status') == 'DEGRADED')
+          assert degraded == ['autonomy', 'web'], degraded
+          checks = {name: part['status']
+                    for name, part in report['autonomy']['checks'].items()}
+          assert [n for n, s in checks.items() if s == 'DEGRADED'] == ['calibrator'], checks
+          web = {name: part['status'] for name, part in report['web_detail'].items()
+                 if isinstance(part, dict) and 'status' in part and name != 'web'}
+          assert [n for n, s in web.items() if s == 'DEGRADED'] == ['secret'], web
+          for name in ('configuration', 'database', 'decision_pipeline',
+                       'security_policy', 'config_permissions', 'capabilities',
+                       'storage_writable', 'disk', 'port_availability'):
+              assert report[name]['status'] == 'HEALTHY', (name, report[name])
+          print('doctor: exit 7, degraded exactly', degraded,
+                '- calibrator, access log and web secret are unset on a fresh install')
+          PY
           eye-for-an-eye model status --config eye-for-an-eye.toml
           eye-for-an-eye demo > /dev/null
       - name: Defaults are safe
@@ -115,7 +153,7 @@ jobs:
           docker compose -p e4e-ci -f docker-compose.lab.yml --profile test run --rm client
           docker compose -p e4e-ci -f docker-compose.lab.yml exec -T honeypot eye-for-an-eye storage info --config /etc/eye-for-an-eye/config.toml --json
           docker compose -p e4e-ci -f docker-compose.lab.yml exec -T honeypot python -c 'import os; assert os.geteuid()==10001; assert int(next(x.split()[1] for x in open("/proc/self/status") if x.startswith("CapEff:")),16)==0'
-          docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --tmpfs /tmp:size=32m eye-for-an-eye:0.8.0-rc.1-lab demo --json
+          docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --tmpfs /tmp:size=32m eye-for-an-eye:0.8.0-rc.2-lab demo --json
   dataset:
     # Regeneration is not needed on every commit: the normal job already validates the committed
     # dataset, its manifests and its split through the same code paths.

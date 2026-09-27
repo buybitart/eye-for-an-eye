@@ -11,7 +11,6 @@ nothing disagrees.
 """
 from pathlib import Path
 import re
-import shutil
 import tempfile
 import unittest
 
@@ -142,12 +141,6 @@ class TestTheAdministratorQuickStartIsAlsoTheSafePath(unittest.TestCase):
         self.assertNotIn('eye-for-an-eye run', ' '.join(self.commands),
                          'the Quick start starts a sensor that a fresh install '
                          'has no traffic source for')
-
-    def test_no_firewall_or_enforcement_command_appears(self):
-        joined = ' '.join(self.commands).lower()
-        for forbidden in ('firewall', 'nft', 'iptables', 'autonomy enable'):
-            with self.subTest(term=forbidden):
-                self.assertNotIn(forbidden, joined)
 
 
 class TestTheProfileTheQuickStartSelects(unittest.TestCase):

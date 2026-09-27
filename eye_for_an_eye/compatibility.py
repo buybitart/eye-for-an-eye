@@ -151,7 +151,13 @@ class SchemaContract:
                 'current': current, 'servable': list(servable)}
 
 
-_CACHE = {}
+#: Contract name -> the `(current, servable)` pair its resolver produced, cached
+#: because a resolver imports a module to read one constant. Annotated to the
+#: same precision as `SchemaContract.resolver` above and no further: the value is
+#: provably a 2-tuple, and the resolver's own annotation does not establish what
+#: is inside it, so stating element types here would assert more than the code
+#: does.
+_CACHE: dict[str, tuple] = {}
 
 
 def _feature_schema():

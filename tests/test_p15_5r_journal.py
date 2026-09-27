@@ -393,7 +393,6 @@ class TestTheEntryExplainsItselfWithoutTheExport(JournalCase):
         Guessing there would put a claim in the forensic record that the
         enforcer had not yet had a chance to contradict.
         """
-        from eye_for_an_eye.autonomy.pipeline import AutonomousDecisionPipeline
         pipeline = _pipeline_that_will_enforce()
         self.assertEqual(pipeline._withheld_before_attempt(_Blocked()), '')
 

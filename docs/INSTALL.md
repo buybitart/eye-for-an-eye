@@ -43,7 +43,7 @@ sh scripts/install.sh --dry-run                    # show every step, change not
 sh scripts/install.sh --prefix ~/apps/e4e          # choose where the program goes
 sh scripts/install.sh --data-dir ~/e4e-data        # choose where the data goes
 sh scripts/install.sh --profile honeypot           # a different first profile
-sh scripts/install.sh --wheel dist/eye_for_an_eye-0.8.0rc1-py3-none-any.whl
+sh scripts/install.sh --wheel dist/eye_for_an_eye-0.8.0rc2-py3-none-any.whl
 sudo sh scripts/install.sh --system                # /opt and /var/lib
 ```
 
@@ -115,7 +115,7 @@ server:
 ```sh
 python -m pip install --no-index --find-links wheelhouse \
     --require-hashes -r requirements/runtime.txt
-sh scripts/install.sh --wheel ./eye_for_an_eye-0.8.0rc1-py3-none-any.whl
+sh scripts/install.sh --wheel ./eye_for_an_eye-0.8.0rc2-py3-none-any.whl
 ```
 
 Notes:

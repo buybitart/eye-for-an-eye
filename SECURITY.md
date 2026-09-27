@@ -57,7 +57,7 @@ a report.**
 * The model and dataset boundary.
 * Supply chain.
 
-The current review target is 0.8.0rc1. There is no approved public support or
+The current review target is 0.8.0rc2. There is no approved public support or
 security-backport policy. Older P0–P7 versions are not declared supported
 releases.
 

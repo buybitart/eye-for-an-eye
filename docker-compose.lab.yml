@@ -2,7 +2,7 @@
 services:
   honeypot:
     build: .
-    image: eye-for-an-eye:0.8.0-rc.1-lab
+    image: eye-for-an-eye:0.8.0-rc.2-lab
     user: "10001:10000"
     read_only: true
     cap_drop: [ALL]
@@ -26,7 +26,7 @@ services:
       nofile: {soft: 1024, hard: 1024}
     stop_grace_period: 12s
   client:
-    image: eye-for-an-eye:0.8.0-rc.1-lab
+    image: eye-for-an-eye:0.8.0-rc.2-lab
     profiles: [test]
     user: "10001:10000"
     read_only: true

@@ -1,5 +1,59 @@
 # Changelog
 
+## 0.8.0rc2 — Public Beta
+
+Pushing 0.8.0rc1 to a public repository ran this project's continuous integration
+in public for the first time, and two jobs went red. This release is that repair
+and nothing else. No detection logic, threshold, calibration, model, policy guard,
+enforcement path or configuration default changed, and no validation claim moved:
+real-world validation of autonomous blocking is still pending and automatic
+blocking is still off after installation.
+
+0.8.0rc1 stays published and its failed CI run stays visible. It is the evidence
+that these were real problems.
+
+### Fixed
+
+* **`install-smoke` asserted the opposite of the correct answer.** The job ran
+  `eye-for-an-eye doctor` as a plain command under `set -e`, which asserts exit 0.
+  `doctor` exits 7 when any component is degraded, and on a fresh install of the
+  safe profile that is the required answer rather than a fault: no calibrator, no
+  access log and no web secret are configured, because the installer does not
+  invent deployment-specific artifacts. The expectation held only while the
+  installed profile was `website`, which has no `[autonomy]` section and so
+  nothing to degrade; it was not updated when the installed default became
+  `production-shadow`. The job now asserts exit 7 **and** that the degraded set is
+  exactly those three gaps, so a regression that degrades the database, the
+  configuration, the security policy or file permissions still fails it. A test
+  now ties the installed profile and the CI expectation together, because reading
+  either alone could not have revealed the conflict.
+* **The release archives and the repository shipped different bytes.** 40 files
+  were stored in Git with LF, as `.gitattributes` requires, while every archive
+  carried CRLF for those same files -- three systemd units, three configuration
+  templates, seven runtime modules and five fixtures among them -- because the
+  archives were built from a working copy checked out on Windows. Two people
+  installing the same version received different bytes, and the SHA-256 of a
+  source file in the Debian package did not match the same file in the repository.
+  The release root, the repository and a fresh clone now agree.
+* **The clean-clone gate had never cloned.** It was a copy of the release root
+  with `git init` run inside it, so it measured the tree it was copied from and
+  could not see a difference introduced by checkout. It is a real `git clone` now.
+* **22 lint findings**: unused imports and two redundant f-string prefixes. One of
+  them was not safe to remove mechanically -- `MAX_ENTRY_BYTES` is re-exported
+  from `autonomy.journal`, which the journal's own tests import it from -- and it
+  is restored with an explicit marker saying so.
+* **A duplicate test method**, defined twice in one class with identical bodies, so
+  only the second ever ran.
+* **A benchmark's timed callable** closed over a variable the enclosing function
+  later deleted. It worked only because the timing helper calls it immediately; it
+  is now self-contained.
+* **A missing type annotation** that `mypy` reports. Nobody had seen it because
+  the lint step runs first and stopped the job before `mypy` ran.
+* **A version bump could reach some files and not others.** The version is written
+  in three spellings for three packaging systems; a test now requires them to
+  agree, so a wheel named rc2 cannot contain a command that prints rc1, and the
+  container job cannot build one image tag and run another.
+
 ## 0.8.0rc1 — Public Beta
 
 The first release meant to be downloaded and installed by somebody who did not

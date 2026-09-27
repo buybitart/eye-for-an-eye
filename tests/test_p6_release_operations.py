@@ -324,3 +324,38 @@ def test_corrupt_status_has_machine_error_without_traceback(tmp_path, state):
     assert code == 1 and not out
     assert json.loads(err)['schema_version'] == 1
     assert 'Traceback' not in err
+
+
+def test_one_version_in_three_spellings_stays_one_version():
+    """A release version is written several times for three packaging systems.
+
+    `eye_for_an_eye/__init__.py` is what every builder parses and what
+    `--version` prints. `pyproject.toml` is what the wheel and sdist carry, and it
+    is static, so nothing makes the two agree by construction. The container label
+    and the lab image tag spell the same version the way an OCI tag allows.
+
+    A bump that reaches some of them produces artifacts that disagree with
+    themselves: a wheel named rc2 whose command prints rc1, or a `container-lab`
+    job that builds one image tag and runs another. `package_smoke` installs the
+    wheel and prints its version but never compares the two, so nothing else
+    catches it.
+    """
+    root = Path(__file__).resolve().parents[1]
+    from eye_for_an_eye import __version__
+
+    declared = [line for line in (root/'pyproject.toml').read_text(encoding='utf-8').splitlines()
+                if line.startswith('version = ')]
+    assert declared == [f'version = "{__version__}"'], declared
+
+    # 0.8.0rc2 -> 0.8.0-rc.2, which is what a container tag may contain.
+    oci = __version__.replace('rc', '-rc.')
+    assert f'org.opencontainers.image.version="{oci}"' in \
+        (root/'Dockerfile').read_text(encoding='utf-8')
+
+    tag = f'eye-for-an-eye:{oci}-lab'
+    compose = (root/'docker-compose.lab.yml').read_text(encoding='utf-8')
+    assert compose.count(f'image: {tag}') == 2, compose.count('image: ')
+    workflow = (root/'.github'/'workflows'/'ci.yml').read_text(encoding='utf-8')
+    assert tag in workflow, 'the container job runs an image tag nothing builds'
+    assert f'eye_for_an_eye-{__version__}-py3-none-any.whl' in workflow, \
+        'the smoke test installs a wheel filename this version does not produce'

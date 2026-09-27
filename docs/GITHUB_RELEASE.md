@@ -64,7 +64,7 @@ Deliberately not used: `waf` (this is not a web application firewall),
 Eye for an Eye 0.8.0 RC1 — Public Beta
 ```
 
-**Tag**: `v0.8.0rc1`
+**Tag**: `v0.8.0rc2`
 
 **Mark as pre-release: yes.** The version is a release candidate and real-world
 validation of autonomous blocking is pending. It must not be labelled Stable or
@@ -77,11 +77,11 @@ Latest release while that is true.
 
 | File | Notes |
 | --- | --- |
-| `eye-for-an-eye-0.8.0rc1-linux-x86_64.tar.gz` | the primary Linux path |
-| `eye-for-an-eye_0.8.0~rc1-1_all.deb` | Ubuntu 24.04 and derivatives with Python 3.12 |
-| `Eye-for-an-Eye-0.8.0rc1-Windows.zip` | the Windows beginner path |
-| `eye_for_an_eye-0.8.0rc1-py3-none-any.whl` | the Python package |
-| `eye_for_an_eye-0.8.0rc1.tar.gz` | the source distribution |
+| `eye-for-an-eye-0.8.0rc2-linux-x86_64.tar.gz` | the primary Linux path |
+| `eye-for-an-eye_0.8.0~rc2-1_all.deb` | Ubuntu 24.04 and derivatives with Python 3.12 |
+| `Eye-for-an-Eye-0.8.0rc2-Windows.zip` | the Windows beginner path |
+| `eye_for_an_eye-0.8.0rc2-py3-none-any.whl` | the Python package |
+| `eye_for_an_eye-0.8.0rc2.tar.gz` | the source distribution |
 | `sbom.cdx.json` | CycloneDX 1.6 |
 | `SHA256SUMS` | hashes of everything above |
 

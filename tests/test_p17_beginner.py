@@ -8,7 +8,6 @@ did *not* acquire an opinion of its own.
 """
 from pathlib import Path
 import io
-import json
 import sys
 import tempfile
 import time

@@ -46,9 +46,14 @@ choice is explicit: `autonomy.journal_required_for_action`, default false,
 because the accountable minimum survives in the log either way. An operator who
 needs the stronger property sets it and gets it.
 """
-from .bounded_jsonl import (BoundedJsonlWriter, DEGRADED, FILE_MODE, HEALTHY,
-                            MAX_ENTRY_BYTES, NOT_CONFIGURED, UNAVAILABLE,
-                            WriterLimits)
+from .bounded_jsonl import BoundedJsonlWriter, WriterLimits
+#: Part of this module's vocabulary, not an accident: a caller reasoning about
+#: the journal's bounds reads the ceiling from the journal, the same way it reads
+#: `JournalLimits` below, rather than reaching past it into the shared writer.
+#: `tests/test_p15_5r_journal.py` asserts the journal's rotation and refusal
+#: bounds in terms of it. Kept on its own line so the suppression cannot also
+#: hide an import that really is unused.
+from .bounded_jsonl import MAX_ENTRY_BYTES  # noqa: F401  -- re-exported, see above
 from ..security.redaction import sensitive_key
 
 import time

@@ -37,19 +37,18 @@ record is *allowed* to be handed to the enforcer at all, which is §4 and §30:
     record.blocked is False     -> never
     otherwise                   -> HostEnforcer.execute(record), which may still refuse
 """
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 import time
 
 from ..decision.families import FLOOR as FAMILY_FLOOR
 from ..decision.features import NAMES
-from ..decision.math_risk import VERSION as MATH_RISK_VERSION
 from ..decision.policy import POLICY_GUARD_VERSION, usable_ml
 from . import calibrator as calibration_loader
 from .authority import AUTONOMOUS, DecisionInputs, SHADOW
 from .journal import JOURNAL_SCHEMA_VERSION
 from .authority import from_config as authority_from_config
 from .cost import from_config as cost_from_config
-from .scope import ScopeResolver, services_in
+from .scope import ScopeResolver
 
 PIPELINE_VERSION = 'autonomous-decision-pipeline-v1'
 

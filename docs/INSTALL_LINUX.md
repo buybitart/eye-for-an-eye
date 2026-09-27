@@ -129,7 +129,7 @@ sudo apt install ./eye-for-an-eye_<version>_all.deb
 ```
 
 Use the real filename from the release page. The version in the filename uses a
-tilde — for example `eye-for-an-eye_0.8.0~rc1-1_all.deb` — which is how Debian
+tilde — for example `eye-for-an-eye_0.8.0~rc2-1_all.deb` — which is how Debian
 writes "before the final release".
 
 On Debian 12 or 13 this command will refuse, because the package depends on

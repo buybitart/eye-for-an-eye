@@ -12,7 +12,7 @@ configure Autonomous Mode deliberately, and only on Linux.
 
 No cloud AI service is required. Nothing is sent anywhere. No account.
 
-> **Status: PUBLIC BETA — version 0.8.0rc1.** Automatic blocking is **off by
+> **Status: PUBLIC BETA — version 0.8.0rc2.** Automatic blocking is **off by
 > default** and has never run in production. On our own generated test data it
 > blocks 120 sources of 203, with **no false blocks** in 546 benign sources —
 > and it detects **nothing at all** in six of the behaviour families it is
@@ -39,8 +39,8 @@ Linux, from a release archive. No Git, no `pip`, no virtual environment, no root
 
 ```sh
 sha256sum -c SHA256SUMS
-tar xzf eye-for-an-eye-0.8.0rc1-linux-x86_64.tar.gz
-cd eye-for-an-eye-0.8.0rc1
+tar xzf eye-for-an-eye-0.8.0rc2-linux-x86_64.tar.gz
+cd eye-for-an-eye-0.8.0rc2
 sh install.sh
 eye-for-an-eye setup
 eye-for-an-eye start
@@ -57,7 +57,7 @@ Six commands, in order:
 1. **`sha256sum -c SHA256SUMS`** — checks the file you downloaded is the file
    that was published. You want `OK`.
 2. **`tar xzf …`** — unpacks it. The version in the filename is the one you
-   downloaded; `0.8.0rc1` is the current release.
+   downloaded; `0.8.0rc2` is the current release.
 3. **`cd …`** — the archive unpacks into one directory of that name.
 4. **`sh install.sh`** — installs for your account only. Prints
    **Installation complete**. Changes no firewall rule and starts nothing.
@@ -69,7 +69,7 @@ To stop it: `eye-for-an-eye stop`. To remove it: `sh uninstall.sh`.
 On **Ubuntu 24.04** you can use the Debian package instead of steps 2 to 4:
 
 ```sh
-sudo apt install ./eye-for-an-eye_0.8.0~rc1-1_all.deb
+sudo apt install ./eye-for-an-eye_0.8.0~rc2-1_all.deb
 ```
 
 Everything about installing, including other distributions and what goes where:

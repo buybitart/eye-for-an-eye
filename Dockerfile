@@ -8,7 +8,7 @@ COPY eye_for_an_eye ./eye_for_an_eye
 RUN uv sync --frozen --no-dev --no-editable
 
 FROM python:3.12.14-slim-bookworm@sha256:782412e85d0f0984994c290652577d4018aff08145c85b262bb63dc0c7522254 AS runtime
-LABEL org.opencontainers.image.title="Eye for an Eye" org.opencontainers.image.version="0.8.0-rc.1"
+LABEL org.opencontainers.image.title="Eye for an Eye" org.opencontainers.image.version="0.8.0-rc.2"
 RUN groupadd --gid 10000 eye-for-an-eye && useradd --uid 10001 --gid 10000 --no-create-home --shell /usr/sbin/nologin eye-for-an-eye \
     && install -d -o 10001 -g 10000 -m 0750 /var/lib/eye-for-an-eye /run/eye-for-an-eye
 COPY --from=build /opt/eye-for-an-eye/.venv /opt/eye-for-an-eye/.venv
