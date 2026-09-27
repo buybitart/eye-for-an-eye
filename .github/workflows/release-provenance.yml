@@ -1,9 +1,6 @@
 name: Release provenance
 
 on:
-  push:
-    tags:
-      - 'v*'
   workflow_dispatch:
 
 permissions:
@@ -14,7 +11,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     permissions:
-      contents: write
+      contents: read
       id-token: write
       attestations: write
     steps:
@@ -36,27 +33,10 @@ jobs:
         uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
         with:
           subject-path: 'release-artifacts/**'
-      - name: Upload workflow artifacts
+      - name: Upload release artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: release-${{ github.ref_name }}
+          name: release-provenance-test
           path: release-artifacts/
           if-no-files-found: error
           retention-days: 30
-      - name: Create draft GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          if gh release view "$GITHUB_REF_NAME >/dev/null 2>&1; then
- echo Release $GITHUB_REF_NAME already exists. Refusing to replace release assets.
- exit 1
- fi
- mapfile -t files < <(find release-artifacts -maxdepth 1 -type f -print | sort)
- test ${#files[@]} -gt 0
- args=(--draft --verify-tag --title $GITHUB_REF_NAME)
- if [[ $GITHUB_REF_NAME == *rc* ]]; then
- args+=(--prerelease)
- fi
- gh release create $GITHUB_REF_NAME ${files[@]} ${args[@]}
