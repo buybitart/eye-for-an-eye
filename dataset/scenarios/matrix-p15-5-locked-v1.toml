@@ -1,0 +1,553 @@
+# dataset-p15-5-locked-v1: the P15.5 locked release benchmark.
+#
+# Scored exactly once, after the freeze commit, and never used for anything else.
+#
+# SAME SHAPE, NEW DRAW, NEW UNSEEN PAIR. Every non-withheld scenario below is
+# carried over from `matrix-p15-4-locked-v1.toml` unchanged, so the two
+# benchmarks are comparable family by family. What differs is the seed salt —
+# `p15.5-locked`, which reseeds every scenario and every run — and the withheld
+# pair at the end.
+#
+# THE P15.4 WITHHELD PAIR IS NOT HERE. `withheld.mobile_app_sync` and
+# `withheld.probe_then_login` were scored once on the P15.4 benchmark. They are
+# still barred from every fitting matrix and always will be, but they are no
+# longer *unseen*, and including them here would invite their second score to be
+# read as a second independent result. The P15.5 generalisation claim rests on
+# the new pair and on nothing else — the same rule P15.4 applied when it
+# declined to call the six P15.3 composite families unseen a second time.
+#
+# THE NEW PAIR, AND WHY THESE TWO. Both sit on `admin`, whose cutoff of 0.888889
+# is the lowest of the profiles that may network-block. That makes it
+# simultaneously the most demanding test available for a hard negative — the
+# place a false block is likeliest — and the fairest one for a positive, where a
+# failure to detect is about evidence rather than about an unreachable cutoff.
+#
+#   withheld.backup_window_sweep   benign. Breadth, volume, regularity and
+#                                  persistence at once, from a nightly backup
+#                                  agent authenticating successfully on every
+#                                  service it protects. The first honest benign
+#                                  producer of the (NETWORK_RATE, PORT_BREADTH)
+#                                  interaction.
+#
+#   withheld.credential_drift      malicious. One valid credential, walked
+#                                  across services: a success, then breadth,
+#                                  then failures from the principal that just
+#                                  succeeded. Single-principal on purpose, so
+#                                  the strongest authentication signal this
+#                                  sensor has is withheld from it and whatever
+#                                  the composition makes of it measures the
+#                                  port-breadth interaction instead.
+#
+# 749 runs, within the 762 documentation addresses.
+
+matrix_version = "1.0"
+dataset_version = "dataset-p15-5-locked-v1"
+snapshot_interval_seconds = 2.0
+max_samples_per_source = 40
+max_samples_per_scenario = 1600
+
+
+# --- public_website ---------------------------------------------------------
+# Three sites. The profile whose cutoff is 0.975610 and whose traffic is the
+# most varied: browsers, crawlers, and whatever the Internet sends at a web
+# server unprompted.
+
+[[scenario]]
+id = "benign/web/browse"
+group = "benign-web"
+generator = "benign.web_client"
+runs = 26
+params = { requests = 16, period = 1.1, follow_ups = 2 }
+site_group = "site-web-1"
+profile_type = "public_website"
+
+[[scenario]]
+id = "benign/web/browse-slow"
+group = "benign-web"
+generator = "benign.web_client"
+runs = 16
+params = { requests = 12, period = 3.4, follow_ups = 1 }
+site_group = "site-web-2"
+profile_type = "public_website"
+
+[[scenario]]
+id = "benign/web/page-burst"
+group = "benign-web-burst"
+generator = "benign.web_burst"
+runs = 20
+params = { bursts = 5, burst_size = 9 }
+site_group = "site-web-1"
+profile_type = "public_website"
+
+[[scenario]]
+id = "hard-negative/web/asset-fetch"
+group = "profile-web-assets"
+generator = "profiles.asset_fetch"
+runs = 22
+params = { pages = 4, assets = 22 }
+site_group = "site-web-2"
+profile_type = "public_website"
+
+[[scenario]]
+id = "hard-negative/content-crawler"
+group = "hard-negative-crawler"
+generator = "composite.content_crawler"
+runs = 20
+site_group = "site-web-3"
+profile_type = "public_website"
+
+[[scenario]]
+id = "benign/retry/flaky-link"
+group = "benign-retry"
+generator = "benign.retry_then_success"
+runs = 20
+params = { attempts = 16, period = 1.8 }
+site_group = "site-web-3"
+profile_type = "public_website"
+
+[[scenario]]
+id = "benign/noise/ambient"
+group = "benign-noise"
+generator = "benign.ambient_noise"
+runs = 18
+params = { contacts_count = 12, period = 5.5 }
+site_group = "site-web-1"
+profile_type = "public_website"
+
+[[scenario]]
+id = "scan/sequential/50-ports"
+group = "scan-sequential"
+generator = "scanner.sequential_scan"
+runs = 8
+params = { port_count = 50, period = 0.5 }
+site_group = "site-web-1"
+profile_type = "public_website"
+
+[[scenario]]
+id = "scan/randomized/100-ports"
+group = "scan-randomized"
+generator = "scanner.randomized_scan"
+runs = 7
+params = { port_count = 100, period = 0.25 }
+site_group = "site-web-2"
+profile_type = "public_website"
+
+[[scenario]]
+id = "scan/connect-only"
+group = "scan-connect"
+generator = "scanner.connect_scan"
+runs = 7
+params = { port_count = 40, period = 0.6, order = "sequential" }
+site_group = "site-web-3"
+profile_type = "public_website"
+
+[[scenario]]
+id = "probe/repeated"
+group = "probe-repeated"
+generator = "protocol.repeated_probes"
+runs = 7
+params = { attempts = 45, period = 0.9 }
+site_group = "site-web-1"
+profile_type = "public_website"
+
+[[scenario]]
+id = "protocol/mismatch"
+group = "protocol-mismatch"
+generator = "protocol.protocol_mismatch"
+runs = 8
+params = { attempts = 28, period = 1.1 }
+site_group = "site-web-2"
+profile_type = "public_website"
+
+[[scenario]]
+id = "positive/web/login-stuffing"
+group = "positive-web-stuffing"
+generator = "profiles.login_stuffing"
+runs = 13
+params = { attempts = 40, period = 2.0 }
+site_group = "site-web-1"
+profile_type = "public_website"
+
+[[scenario]]
+id = "composite/paced-breadth-sweep"
+group = "composite-paced-breadth"
+generator = "composite.paced_breadth_sweep"
+runs = 8
+site_group = "site-web-3"
+profile_type = "public_website"
+
+
+# --- api --------------------------------------------------------------------
+# Two sites, and the profile this cycle exists for. Machine-to-machine traffic
+# authenticates on every request, which is why credential presence could never
+# have been evidence, and why every hard negative here does it constantly.
+
+[[scenario]]
+id = "benign/api/client"
+group = "benign-api"
+generator = "benign.web_client"
+runs = 18
+params = { requests = 20, period = 0.9, follow_ups = 3, ports = [443, 8443, 9090] }
+site_group = "site-api-1"
+profile_type = "api"
+
+[[scenario]]
+id = "hard-negative/api/authenticated-batch"
+group = "profile-api-batch"
+generator = "profiles.authenticated_batch"
+runs = 26
+params = { bursts = 6, burst_size = 14 }
+site_group = "site-api-1"
+profile_type = "api"
+
+[[scenario]]
+id = "hard-negative/api/high-rate"
+group = "profile-api-high-rate"
+generator = "profiles.high_rate_api"
+runs = 22
+params = { calls = 120, period = 0.55 }
+site_group = "site-api-2"
+profile_type = "api"
+
+[[scenario]]
+id = "hard-negative/api/service-account"
+group = "profile-api-service-account"
+generator = "profiles.service_account"
+runs = 22
+params = { calls = 40, period = 9.0 }
+site_group = "site-api-2"
+profile_type = "api"
+
+[[scenario]]
+id = "hard-negative/api/stale-credential"
+group = "profile-api-stale-credential"
+generator = "profiles.stale_credential_client"
+runs = 20
+params = { attempts = 21, period = 26.0 }
+site_group = "site-api-2"
+profile_type = "api"
+
+[[scenario]]
+id = "hard-negative/batch-api-client"
+group = "hard-negative-batch-api"
+generator = "composite.batch_api_client"
+runs = 18
+site_group = "site-api-1"
+profile_type = "api"
+
+[[scenario]]
+id = "hard-negative/backup-client"
+group = "hard-negative-backup"
+generator = "composite.backup_client"
+runs = 16
+site_group = "site-api-2"
+profile_type = "api"
+
+[[scenario]]
+id = "hard-negative/health-check/load-balancer"
+group = "hard-negative-health-check"
+generator = "benign.health_checker"
+runs = 16
+params = { checks = 110, period = 0.55 }
+site_group = "site-api-1"
+profile_type = "api"
+
+[[scenario]]
+id = "hard-negative/monitoring/agent"
+group = "hard-negative-monitoring"
+generator = "benign.monitoring_agent"
+runs = 14
+params = { checks = 45, period = 2.5 }
+site_group = "site-api-2"
+profile_type = "api"
+
+[[scenario]]
+id = "hard-negative/monitoring/fast-agent"
+group = "hard-negative-monitoring"
+generator = "benign.monitoring_agent"
+runs = 14
+params = { checks = 70, period = 1.2 }
+site_group = "site-api-1"
+profile_type = "api"
+
+[[scenario]]
+id = "hard-negative/health-check/connect-probe"
+group = "hard-negative-connect"
+generator = "benign.connect_probe"
+runs = 18
+params = { checks = 45, period = 2.0, port_count = 3 }
+site_group = "site-api-2"
+profile_type = "api"
+
+[[scenario]]
+id = "positive/api/credential-spray"
+group = "positive-api-spray"
+generator = "profiles.api_credential_spray"
+runs = 13
+params = { principals = 18, period = 3.4 }
+site_group = "site-api-1"
+profile_type = "api"
+
+[[scenario]]
+id = "positive/api/patient-account-walk"
+group = "positive-api-patient-walk"
+generator = "profiles.patient_account_walk"
+runs = 13
+params = { principals = 14, delay = 38.0 }
+site_group = "site-api-2"
+profile_type = "api"
+
+[[scenario]]
+id = "credential/automation"
+group = "credential-automation"
+generator = "protocol.credential_automation"
+runs = 7
+params = { attempts = 32, period = 0.8, port = 21 }
+site_group = "site-api-1"
+profile_type = "api"
+
+[[scenario]]
+id = "credential/low-rate"
+group = "credential-low-rate"
+generator = "protocol.low_rate_credentials"
+runs = 7
+params = { attempts = 14, period = 10.0, port = 110 }
+site_group = "site-api-2"
+profile_type = "api"
+
+[[scenario]]
+id = "composite/credential-spray"
+group = "composite-credential-spray"
+generator = "composite.credential_spray"
+runs = 8
+site_group = "site-api-1"
+profile_type = "api"
+
+[[scenario]]
+id = "scan/horizontal/single-service"
+group = "scan-horizontal"
+generator = "scanner.horizontal_scan"
+runs = 8
+params = { destinations = 6, port = 445, period = 1.1 }
+site_group = "site-api-2"
+profile_type = "api"
+
+[[scenario]]
+id = "recon/multi-stage"
+group = "recon-multi-stage"
+generator = "scanner.multi_stage_recon"
+runs = 7
+params = { sweep = 28, probes = 12, period = 0.7 }
+site_group = "site-api-1"
+profile_type = "api"
+
+
+# --- admin ------------------------------------------------------------------
+# One site, the highest false-block cost in the policy (cutoff 0.888889), and
+# the traffic most easily mistaken for an attack: an administrator diagnosing a
+# problem looks like reconnaissance, and one who has forgotten a password looks
+# like a brute force.
+
+[[scenario]]
+id = "hard-negative/admin/login-mistakes"
+group = "profile-admin-mistakes"
+generator = "profiles.admin_login_mistakes"
+runs = 26
+params = { mistakes = 3, period = 6.5 }
+site_group = "site-admin-1"
+profile_type = "admin"
+
+[[scenario]]
+id = "hard-negative/admin/console"
+group = "profile-admin-console"
+generator = "profiles.admin_console"
+runs = 18
+params = { actions = 24, period = 7.0 }
+site_group = "site-admin-1"
+profile_type = "admin"
+
+[[scenario]]
+id = "hard-negative/admin/diagnostic-3"
+group = "hard-negative-admin"
+generator = "benign.admin_diagnostic"
+runs = 16
+params = { port_count = 3, period = 4.5 }
+site_group = "site-admin-1"
+profile_type = "admin"
+
+[[scenario]]
+id = "hard-negative/admin/diagnostic-5"
+group = "hard-negative-admin"
+generator = "benign.admin_diagnostic"
+runs = 16
+params = { port_count = 5, period = 3.2 }
+site_group = "site-admin-1"
+profile_type = "admin"
+
+[[scenario]]
+id = "hard-negative/admin/diagnostic-10"
+group = "hard-negative-admin"
+generator = "benign.admin_diagnostic"
+runs = 18
+params = { port_count = 10, period = 2.0 }
+site_group = "site-admin-1"
+profile_type = "admin"
+
+[[scenario]]
+id = "benign/ssh/short-session"
+group = "benign-ssh"
+generator = "benign.ssh_session"
+runs = 16
+params = { sessions = 7, period = 8.0 }
+site_group = "site-admin-1"
+profile_type = "admin"
+
+[[scenario]]
+id = "hard-negative/discovery/service-discovery"
+group = "hard-negative-discovery"
+generator = "benign.service_discovery"
+runs = 16
+params = { rounds = 7, period = 5.0, port_count = 6 }
+site_group = "site-admin-1"
+profile_type = "admin"
+
+[[scenario]]
+id = "positive/admin/brute-force"
+group = "positive-admin-brute"
+generator = "profiles.admin_brute_force"
+runs = 15
+params = { attempts = 34, period = 1.1 }
+site_group = "site-admin-1"
+profile_type = "admin"
+
+[[scenario]]
+id = "scan/sequential/10-ports"
+group = "scan-sequential"
+generator = "scanner.sequential_scan"
+runs = 8
+params = { port_count = 10, period = 1.6 }
+site_group = "site-admin-1"
+profile_type = "admin"
+
+[[scenario]]
+id = "scan/slow/sequential"
+group = "scan-slow"
+generator = "scanner.slow_scan"
+runs = 5
+params = { port_count = 16, delay = 8.0, order = "sequential" }
+site_group = "site-admin-1"
+profile_type = "admin"
+
+[[scenario]]
+id = "scan/slow/randomized"
+group = "scan-slow"
+generator = "scanner.slow_scan"
+runs = 5
+params = { port_count = 14, delay = 11.0, order = "random" }
+site_group = "site-admin-1"
+profile_type = "admin"
+
+
+# --- payment_webhook --------------------------------------------------------
+# The profile that never blocks by design: its cutoff of 0.998004 is above
+# anything the scoring path produces. That is a claim worth measuring rather
+# than assuming, which is why the site is here at all, and why it carries a
+# positive as well as the signed callbacks.
+
+[[scenario]]
+id = "hard-negative/webhook/signed-callback"
+group = "profile-webhook-signed"
+generator = "profiles.signed_webhook"
+runs = 22
+params = { callbacks = 50, period = 4.0 }
+site_group = "site-hook-1"
+profile_type = "payment_webhook"
+
+[[scenario]]
+id = "benign/webhook/retry"
+group = "benign-retry"
+generator = "benign.retry_then_success"
+runs = 14
+params = { attempts = 12, period = 4.0 }
+site_group = "site-hook-1"
+profile_type = "payment_webhook"
+
+[[scenario]]
+id = "probe/webhook/repeated"
+group = "probe-repeated"
+generator = "protocol.repeated_probes"
+runs = 7
+params = { attempts = 45, period = 0.9, ports = [443, 8443] }
+site_group = "site-hook-1"
+profile_type = "payment_webhook"
+
+
+# --- honeypot ---------------------------------------------------------------
+# The only profile where a false block is cheap (cutoff 0.666667), because
+# nothing legitimate has a reason to be here. The benign family is the one thing
+# that does: something brushing past a decoy by accident.
+
+[[scenario]]
+id = "hard-negative/deception/brush-past"
+group = "hard-negative-deception"
+generator = "deception.decoy_brush_past"
+runs = 20
+params = { touches = 5, period = 18.0 }
+site_group = "site-decoy-1"
+profile_type = "honeypot"
+
+[[scenario]]
+id = "deception/decoy-enumeration"
+group = "deception-enumeration"
+generator = "deception.decoy_enumeration"
+runs = 8
+params = { sessions = 10, commands = 5, period = 2.5 }
+site_group = "site-decoy-1"
+profile_type = "honeypot"
+
+[[scenario]]
+id = "composite/decoy-then-enumerate"
+group = "composite-decoy-recon"
+generator = "composite.decoy_then_enumerate"
+runs = 8
+site_group = "site-decoy-1"
+profile_type = "honeypot"
+
+[[scenario]]
+id = "probe/service-enumeration"
+group = "probe-enumeration"
+generator = "scanner.service_enumeration"
+runs = 5
+params = { rounds = 4, period = 0.7 }
+site_group = "site-decoy-1"
+profile_type = "honeypot"
+
+[[scenario]]
+id = "scan/burst/pause"
+group = "scan-burst"
+generator = "scanner.burst_scan"
+runs = 7
+params = { bursts = 4, burst_size = 10, inside = 0.6, pause = 30.0 }
+site_group = "site-decoy-1"
+profile_type = "honeypot"
+
+# --- withheld from every fitting corpus (§49, §50) --------------------------
+# The only two families here that no threshold, no interaction term, no feature
+# and no calibrator has ever seen. Scored once, with everything above them
+# frozen.
+
+[[scenario]]
+id = "withheld/backup-window-sweep"
+group = "withheld-backup-sweep"
+generator = "withheld.backup_window_sweep"
+runs = 18
+site_group = "site-admin-2"
+profile_type = "admin"
+
+[[scenario]]
+id = "withheld/credential-drift"
+group = "withheld-credential-drift"
+generator = "withheld.credential_drift"
+runs = 14
+site_group = "site-admin-3"
+profile_type = "admin"

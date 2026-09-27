@@ -1,0 +1,95 @@
+{
+  "corpus": "tests/fixtures/p2/corpus.json",
+  "model_version": "risk-logreg-v1",
+  "transmitted_packets": 0,
+  "enforcement": "refused by offline analysis",
+  "samples": [
+    {
+      "id": "scan",
+      "sha256": "f1250220270ed32f89f7a6a44ed4f93ea7d054f75b36fb6c1fd8cbd759f2b13d",
+      "provenance": {
+        "kind": "synthetic",
+        "generator": "generate.py",
+        "external_capture": false
+      },
+      "packets": 32,
+      "parse_errors": 0,
+      "expected_correlation_labels": [
+        {
+          "src_ip": "192.0.2.1",
+          "window_seconds": 60,
+          "label": "scanner"
+        }
+      ],
+      "observed_correlation_labels": {
+        "192.0.2.1@60s": "scanner",
+        "192.0.2.1@900s": "scanner"
+      },
+      "decisions_by_source": {
+        "192.0.2.1": {
+          "decisions": 16,
+          "highest_risk": 0.468594,
+          "action_at_highest_risk": "WATCH",
+          "math_score": 0.197444,
+          "model_score": 1.0,
+          "model_status": "healthy",
+          "would_enforce": false,
+          "policy_reasons": [
+            "insufficient_data_quality",
+            "independent_behavior_categories",
+            "math_confirmation"
+          ],
+          "disagreements": [
+            "math_low_ml_high"
+          ]
+        }
+      }
+    },
+    {
+      "id": "noise",
+      "sha256": "9bae91c231857ee6dad51ac910f7d870ae183c43bd923f758cc367f2e8be0ef5",
+      "provenance": {
+        "kind": "synthetic",
+        "generator": "generate.py",
+        "external_capture": false
+      },
+      "packets": 1,
+      "parse_errors": 0,
+      "expected_correlation_labels": [
+        {
+          "src_ip": "192.0.2.1",
+          "window_seconds": 60,
+          "label": "noise"
+        }
+      ],
+      "observed_correlation_labels": {
+        "192.0.2.1@60s": "noise",
+        "192.0.2.1@900s": "noise"
+      },
+      "decisions_by_source": {
+        "192.0.2.1": {
+          "decisions": 1,
+          "highest_risk": 0.012345,
+          "action_at_highest_risk": "OBSERVE",
+          "math_score": 0.019644,
+          "model_score": 0.00427091121673584,
+          "model_status": "healthy",
+          "would_enforce": false,
+          "policy_reasons": [
+            "insufficient_data_quality",
+            "minimum_samples",
+            "minimum_duration",
+            "independent_behavior_categories",
+            "math_confirmation"
+          ],
+          "disagreements": []
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "the shipped lab corpus is two tiny deterministic synthetic captures, not accuracy evidence",
+    "correlation labels are not model labels and are reported side by side, never scored together",
+    "no traffic is transmitted and no firewall rule is created or evaluated"
+  ]
+}

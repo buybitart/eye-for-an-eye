@@ -1,0 +1,16 @@
+config_version = 1
+[deployment]
+profile = "sensor"
+egress = "disabled"
+[capture]
+interface = "eth0"
+bpf = "ip or ip6"
+ipc_socket = "/run/eye-for-an-eye/capture.sock"
+helper_uid = 10002
+analysis_uid = 10001
+[enrichment]
+enabled = false
+[storage]
+enabled = false
+[active_probes]
+enabled = false

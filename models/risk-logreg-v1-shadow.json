@@ -1,0 +1,631 @@
+{
+  "dataset_split": "test",
+  "rows": 994,
+  "synthetic_only": true,
+  "enforcement": "disabled; shadow mode; no firewall interaction",
+  "positive_class": "malicious_automation_like",
+  "candidates": {
+    "math_only": {
+      "summary": {
+        "total_sources_retained": 76,
+        "source_limit_exceeded_events": 0,
+        "decisions_by_action": {
+          "OBSERVE": 711,
+          "WATCH": 270,
+          "RATE_LIMIT": 13
+        },
+        "highest_action_by_source": {
+          "WATCH": 23,
+          "OBSERVE": 51,
+          "RATE_LIMIT": 2
+        },
+        "would_block_sources": 0,
+        "agreement": {
+          "none": 994
+        },
+        "risk_deciles": [
+          253,
+          256,
+          130,
+          85,
+          74,
+          50,
+          44,
+          34,
+          68,
+          0
+        ],
+        "top_math_contributions_sum": [
+          [
+            "anomaly_60s",
+            695.5427599999997
+          ],
+          [
+            "ports_60s",
+            507.4228000000005
+          ],
+          [
+            "families_60s",
+            413.0
+          ],
+          [
+            "continuation_60s",
+            245.58530999999994
+          ],
+          [
+            "sequential_60s",
+            188.41345999999947
+          ],
+          [
+            "ports_900s",
+            187.25415000000064
+          ]
+        ],
+        "potential_false_positive_sources": null,
+        "block_precision": null,
+        "labelled_would_block_sources": 0,
+        "unlabelled_would_block_sources": 0
+      },
+      "action_totals": {
+        "OBSERVE": 711,
+        "WATCH": 270,
+        "RATE_LIMIT": 13,
+        "TEMP_BLOCK": 0
+      },
+      "disagreement_examples": {},
+      "disagreement_counts": {},
+      "scenarios": {
+        "admin_diagnostic": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "backup_client": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "bursty_recon": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "cdn_origin_fetch": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "credential_automation": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "deception_prober": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "deployment_probe": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "few_port_scan": {
+          "label": 1,
+          "sources": 6,
+          "would_block_sources": 0
+        },
+        "flaky_client": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "health_checker": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "horizontal_scan": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "human_manual_access": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "interactive_ssh": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "load_balancer": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "low_rate_credentials": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "mobile_app_client": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "monitoring_agent": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "multi_burst_recon": {
+          "label": 1,
+          "sources": 6,
+          "would_block_sources": 0
+        },
+        "owner_vulnerability_scanner": {
+          "label": 0,
+          "sources": 6,
+          "would_block_sources": 0
+        },
+        "paced_random_scan": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "protocol_mismatch_probe": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "randomized_port_scan": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "repeated_probe_bot": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "reverse_proxy": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "sequential_port_scan": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "service_discovery": {
+          "label": 0,
+          "sources": 6,
+          "would_block_sources": 0
+        },
+        "service_enumeration": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "slow_sequential_scan": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "software_updater": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "web_browser": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        }
+      },
+      "benign_sources_that_would_block": []
+    },
+    "risk-logreg-v1": {
+      "summary": {
+        "total_sources_retained": 76,
+        "source_limit_exceeded_events": 0,
+        "decisions_by_action": {
+          "OBSERVE": 457,
+          "WATCH": 524,
+          "RATE_LIMIT": 8,
+          "TEMP_BLOCK": 5
+        },
+        "highest_action_by_source": {
+          "WATCH": 41,
+          "OBSERVE": 33,
+          "TEMP_BLOCK": 2
+        },
+        "would_block_sources": 2,
+        "agreement": {
+          "none": 884,
+          "math_low_ml_high": 110
+        },
+        "risk_deciles": [
+          237,
+          157,
+          46,
+          39,
+          138,
+          100,
+          101,
+          80,
+          96,
+          0
+        ],
+        "top_math_contributions_sum": [
+          [
+            "anomaly_60s",
+            695.5427599999997
+          ],
+          [
+            "ports_60s",
+            507.4228000000005
+          ],
+          [
+            "families_60s",
+            413.0
+          ],
+          [
+            "continuation_60s",
+            245.58530999999994
+          ],
+          [
+            "sequential_60s",
+            188.41345999999947
+          ],
+          [
+            "ports_900s",
+            187.25415000000064
+          ]
+        ],
+        "potential_false_positive_sources": 2,
+        "block_precision": 0.0,
+        "labelled_would_block_sources": 2,
+        "unlabelled_would_block_sources": 0
+      },
+      "action_totals": {
+        "OBSERVE": 457,
+        "WATCH": 524,
+        "RATE_LIMIT": 8,
+        "TEMP_BLOCK": 5
+      },
+      "disagreement_examples": {
+        "math_low_ml_high": [
+          {
+            "sample_id": "bursty_recon:011:0006",
+            "scenario_id": "bursty_recon",
+            "label": 1,
+            "math_score": 0.182415,
+            "model_score": 0.9999955892562866,
+            "fused_risk": 0.450414,
+            "action": "WATCH",
+            "policy_reasons": [
+              "insufficient_data_quality",
+              "minimum_samples",
+              "minimum_duration",
+              "independent_behavior_categories",
+              "math_confirmation"
+            ]
+          },
+          {
+            "sample_id": "credential_automation:005:0012",
+            "scenario_id": "credential_automation",
+            "label": 1,
+            "math_score": 0.179449,
+            "model_score": 0.8721035718917847,
+            "fused_risk": 0.34327,
+            "action": "OBSERVE",
+            "policy_reasons": [
+              "minimum_samples",
+              "minimum_duration",
+              "independent_behavior_categories",
+              "math_confirmation"
+            ]
+          },
+          {
+            "sample_id": "deception_prober:005:0018",
+            "scenario_id": "deception_prober",
+            "label": 1,
+            "math_score": 0.121753,
+            "model_score": 0.9122741222381592,
+            "fused_risk": 0.34062,
+            "action": "OBSERVE",
+            "policy_reasons": [
+              "minimum_samples",
+              "independent_behavior_categories",
+              "math_confirmation"
+            ]
+          },
+          {
+            "sample_id": "deception_prober:005:0024",
+            "scenario_id": "deception_prober",
+            "label": 1,
+            "math_score": 0.121467,
+            "model_score": 0.938866913318634,
+            "fused_risk": 0.364189,
+            "action": "OBSERVE",
+            "policy_reasons": [
+              "independent_behavior_categories",
+              "math_confirmation"
+            ]
+          },
+          {
+            "sample_id": "deception_prober:005:0030",
+            "scenario_id": "deception_prober",
+            "label": 1,
+            "math_score": 0.142426,
+            "model_score": 0.9898169040679932,
+            "fused_risk": 0.423319,
+            "action": "WATCH",
+            "policy_reasons": [
+              "independent_behavior_categories",
+              "math_confirmation"
+            ]
+          },
+          {
+            "sample_id": "deception_prober:005:0036",
+            "scenario_id": "deception_prober",
+            "label": 1,
+            "math_score": 0.138952,
+            "model_score": 0.9940493106842041,
+            "fused_risk": 0.426286,
+            "action": "WATCH",
+            "policy_reasons": [
+              "independent_behavior_categories",
+              "math_confirmation"
+            ]
+          },
+          {
+            "sample_id": "deception_prober:005:0042",
+            "scenario_id": "deception_prober",
+            "label": 1,
+            "math_score": 0.141039,
+            "model_score": 0.9981805086135864,
+            "fused_risk": 0.432437,
+            "action": "WATCH",
+            "policy_reasons": [
+              "independent_behavior_categories",
+              "math_confirmation"
+            ]
+          },
+          {
+            "sample_id": "deception_prober:005:0048",
+            "scenario_id": "deception_prober",
+            "label": 1,
+            "math_score": 0.145361,
+            "model_score": 0.999342679977417,
+            "fused_risk": 0.437014,
+            "action": "WATCH",
+            "policy_reasons": [
+              "independent_behavior_categories",
+              "math_confirmation"
+            ]
+          },
+          {
+            "sample_id": "deception_prober:005:0054",
+            "scenario_id": "deception_prober",
+            "label": 1,
+            "math_score": 0.146603,
+            "model_score": 0.9997678995132446,
+            "fused_risk": 0.439166,
+            "action": "WATCH",
+            "policy_reasons": [
+              "independent_behavior_categories",
+              "math_confirmation"
+            ]
+          },
+          {
+            "sample_id": "deception_prober:005:0060",
+            "scenario_id": "deception_prober",
+            "label": 1,
+            "math_score": 0.166366,
+            "model_score": 0.9999678730964661,
+            "fused_risk": 0.451129,
+            "action": "WATCH",
+            "policy_reasons": [
+              "independent_behavior_categories",
+              "math_confirmation"
+            ]
+          },
+          {
+            "sample_id": "deception_prober:005:0066",
+            "scenario_id": "deception_prober",
+            "label": 1,
+            "math_score": 0.163537,
+            "model_score": 0.9999841451644897,
+            "fused_risk": 0.450482,
+            "action": "WATCH",
+            "policy_reasons": [
+              "independent_behavior_categories",
+              "math_confirmation"
+            ]
+          },
+          {
+            "sample_id": "deception_prober:005:0072",
+            "scenario_id": "deception_prober",
+            "label": 1,
+            "math_score": 0.165165,
+            "model_score": 0.9999827742576599,
+            "fused_risk": 0.452358,
+            "action": "WATCH",
+            "policy_reasons": [
+              "independent_behavior_categories",
+              "math_confirmation"
+            ]
+          }
+        ]
+      },
+      "disagreement_counts": {
+        "math_low_ml_high": 12
+      },
+      "scenarios": {
+        "admin_diagnostic": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "backup_client": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "bursty_recon": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "cdn_origin_fetch": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "credential_automation": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "deception_prober": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "deployment_probe": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "few_port_scan": {
+          "label": 1,
+          "sources": 6,
+          "would_block_sources": 0
+        },
+        "flaky_client": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "health_checker": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "horizontal_scan": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "human_manual_access": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "interactive_ssh": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "load_balancer": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "low_rate_credentials": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "mobile_app_client": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "monitoring_agent": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "multi_burst_recon": {
+          "label": 1,
+          "sources": 6,
+          "would_block_sources": 0
+        },
+        "owner_vulnerability_scanner": {
+          "label": 0,
+          "sources": 6,
+          "would_block_sources": 2
+        },
+        "paced_random_scan": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "protocol_mismatch_probe": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "randomized_port_scan": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "repeated_probe_bot": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "reverse_proxy": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "sequential_port_scan": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "service_discovery": {
+          "label": 0,
+          "sources": 6,
+          "would_block_sources": 0
+        },
+        "service_enumeration": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "slow_sequential_scan": {
+          "label": 1,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "software_updater": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        },
+        "web_browser": {
+          "label": 0,
+          "sources": 2,
+          "would_block_sources": 0
+        }
+      },
+      "benign_sources_that_would_block": [
+        "owner_vulnerability_scanner"
+      ]
+    }
+  },
+  "release_recommendation": "SHADOW ONLY",
+  "limitations": [
+    "synthetic replay is not deployment evidence",
+    "per-source timing is generator time, not captured wall clock"
+  ]
+}

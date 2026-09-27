@@ -1,0 +1,514 @@
+# dataset-p15-5-cal-v*: the P15.5 calibration matrix. API-enriched.
+#
+# WHAT THIS IS FOR. One number: the conservative lower bound on P(malicious) in
+# the highest score band. A block requires that bound to clear the cost profile's
+# cutoff, the `api` cutoff is 0.987654, and the calibrator fitted in P15.4 tops
+# out at 0.981951 — so with that artifact **no autonomous block was possible on
+# an API at any score**, not because the evidence was weak but because there was
+# not enough calibration data to bound it.
+#
+# The bound is a Wilson interval over the calibration sample's own examples, so
+# its width is set by how many sources land in each band. More independent
+# sources is the only honest way to tighten it. Lowering the cutoff is the
+# dishonest way and P15.5 §11 forbids it in as many words.
+#
+# WHY THE MIX CHANGED FROM matrix-p15-4-dev-v1. §12 asks the new calibration
+# evidence to represent API behaviour specifically: authenticated batch clients,
+# service accounts, high-rate legitimate callers, stale credential clients,
+# credential spray, patient account walks, credential automation. Those are the
+# families whose probabilities the API cutoff will be applied to, and calibrating
+# the API cutoff on a corpus that is mostly web browsing is calibrating for the
+# wrong traffic.
+#
+# So API weight rises from 280 runs to 358, drawn down from the public-website
+# benign families, which were the most heavily sampled and the least varied — 62
+# runs of "a browser" across three scenarios bought statistical power and no
+# coverage.
+#
+# WHAT DID NOT CHANGE, AND WHY IT MATTERS. Every scanner, probe and composite
+# family stays. They are what populate the top score band: the band begins at
+# math risk 0.755895, and a credential attack scores 0.75 to 0.78 while a port
+# sweep scores 0.83. An API-*only* matrix would add hundreds of positives at 0.75
+# and leave the top band exactly as wide as it was, which would have been an
+# expensive way to learn nothing. The enrichment is additive, not substitutive.
+#
+# THE HARD NEGATIVES ARE THE POINT, NOT THE PADDING. §12's last line asks for
+# realistic hard negatives and this matrix leans on them: 250 benign API sources,
+# including the four families designed to look exactly like the attacks they sit
+# beside. `hard-negative/api/stale-credential` is one service account retrying an
+# old password for ten minutes — one principal, many failures — and under the
+# ungated failure-span term measured in P15.4 it scored 0.784, higher than
+# several real attacks. If any of them reaches the top band the bound collapses,
+# and that is the test rather than a hazard to be engineered around.
+#
+# 476 benign and 280 malicious source groups, 756 in total — within the 762
+# RFC 5737 documentation addresses the generators may draw from.
+
+matrix_version = "1.0"
+dataset_version = "dataset-p15-5-cal-v1"
+snapshot_interval_seconds = 2.0
+max_samples_per_source = 40
+max_samples_per_scenario = 1600
+
+
+# --- public_website ---------------------------------------------------------
+# Drawn down on the benign side, untouched on the malicious side. The scanners
+# here are a large share of what fills the top band.
+
+[[scenario]]
+id = "benign/web/browse"
+group = "benign-web"
+generator = "benign.web_client"
+runs = 16
+params = { requests = 16, period = 1.1, follow_ups = 2 }
+site_group = "site-web-1"
+profile_type = "public_website"
+
+[[scenario]]
+id = "benign/web/browse-slow"
+group = "benign-web"
+generator = "benign.web_client"
+runs = 10
+params = { requests = 12, period = 3.4, follow_ups = 1 }
+site_group = "site-web-2"
+profile_type = "public_website"
+
+[[scenario]]
+id = "benign/web/page-burst"
+group = "benign-web-burst"
+generator = "benign.web_burst"
+runs = 12
+params = { bursts = 5, burst_size = 9 }
+site_group = "site-web-1"
+profile_type = "public_website"
+
+[[scenario]]
+id = "hard-negative/web/asset-fetch"
+group = "profile-web-assets"
+generator = "profiles.asset_fetch"
+runs = 14
+params = { pages = 4, assets = 22 }
+site_group = "site-web-2"
+profile_type = "public_website"
+
+[[scenario]]
+id = "hard-negative/content-crawler"
+group = "hard-negative-crawler"
+generator = "composite.content_crawler"
+runs = 14
+site_group = "site-web-3"
+profile_type = "public_website"
+
+[[scenario]]
+id = "benign/retry/flaky-link"
+group = "benign-retry"
+generator = "benign.retry_then_success"
+runs = 12
+params = { attempts = 16, period = 1.8 }
+site_group = "site-web-3"
+profile_type = "public_website"
+
+[[scenario]]
+id = "benign/noise/ambient"
+group = "benign-noise"
+generator = "benign.ambient_noise"
+runs = 10
+params = { contacts_count = 12, period = 5.5 }
+site_group = "site-web-1"
+profile_type = "public_website"
+
+[[scenario]]
+id = "scan/sequential/50-ports"
+group = "scan-sequential"
+generator = "scanner.sequential_scan"
+runs = 10
+params = { port_count = 50, period = 0.5 }
+site_group = "site-web-1"
+profile_type = "public_website"
+
+[[scenario]]
+id = "scan/randomized/100-ports"
+group = "scan-randomized"
+generator = "scanner.randomized_scan"
+runs = 8
+params = { port_count = 100, period = 0.35 }
+site_group = "site-web-2"
+profile_type = "public_website"
+
+[[scenario]]
+id = "scan/connect-only"
+group = "scan-connect"
+generator = "scanner.connect_scan"
+runs = 8
+site_group = "site-web-3"
+profile_type = "public_website"
+
+[[scenario]]
+id = "probe/repeated"
+group = "probe-repeated"
+generator = "protocol.repeated_probes"
+runs = 8
+site_group = "site-web-2"
+profile_type = "public_website"
+
+[[scenario]]
+id = "protocol/mismatch"
+group = "protocol-mismatch"
+generator = "protocol.protocol_mismatch"
+runs = 10
+site_group = "site-web-3"
+profile_type = "public_website"
+
+[[scenario]]
+id = "positive/web/login-stuffing"
+group = "positive-web-stuffing"
+generator = "profiles.login_stuffing"
+runs = 16
+params = { attempts = 40, period = 2.0 }
+site_group = "site-web-1"
+profile_type = "public_website"
+
+[[scenario]]
+id = "composite/paced-breadth-sweep"
+group = "composite-paced-breadth"
+generator = "composite.paced_breadth_sweep"
+runs = 10
+site_group = "site-web-2"
+profile_type = "public_website"
+
+
+# --- api --------------------------------------------------------------------
+# The profile this matrix exists for. 250 benign sources and 108 malicious ones,
+# and the benign side is deliberately the larger: the question the bound answers
+# is what fraction of the sources in a score band are malicious, and a corpus
+# with no realistic benign API traffic would answer it flatteringly.
+
+[[scenario]]
+id = "benign/api/client"
+group = "benign-api"
+generator = "benign.web_client"
+runs = 20
+params = { requests = 20, period = 0.9, follow_ups = 1, ports = [8080, 8443] }
+site_group = "site-api-1"
+profile_type = "api"
+
+[[scenario]]
+id = "hard-negative/api/authenticated-batch"
+group = "profile-api-batch"
+generator = "profiles.authenticated_batch"
+runs = 32
+params = { bursts = 6, burst_size = 14 }
+site_group = "site-api-1"
+profile_type = "api"
+
+[[scenario]]
+id = "hard-negative/api/high-rate"
+group = "profile-api-high-rate"
+generator = "profiles.high_rate_api"
+runs = 28
+params = { calls = 120, period = 0.55 }
+site_group = "site-api-2"
+profile_type = "api"
+
+[[scenario]]
+id = "hard-negative/api/service-account"
+group = "profile-api-service-account"
+generator = "profiles.service_account"
+runs = 28
+params = { calls = 40, period = 9.0 }
+site_group = "site-api-2"
+profile_type = "api"
+
+[[scenario]]
+id = "hard-negative/api/stale-credential"
+group = "profile-api-stale-credential"
+generator = "profiles.stale_credential_client"
+runs = 26
+params = { attempts = 21, period = 26.0 }
+site_group = "site-api-3"
+profile_type = "api"
+
+[[scenario]]
+id = "hard-negative/batch-api-client"
+group = "hard-negative-batch-api"
+generator = "composite.batch_api_client"
+runs = 22
+site_group = "site-api-1"
+profile_type = "api"
+
+[[scenario]]
+id = "hard-negative/backup-client"
+group = "hard-negative-backup"
+generator = "composite.backup_client"
+runs = 20
+site_group = "site-api-3"
+profile_type = "api"
+
+[[scenario]]
+id = "hard-negative/health-check/load-balancer"
+group = "hard-negative-health-check"
+generator = "benign.health_checker"
+runs = 20
+params = { checks = 90, period = 0.8 }
+site_group = "site-api-2"
+profile_type = "api"
+
+[[scenario]]
+id = "hard-negative/monitoring/agent"
+group = "hard-negative-monitoring"
+generator = "benign.monitoring_agent"
+runs = 18
+params = { checks = 40, period = 3.0 }
+site_group = "site-api-1"
+profile_type = "api"
+
+[[scenario]]
+id = "hard-negative/monitoring/fast-agent"
+group = "hard-negative-monitoring"
+generator = "benign.monitoring_agent"
+runs = 16
+params = { checks = 70, period = 1.2 }
+site_group = "site-api-3"
+profile_type = "api"
+
+[[scenario]]
+id = "hard-negative/health-check/connect-probe"
+group = "hard-negative-connect"
+generator = "benign.connect_probe"
+runs = 20
+params = { checks = 40, period = 2.0 }
+site_group = "site-api-2"
+profile_type = "api"
+
+[[scenario]]
+id = "positive/api/credential-spray"
+group = "positive-api-spray"
+generator = "profiles.api_credential_spray"
+runs = 22
+params = { principals = 18, period = 3.4 }
+site_group = "site-api-1"
+profile_type = "api"
+
+[[scenario]]
+id = "positive/api/patient-account-walk"
+group = "positive-api-patient-walk"
+generator = "profiles.patient_account_walk"
+runs = 22
+params = { principals = 14, delay = 42.0 }
+site_group = "site-api-3"
+profile_type = "api"
+
+[[scenario]]
+id = "credential/automation"
+group = "credential-automation"
+generator = "protocol.credential_automation"
+runs = 12
+site_group = "site-api-2"
+profile_type = "api"
+
+[[scenario]]
+id = "credential/low-rate"
+group = "credential-low-rate"
+generator = "protocol.low_rate_credentials"
+runs = 12
+site_group = "site-api-3"
+profile_type = "api"
+
+[[scenario]]
+id = "composite/credential-spray"
+group = "composite-credential-spray"
+generator = "composite.credential_spray"
+runs = 14
+site_group = "site-api-1"
+profile_type = "api"
+
+[[scenario]]
+id = "scan/horizontal/single-service"
+group = "scan-horizontal"
+generator = "scanner.horizontal_scan"
+runs = 14
+site_group = "site-api-2"
+profile_type = "api"
+
+[[scenario]]
+id = "recon/multi-stage"
+group = "recon-multi-stage"
+generator = "scanner.multi_stage_recon"
+runs = 12
+site_group = "site-api-3"
+profile_type = "api"
+
+
+# --- admin ------------------------------------------------------------------
+
+[[scenario]]
+id = "hard-negative/admin/login-mistakes"
+group = "profile-admin-mistakes"
+generator = "profiles.admin_login_mistakes"
+runs = 20
+params = { mistakes = 3, period = 6.5 }
+site_group = "site-admin-1"
+profile_type = "admin"
+
+[[scenario]]
+id = "hard-negative/admin/console"
+group = "profile-admin-console"
+generator = "profiles.admin_console"
+runs = 14
+params = { actions = 24, period = 7.0 }
+site_group = "site-admin-1"
+profile_type = "admin"
+
+[[scenario]]
+id = "hard-negative/admin/diagnostic-3"
+group = "hard-negative-admin"
+generator = "benign.admin_diagnostic"
+runs = 12
+params = { port_count = 3, period = 2.5 }
+site_group = "site-admin-2"
+profile_type = "admin"
+
+[[scenario]]
+id = "hard-negative/admin/diagnostic-5"
+group = "hard-negative-admin"
+generator = "benign.admin_diagnostic"
+runs = 12
+params = { port_count = 5, period = 2.5 }
+site_group = "site-admin-1"
+profile_type = "admin"
+
+[[scenario]]
+id = "hard-negative/admin/diagnostic-10"
+group = "hard-negative-admin"
+generator = "benign.admin_diagnostic"
+runs = 12
+params = { port_count = 10, period = 4.0 }
+site_group = "site-admin-2"
+profile_type = "admin"
+
+[[scenario]]
+id = "benign/ssh/short-session"
+group = "benign-ssh"
+generator = "benign.ssh_session"
+runs = 12
+params = { sessions = 4, period = 12.0 }
+site_group = "site-admin-1"
+profile_type = "admin"
+
+[[scenario]]
+id = "hard-negative/discovery/service-discovery"
+group = "hard-negative-discovery"
+generator = "benign.service_discovery"
+runs = 12
+site_group = "site-admin-2"
+profile_type = "admin"
+
+[[scenario]]
+id = "positive/admin/brute-force"
+group = "positive-admin-brute"
+generator = "profiles.admin_brute_force"
+runs = 22
+params = { attempts = 34, period = 1.1 }
+site_group = "site-admin-1"
+profile_type = "admin"
+
+[[scenario]]
+id = "scan/sequential/10-ports"
+group = "scan-sequential"
+generator = "scanner.sequential_scan"
+runs = 12
+params = { port_count = 10, period = 1.5 }
+site_group = "site-admin-2"
+profile_type = "admin"
+
+[[scenario]]
+id = "scan/slow/sequential"
+group = "scan-slow"
+generator = "scanner.slow_scan"
+runs = 7
+site_group = "site-admin-1"
+profile_type = "admin"
+
+[[scenario]]
+id = "scan/slow/randomized"
+group = "scan-slow"
+generator = "scanner.slow_scan"
+runs = 7
+params = { port_count = 14, delay = 11.0, order = "random" }
+site_group = "site-admin-2"
+profile_type = "admin"
+
+
+# --- payment_webhook --------------------------------------------------------
+
+[[scenario]]
+id = "hard-negative/webhook/signed-callback"
+group = "profile-webhook-signed"
+generator = "profiles.signed_webhook"
+runs = 18
+params = { callbacks = 50, period = 4.0 }
+site_group = "site-webhook-1"
+profile_type = "payment_webhook"
+
+[[scenario]]
+id = "benign/webhook/retry"
+group = "benign-retry"
+generator = "benign.retry_then_success"
+runs = 10
+params = { attempts = 12, period = 2.6 }
+site_group = "site-webhook-1"
+profile_type = "payment_webhook"
+
+[[scenario]]
+id = "probe/webhook/repeated"
+group = "probe-repeated"
+generator = "protocol.repeated_probes"
+runs = 8
+site_group = "site-webhook-1"
+profile_type = "payment_webhook"
+
+
+# --- honeypot ---------------------------------------------------------------
+# Slightly enriched on the malicious side. Decoy interaction is a carrying
+# family and these sources reach the top band readily, which is where the bound
+# is set.
+
+[[scenario]]
+id = "hard-negative/deception/brush-past"
+group = "hard-negative-deception"
+generator = "deception.decoy_brush_past"
+runs = 16
+site_group = "site-honeypot-1"
+profile_type = "honeypot"
+
+[[scenario]]
+id = "deception/decoy-enumeration"
+group = "deception-enumeration"
+generator = "deception.decoy_enumeration"
+runs = 14
+site_group = "site-honeypot-1"
+profile_type = "honeypot"
+
+[[scenario]]
+id = "composite/decoy-then-enumerate"
+group = "composite-decoy-recon"
+generator = "composite.decoy_then_enumerate"
+runs = 14
+site_group = "site-honeypot-1"
+profile_type = "honeypot"
+
+[[scenario]]
+id = "probe/service-enumeration"
+group = "probe-enumeration"
+generator = "scanner.service_enumeration"
+runs = 8
+site_group = "site-honeypot-1"
+profile_type = "honeypot"
+
+[[scenario]]
+id = "scan/burst/pause"
+group = "scan-burst"
+generator = "scanner.burst_scan"
+runs = 10
+site_group = "site-honeypot-1"
+profile_type = "honeypot"

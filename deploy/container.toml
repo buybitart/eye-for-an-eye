@@ -1,0 +1,28 @@
+config_version = 1
+[deployment]
+profile = "honeypot"
+egress = "disabled"
+[runtime]
+sensor_id = "container-lab"
+status_file = "/run/eye-for-an-eye/status.json"
+[network]
+bind_address = "127.0.0.1"
+port = 1234
+[deception]
+secret_file = "/run/secrets/deception.secret"
+decoy_ports = [1234]
+port_profiles = { "1234" = "http" }
+source_allowlist = ["127.0.0.0/8", "::1/128"]
+[storage]
+enabled = true
+path = "/var/lib/eye-for-an-eye/events.sqlite3"
+[logging]
+file = "" # stdout; container runtime owns rotation.
+[api]
+enabled = true
+bind_address = "127.0.0.1"
+port = 8777
+[metrics]
+enabled = true
+bind_address = "127.0.0.1"
+port = 8778

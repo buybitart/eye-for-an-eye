@@ -1,0 +1,61 @@
+# Bounded TCP deception; no raw capture or automatic firewall changes.
+config_version = 1
+[deployment]
+profile = "honeypot"
+egress = "disabled"
+[network]
+bind_address = "127.0.0.1"
+port = 1234
+protocol = "tcp"
+udp_responses = false
+[deception]
+enabled = true
+secret_file = ""
+mode = "sensor"
+port_set = "custom"
+decoy_ports = [1234]
+source_allowlist = ["127.0.0.0/8", "::1/128"]
+[active_probes]
+enabled = false
+[enrichment]
+enabled = false
+rdap_enabled = false
+[runtime]
+status_file = "status.json"
+[storage]
+enabled = true
+path = "events.sqlite3"
+retention_seconds = 86400.0
+max_events = 100000
+max_bytes = 134217728
+[api]
+enabled = true
+bind_address = "127.0.0.1"
+port = 8777
+[metrics]
+enabled = true
+bind_address = "127.0.0.1"
+port = 8778
+[firewall]
+enabled = false
+
+# P7: local decisions; no model download or firewall changes by default.
+[ml]
+enabled = true
+required = false
+model_path = ""
+manifest_path = ""
+max_pending = 64
+max_concurrent = 1
+inference_timeout_ms = 200
+
+[decision]
+enabled = true
+mode = "shadow"
+interval_ms = 2000
+
+[enforcement]
+enabled = false
+management_networks = []
+allowlist = []
+trusted_proxies = []

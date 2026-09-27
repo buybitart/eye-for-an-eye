@@ -1,0 +1,116 @@
+{
+  "created_at": "2026-09-10T06:42:20+00:00",
+  "dataset_version": "dataset-v1",
+  "evaluation": {
+    "holdout_anomaly_score": {
+      "mean": 0.40570281451693324,
+      "p95": 0.7003857874863488,
+      "share_above_0_5": 0.34782608695652173
+    },
+    "holdout_groups": [
+      "benign/noise/ambient#02",
+      "benign/noise/ambient#03",
+      "benign/noise/ambient#04",
+      "benign/retry/flaky-link#01"
+    ],
+    "holdout_rows": 46,
+    "onnx_parity_max_abs_error": 2.2540404709392448e-07,
+    "train_anomaly_score": {
+      "mean": 0.2021026807719063,
+      "p50": 0.14461351765094674,
+      "p95": 0.6077349732605948,
+      "p99": 1.0,
+      "share_above_0_5": 0.09360730593607305
+    },
+    "train_rows": 438
+  },
+  "feature_names": [
+    "connections_10s",
+    "connections_60s",
+    "connections_900s",
+    "ports_60s",
+    "ports_900s",
+    "destinations_60s",
+    "families_60s",
+    "repetition_60s",
+    "sequential_60s",
+    "anomaly_60s",
+    "credentials_60s",
+    "continuation_60s",
+    "persistence_900s",
+    "burst_10s",
+    "interarrival_mean_60s",
+    "interarrival_cv_60s",
+    "deception_60s",
+    "available_connections_10s",
+    "available_connections_60s",
+    "available_connections_900s",
+    "available_ports_60s",
+    "available_ports_900s",
+    "available_destinations_60s",
+    "available_families_60s",
+    "available_repetition_60s",
+    "available_sequential_60s",
+    "available_anomaly_60s",
+    "available_credentials_60s",
+    "available_continuation_60s",
+    "available_persistence_900s",
+    "available_burst_10s",
+    "available_interarrival_mean_60s",
+    "available_interarrival_cv_60s",
+    "available_deception_60s"
+  ],
+  "feature_schema_version": 1,
+  "input_dtype": "float32",
+  "input_name": "X",
+  "input_shape": [
+    1,
+    34
+  ],
+  "limitations": [
+    "an anomaly is unusual behaviour, not evidence of an attack",
+    "fitted on one synthetic corpus; it has not seen production traffic",
+    "scores are uncalibrated and are not probabilities"
+  ],
+  "manifest_version": 1,
+  "model_family": "isolation_forest",
+  "model_version": "isolation-v1",
+  "normalization": {
+    "formula": "anomaly_score = clamp01((high - raw) / (high - low))",
+    "high": 0.19263154729156107,
+    "low": -0.047377167530911146,
+    "method": "linear_clamped_on_benign_quantiles",
+    "raw_semantics": "sklearn_isolation_forest_decision_function_higher_is_more_normal"
+  },
+  "output_names": [
+    "label",
+    "scores"
+  ],
+  "parameters": {
+    "contamination": 0.02,
+    "max_samples": 256,
+    "n_estimators": 128,
+    "random_state": 20260910
+  },
+  "raw_score_output_index": 1,
+  "recommended_mode": "shadow",
+  "score_semantics": "normalised_anomaly_score_0_common_1_unusual",
+  "sha256": "3b9f86573554d80582645db2ba5c2e98d7124d47bb47fda7e657e145277dc801",
+  "software": {
+    "onnxruntime": "1.29.0",
+    "python": "3.12.3",
+    "scikit_learn": "1.9.0",
+    "skl2onnx": "1.20.0"
+  },
+  "training_population": {
+    "description": "validated benign-like rows only; no malicious rows and no unreviewed shadow rows",
+    "groups_excluded_for_evaluation": [
+      "benign/noise/ambient#02",
+      "benign/noise/ambient#03",
+      "benign/noise/ambient#04",
+      "benign/retry/flaky-link#01"
+    ],
+    "mode": "trusted_benign",
+    "rows": 438
+  }
+}

@@ -1,0 +1,251 @@
+{
+ "observability_schema_version": 1,
+ "classes": [
+  "IN_SCOPE_OBSERVABLE",
+  "IN_SCOPE_PARTIALLY_OBSERVABLE",
+  "OUT_OF_SCOPE",
+  "INVALID_TEST_SCENARIO"
+ ],
+ "by_class": {
+  "IN_SCOPE_OBSERVABLE": [
+   "benign-api",
+   "benign-noise",
+   "benign-retry",
+   "benign-ssh",
+   "benign-web",
+   "benign-web-burst",
+   "composite-credential-spray",
+   "composite-decoy-recon",
+   "composite-paced-breadth",
+   "credential-automation",
+   "credential-low-rate",
+   "deception-enumeration",
+   "hard-negative-admin",
+   "hard-negative-backup",
+   "hard-negative-batch-api",
+   "hard-negative-connect",
+   "hard-negative-crawler",
+   "hard-negative-deception",
+   "hard-negative-discovery",
+   "hard-negative-health-check",
+   "hard-negative-monitoring",
+   "probe-enumeration",
+   "probe-repeated",
+   "protocol-mismatch",
+   "recon-multi-stage",
+   "scan-burst",
+   "scan-connect",
+   "scan-horizontal",
+   "scan-randomized",
+   "scan-sequential",
+   "scan-slow"
+  ],
+  "IN_SCOPE_PARTIALLY_OBSERVABLE": [
+   "benign-truncated",
+   "probe-truncated"
+  ],
+  "OUT_OF_SCOPE": [],
+  "INVALID_TEST_SCENARIO": []
+ },
+ "families": {
+  "benign-api": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "observed": "a programmatic client on one port",
+   "not_observed": ""
+  },
+  "benign-noise": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "observed": "ambient background traffic",
+   "not_observed": ""
+  },
+  "benign-retry": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "observed": "a flaky link retrying; retry_observations distinguishes a retransmission from a fresh attempt",
+   "not_observed": ""
+  },
+  "benign-ssh": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "observed": "an interactive session",
+   "not_observed": ""
+  },
+  "benign-truncated": {
+   "class": "IN_SCOPE_PARTIALLY_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "observed": "ordinary browsing through a truncated capture",
+   "not_observed": "payload-derived evidence unavailable, exactly as for probe-truncated. The pair exists so a truncated capture cannot become a proxy for guilt"
+  },
+  "benign-web": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "observed": "ordinary browsing",
+   "not_observed": ""
+  },
+  "benign-web-burst": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "observed": "a page pulling many assets at once",
+   "not_observed": ""
+  },
+  "composite-credential-spray": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "observed": "credential-shaped requests spread across several addresses and services. Request shape and destination breadth are both visible",
+   "not_observed": ""
+  },
+  "composite-decoy-recon": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "observed": "decoy contact followed by service enumeration. Both halves are ours to see: the decoy is this host-s and the ports are this host-s",
+   "not_observed": ""
+  },
+  "composite-paced-breadth": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "observed": "slow pacing, wide port breadth and several addresses of this host at once. Every component reaches the sensor: ports, destinations and the 900 s span",
+   "not_observed": "nothing relevant. Withholding rate is the test, not a limitation"
+  },
+  "credential-automation": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "observed": "credential_attempts from request shape, never content",
+   "not_observed": ""
+  },
+  "credential-low-rate": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "observed": "the same credential shapes under a rate threshold; the evidence is persistence and repetition rather than rate",
+   "not_observed": ""
+  },
+  "deception-enumeration": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "observed": "contact with a decoy port that exists only to be contacted. The single cleanest signal available to this sensor",
+   "not_observed": ""
+  },
+  "hard-negative-admin": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "observed": "an administrator touching several services in one sitting: real port breadth, legitimately",
+   "not_observed": ""
+  },
+  "hard-negative-backup": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "observed": "sustained volume to one service with every exchange completed. The control for the connections_60s term added in P15.3",
+   "not_observed": ""
+  },
+  "hard-negative-batch-api": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "observed": "authenticated batch jobs in bursts. The control for the credential term: a real API client authenticates constantly",
+   "not_observed": ""
+  },
+  "hard-negative-connect": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "observed": "a connect probe that completes and leaves",
+   "not_observed": ""
+  },
+  "hard-negative-crawler": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "observed": "a polite crawler across several addresses of one site. The control for the destination-breadth re-normalisation added in P15.3",
+   "not_observed": ""
+  },
+  "hard-negative-deception": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "observed": "brushing past a decoy without enumerating it. The control that stops \"touched a decoy\" from becoming a signature",
+   "not_observed": ""
+  },
+  "hard-negative-discovery": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "observed": "service discovery, which is breadth with a good reason",
+   "not_observed": ""
+  },
+  "hard-negative-health-check": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "observed": "high-rate periodic checking from a load balancer",
+   "not_observed": ""
+  },
+  "hard-negative-monitoring": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "observed": "a metronomic agent: the most regular timing on the network and entirely legitimate. The reason a timing term may never be sufficient alone",
+   "not_observed": ""
+  },
+  "probe-enumeration": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "observed": "distinct service probes: unique_protocol_probes and probe_family_diversity",
+   "not_observed": ""
+  },
+  "probe-repeated": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "observed": "the same probe body repeated: max_probe_repetition over payload digests, plus inter-arrival regularity and incomplete connection attempts",
+   "not_observed": "deliberately close to a monitoring agent; separating the two needs more than repetition alone, and that is an evidence problem rather than a visibility one"
+  },
+  "probe-truncated": {
+   "class": "IN_SCOPE_PARTIALLY_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "observed": "the same behaviour as probe-repeated seen through a truncated capture: timing, ports, addresses and connection attempts all survive",
+   "not_observed": "the payload is cut by snaplen, so payload digests, credential shapes and protocol-family classification are unavailable BY CONSTRUCTION. Any evidence family that depends on payload content cannot contribute"
+  },
+  "protocol-mismatch": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "observed": "protocol_anomalies: a request shaped for one service sent to another",
+   "not_observed": ""
+  },
+  "recon-multi-stage": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "observed": "breadth then focus, across the 900 s window; several families react",
+   "not_observed": ""
+  },
+  "scan-burst": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "observed": "port breadth in bursts; burst fraction and interval variance both react",
+   "not_observed": ""
+  },
+  "scan-connect": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "observed": "completed connections across ports; handshake completion is counted",
+   "not_observed": ""
+  },
+  "scan-horizontal": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "observed": "one service across several addresses OF THIS HOST. SENSOR_ADDRESSES are the monitored host-s own addresses, so unique_destinations counts them and the traffic crosses this sensor-s capture path",
+   "not_observed": "breadth across hosts this sensor does not protect is invisible, and a real horizontal sweep of an unrelated network would be OUT_OF_SCOPE"
+  },
+  "scan-randomized": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "observed": "port breadth without sequence: unique_destination_ports reacts, sequential_port_fraction deliberately does not",
+   "not_observed": ""
+  },
+  "scan-sequential": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "observed": "consecutive destination ports on one host: unique_destination_ports and sequential_port_fraction both react",
+   "not_observed": ""
+  },
+  "scan-slow": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "observed": "port breadth accumulated over the 900 s window; persistence and ports_900s are the evidence, not rate",
+   "not_observed": ""
+  }
+ },
+ "note": "classified from the sensor architecture, before the P15.3 locked corpus existed. Detection difficulty is not a reason to reclassify"
+}

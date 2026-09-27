@@ -1,0 +1,15 @@
+config_version = 1
+[deployment]
+profile = "lab"
+egress = "disabled"
+# dry-run works without Linux. Apply is restricted to this named lab namespace.
+[firewall]
+enabled = true
+lab_namespace = "e4e-lab-sensor"
+destination_addresses = ["10.203.1.2"]
+decoy_ports = [8080, 8443]
+real_service_ports = [2220]
+management_ports = [22, 3389]
+listener_address = "10.203.0.1"
+listener_port = 1234
+lease_seconds = 30

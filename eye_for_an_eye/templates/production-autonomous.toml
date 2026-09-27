@@ -1,0 +1,196 @@
+# Production Autonomous.
+#
+# The same analysis stack as Production Shadow, with one difference that
+# matters: a decision the authority takes is carried out. A source that clears
+# every gate gets a temporary local firewall block that expires on its own.
+#
+# READ THIS BEFORE YOU USE IT.
+#
+# Real-world validation of autonomous blocking is PENDING for this project.
+# The decision path has controlled technical validation — unit, integration,
+# clean-clone and real-kernel tests, including a real TCP connection blocked
+# and restored on expiry — and it has no independent evidence from a long
+# running deployment on real traffic. Treat autonomous enforcement as
+# experimental and requiring validation on your own site.
+# See docs/VALIDATION_STATUS.md and docs/SHADOW_VALIDATION_PLAN.md.
+#
+# Prerequisites, all of them:
+#
+#   1. You have run Production Shadow on this host and read its decisions.
+#   2. [enforcement] management_networks contains every range you administer
+#      this host from. A source inside them is never blocked.
+#   3. [web] trusted_proxy_networks contains your CDN or reverse proxy, if any.
+#   4. [autonomy] calibrator_path points at a calibrator file that exists.
+#      The configuration will not validate without it in autonomous mode.
+#   5. `eye-for-an-eye config validate` passes.
+#   6. `eye-for-an-eye doctor` passes.
+#   7. `eye-for-an-eye autonomy readiness` passes.
+#   8. `eye-for-an-eye autonomy preflight` shows the mode, the component health
+#      and the cost profile each of your sites resolves to.
+#
+# There is no command that disarms a sensor that is already running. To stop
+# it taking new decisions, set [autonomy] enabled = false or [enforcement]
+# host_enabled = false and restart the service. To release every block now,
+# run the privileged helper's `cleanup` verb. See docs/AUTONOMOUS_MODE.md.
+config_version = 1
+
+[deployment]
+profile = "sensor"
+egress = "disabled"
+
+[network]
+bind_address = "127.0.0.1"
+udp_responses = false
+
+[capture]
+# REQUIRED for network analysis: the IPC socket of a separate CAP_NET_RAW
+# capture helper. See docs/PRIVILEGES.md.
+ipc_socket = ""
+pcap_path = ""
+
+[web]
+# REQUIRED for web analysis: the access log of the server you are protecting.
+enabled = true
+access_log_path = ""
+start_at_end = true
+# REQUIRED if you are behind a CDN or reverse proxy. A client seen only behind
+# a trusted proxy is never network-blocked, because the address on the packet
+# is the proxy's and blocking it would deny everybody.
+trusted_proxy_networks = []
+trust_forwarded_headers = false
+store_raw_path = false
+store_query_values = false
+
+[correlation]
+enabled = true
+
+[enrichment]
+enabled = false
+rdap_enabled = false
+
+[active_probes]
+enabled = false
+
+[deception]
+# Off. Available, and not appropriate on a host serving real users; the
+# honeypot profile is where the decoy listener belongs.
+enabled = false
+
+[lab]
+enabled = false
+
+[firewall]
+enabled = false
+
+[runtime]
+sensor_id = "local"
+status_file = "status.json"
+enforce_unprivileged = true
+
+[storage]
+enabled = true
+path = "events.sqlite3"
+retention_seconds = 604800.0
+max_events = 1000000
+max_bytes = 1073741824
+
+[logging]
+file = "eye-for-an-eye.log"
+
+[api]
+enabled = true
+bind_address = "127.0.0.1"
+port = 8777
+
+[metrics]
+enabled = true
+bind_address = "127.0.0.1"
+port = 8778
+
+[ml]
+enabled = true
+required = false
+model_path = ""
+manifest_path = ""
+inference_timeout_ms = 200
+
+[decision]
+enabled = true
+mode = "enforce"
+interval_ms = 2000
+
+[enforcement]
+# Temporary local blocks, through the privileged helper and nothing else.
+enabled = false
+host_enabled = true
+# REQUIRED. Every range you administer this host from. A source inside them is
+# refused as a block candidate. Leave this empty and the readiness gate fails,
+# which is the intended behaviour: an empty list is not a statement that you
+# have no management network.
+management_networks = []
+allowlist = []
+trusted_proxies = []
+# The escalating block ladder, in seconds. A first offence gets the first
+# value, a repeat the next, and the last value is the longest any block can
+# last. The configuration refuses a value above 43200 — twelve hours — so no
+# value here can make a block permanent. Every block expires without anybody
+# acting. See docs/ENFORCEMENT.md.
+block_seconds = [300, 1800, 7200, 43200]
+
+[reliability]
+# Enable each of these once its artifact exists. Each reduces trust in the
+# model; none of them creates a block on its own.
+anomaly_enabled = false
+anomaly_model_path = ""
+anomaly_manifest_path = ""
+ood_enabled = false
+distribution_path = ""
+ood_suppresses_block = true
+drift_enabled = false
+degraded_model_suppresses_block = true
+review_queue_enabled = false
+
+[learning]
+enabled = false
+auto_prepare_dataset = false
+auto_train = false
+
+[model_governance]
+# The governance subsystem is present and active. Automatic promotion to ACTIVE
+# stays off: that transition is the highest-impact one and it is gated on
+# evidence this project does not yet have. Guarded activation and automatic
+# rollback remain available.
+auto_promote_enabled = false
+auto_promote_global_enabled = false
+guarded_activation_enabled = true
+auto_rollback_enabled = true
+
+[autonomy]
+enabled = true
+mode = "autonomous"
+default_cost_profile = "public_website"
+# Map each site or service scope to the cost profile that reflects what a wrong
+# block costs there, for example:
+#   cost_profiles = { "SITE:api" = "api", "SITE:admin" = "admin" }
+# A site you do not map is priced at default_cost_profile. `autonomy preflight`
+# reports every site that resolves to the default, because a site somebody
+# meant to price and did not looks exactly like a site nobody priced.
+cost_profiles = {}
+# REQUIRED in autonomous mode. Copy models/mathrisk-cal-v4-isotonic.json next
+# to this file, or give an absolute path. The configuration refuses to validate
+# without it, because a block decided without a calibrated probability is a
+# block decided on a number that is not a probability.
+calibrator_path = "mathrisk-cal-v4-isotonic.json"
+decision_journal_path = "decision-journal.jsonl"
+journal_include_source = false
+# Set this to true if you require a decision to be durably recorded before it
+# may be acted on. The default is false: the compact summary in the operational
+# log still carries the decision, so a block stays explainable either way.
+journal_required_for_action = false
+shadow_export_path = "shadow-export.jsonl"
+shadow_export_collection = "real_shadow"
+shadow_export_placement = ""
+shadow_export_segment = ""
+
+[sites]
+enabled = false

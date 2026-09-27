@@ -1,0 +1,40 @@
+[Unit]
+Description=Eye for an Eye capture-only helper
+After=eye-for-an-eye.service
+BindsTo=eye-for-an-eye.service
+
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=eye-for-an-eye-capture
+Group=eye-for-an-eye-ipc
+WorkingDirectory=/opt/eye-for-an-eye
+ExecStartPre=/opt/eye-for-an-eye/.venv/bin/eye-for-an-eye capture-helper --config /etc/eye-for-an-eye/capture.toml --check-config
+ExecStart=/opt/eye-for-an-eye/.venv/bin/eye-for-an-eye capture-helper --config /etc/eye-for-an-eye/capture.toml
+Restart=on-failure
+RestartSec=3
+RestartPreventExitStatus=2 3 4 6
+TimeoutStopSec=3
+KillMode=control-group
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+CapabilityBoundingSet=CAP_NET_RAW
+AmbientCapabilities=CAP_NET_RAW
+RestrictAddressFamilies=AF_UNIX AF_PACKET AF_INET AF_INET6 AF_NETLINK
+LimitNOFILE=1024
+TasksMax=32
+MemoryMax=128M
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,179 @@
+# Production Shadow.
+#
+# The recommended first production deployment. The complete analysis stack runs
+# and the autonomous decision authority produces real decisions, including
+# would_action = TEMP_BLOCK. Nothing is blocked: no host firewall rule is
+# created, because [enforcement] host_enabled is false and [autonomy] mode is
+# "shadow". Both are required for that, and both are set below.
+#
+# Before you start, set the four operator values marked REQUIRED. Everything
+# else has a working default. Run `eye-for-an-eye config validate` and then
+# `eye-for-an-eye doctor` before `run`; they name what is missing.
+#
+# See docs/SHADOW_MODE.md and docs/SHADOW_VALIDATION_PLAN.md.
+config_version = 1
+
+[deployment]
+profile = "sensor"
+# Local-first: no outbound connection is made by the defensive path. RDAP
+# enrichment and active probes are refused while this is "disabled".
+egress = "disabled"
+
+[network]
+bind_address = "127.0.0.1"
+udp_responses = false
+
+[capture]
+# REQUIRED for network analysis: the IPC socket of a separate CAP_NET_RAW
+# capture helper. Leave empty to run web-log analysis only.
+# See docs/PRIVILEGES.md.
+ipc_socket = ""
+pcap_path = ""
+
+[web]
+# REQUIRED for web analysis: the access log of the server you are protecting.
+enabled = true
+access_log_path = ""
+start_at_end = true
+# Set these to your CDN or reverse proxy ranges if you have one. A client seen
+# only behind a proxy is never network-blocked; see docs/TRUSTED_PROXIES.md.
+trusted_proxy_networks = []
+trust_forwarded_headers = false
+store_raw_path = false
+store_query_values = false
+
+[correlation]
+enabled = true
+
+[enrichment]
+enabled = false
+rdap_enabled = false
+
+[active_probes]
+enabled = false
+
+[deception]
+# Off in a production sensor. The decoy listener binds a port and serves a
+# bounded fake dialogue, which is a honeypot's job rather than a web server's.
+# `eye-for-an-eye config init --profile honeypot` is the profile for that.
+enabled = false
+
+[lab]
+enabled = false
+
+[firewall]
+enabled = false
+
+[runtime]
+sensor_id = "local"
+status_file = "status.json"
+enforce_unprivileged = true
+
+[storage]
+enabled = true
+path = "events.sqlite3"
+retention_seconds = 604800.0
+max_events = 1000000
+max_bytes = 1073741824
+
+[logging]
+file = "eye-for-an-eye.log"
+
+[api]
+enabled = true
+bind_address = "127.0.0.1"
+port = 8777
+
+[metrics]
+enabled = true
+bind_address = "127.0.0.1"
+port = 8778
+
+# Auxiliary local ML. It is evidence, not authority: the decision still passes
+# through evidence maturity, expected loss and PolicyGuard. required = false
+# means a missing or broken model degrades the component health and does not
+# stop the deterministic path. See docs/ML_ARCHITECTURE.md.
+[ml]
+enabled = true
+required = false
+model_path = ""
+manifest_path = ""
+inference_timeout_ms = 200
+
+[decision]
+enabled = true
+mode = "shadow"
+interval_ms = 2000
+
+[enforcement]
+# The decisive setting for a shadow deployment. Nothing is enforced.
+enabled = false
+host_enabled = false
+# REQUIRED before any future autonomous deployment: the ranges you administer
+# this host from. They are never blocked. Setting them now costs nothing.
+management_networks = []
+allowlist = []
+trusted_proxies = []
+
+# Anomaly, out-of-distribution and drift monitoring. Each is off until its
+# artifact is configured, because a monitor with no reference distribution
+# reports nothing and would otherwise look healthy.
+#
+# An anomaly is not an attack, an out-of-distribution score is not malice and
+# drift is not an attack. They reduce trust in the model; none of them creates
+# a block on its own. See docs/OOD.md and docs/DRIFT.md.
+[reliability]
+anomaly_enabled = false
+anomaly_model_path = ""
+anomaly_manifest_path = ""
+ood_enabled = false
+distribution_path = ""
+ood_suppresses_block = true
+drift_enabled = false
+degraded_model_suppresses_block = true
+review_queue_enabled = false
+
+[learning]
+# Controlled retraining infrastructure. Off until a trusted labelled data path
+# exists: a system decision is never a training label. See docs/SELF_LEARNING.md.
+enabled = false
+auto_prepare_dataset = false
+auto_train = false
+
+[model_governance]
+# Model promotion stays manual. The subsystem is present and its highest-impact
+# transition is gated. See docs/MODEL_GOVERNANCE.md.
+auto_promote_enabled = false
+auto_promote_global_enabled = false
+guarded_activation_enabled = true
+auto_rollback_enabled = true
+
+[autonomy]
+# The full decision authority runs and records what it would have done.
+enabled = true
+mode = "shadow"
+default_cost_profile = "public_website"
+# Map a site or service scope to a cost profile where a wrong block costs more
+# or less than on a public website, for example:
+#   cost_profiles = { "SITE:api" = "api", "SITE:admin" = "admin" }
+# An unmapped scope uses default_cost_profile. `autonomy preflight` reports
+# which profile each configured site actually resolves to.
+cost_profiles = {}
+# RECOMMENDED: the calibrated probability the cost model prices with. Copy
+# models/mathrisk-cal-v4-isotonic.json next to this file. Without it every
+# block is refused with CALIBRATION_UNAVAILABLE, which is safe and is also not
+# a measurement of anything.
+calibrator_path = ""
+# The canonical record of every decision. Bounded, rotated and local.
+decision_journal_path = "decision-journal.jsonl"
+journal_include_source = false
+journal_required_for_action = false
+# Pseudonymous analytic rows for independent evaluation. No addresses, no
+# payloads, no credentials. See docs/SHADOW_VALIDATION_PLAN.md.
+shadow_export_path = "shadow-export.jsonl"
+shadow_export_collection = "real_shadow"
+shadow_export_placement = ""
+shadow_export_segment = ""
+
+[sites]
+enabled = false

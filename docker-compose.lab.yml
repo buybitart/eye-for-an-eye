@@ -1,0 +1,53 @@
+# DO NOT USE ON PUBLIC INTERNET. This private internal subnet is authorized.
+services:
+  honeypot:
+    build: .
+    image: eye-for-an-eye:0.8.0-rc.1-lab
+    user: "10001:10000"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    environment:
+      E4E__NETWORK__BIND_ADDRESS: "0.0.0.0"
+      E4E__DECEPTION__SOURCE_ALLOWLIST: '["172.28.77.0/24"]'
+    networks: [isolated]
+    # No published ports and no host network. Only the internal lab can connect.
+    volumes:
+      - sensor-data:/var/lib/eye-for-an-eye
+    secrets:
+      - source: deception
+        target: deception.secret
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+      - /run/eye-for-an-eye:uid=10001,gid=10000,mode=0750,size=1m
+    mem_limit: 256m
+    pids_limit: 32
+    ulimits:
+      nofile: {soft: 1024, hard: 1024}
+    stop_grace_period: 12s
+  client:
+    image: eye-for-an-eye:0.8.0-rc.1-lab
+    profiles: [test]
+    user: "10001:10000"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    networks: [isolated]
+    depends_on:
+      honeypot: {condition: service_healthy}
+    entrypoint: ["python", "-c"]
+    command: ["import socket; s=socket.create_connection(('honeypot',1234),2); s.sendall(b'GET / HTTP/1.0\\r\\n\\r\\n'); data=s.recv(1024); s.close(); assert data.startswith(b'HTTP/'); print('bounded HTTP response:',len(data))"]
+    mem_limit: 64m
+    pids_limit: 8
+networks:
+  isolated:
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.28.77.0/24
+volumes:
+  sensor-data:
+secrets:
+  deception:
+    # Local Compose preserves host ownership/mode; service UID 10001 must read it.
+    file: ${E4E_LAB_SECRET:?Set path to a generated persistent secret owned by UID 10001 mode 0600}

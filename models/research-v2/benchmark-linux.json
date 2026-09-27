@@ -1,0 +1,142 @@
+{
+  "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+  "python": "3.12.14",
+  "cpu_count": 8,
+  "feature_shape": [
+    1,
+    36
+  ],
+  "candidates": {
+    "logistic": {
+      "model_bytes": 748,
+      "direct_load_ms": 66.04132500000048,
+      "single_validated": {
+        "calls": 10000,
+        "sources_per_call": 1,
+        "elapsed_seconds": 0.3737238609999949,
+        "cpu_seconds": 0.36999999999999966,
+        "cpu_scope": "benchmark_process",
+        "parent_peak_sampled_rss_bytes": 189489152,
+        "model_child_rss_bytes": null,
+        "sources_per_second": 26757.724201078338,
+        "latency_ms": {
+          "p50": 0.02412150000097313,
+          "p95": 0.028649650000645,
+          "p99": 0.04950846999648207
+        }
+      },
+      "batch8_validated": {
+        "calls": 2000,
+        "sources_per_call": 8,
+        "elapsed_seconds": 0.20064997000000062,
+        "cpu_seconds": 0.18999999999999995,
+        "cpu_scope": "benchmark_process",
+        "parent_peak_sampled_rss_bytes": 190054400,
+        "model_child_rss_bytes": null,
+        "sources_per_second": 79740.85418502655,
+        "latency_ms": {
+          "p50": 0.07941100000152801,
+          "p95": 0.10024275000191092,
+          "p99": 0.18585785999519536
+        }
+      },
+      "isolated_ipc": {
+        "calls": 1000,
+        "sources_per_call": 1,
+        "elapsed_seconds": 0.18404280499999714,
+        "cpu_seconds": 0.09000000000000008,
+        "cpu_scope": "model_child",
+        "parent_peak_sampled_rss_bytes": 190078976,
+        "model_child_rss_bytes": 82530304,
+        "sources_per_second": 5433.51857737669,
+        "latency_ms": {
+          "p50": 0.14870349999895893,
+          "p95": 0.27110000000512,
+          "p99": 0.3742342899984408
+        }
+      }
+    },
+    "gradient_boosting": {
+      "model_bytes": 11108,
+      "direct_load_ms": 1.2292179999988662,
+      "single_validated": {
+        "calls": 10000,
+        "sources_per_call": 1,
+        "elapsed_seconds": 0.43366439399999734,
+        "cpu_seconds": 0.4399999999999995,
+        "cpu_scope": "benchmark_process",
+        "parent_peak_sampled_rss_bytes": 191373312,
+        "model_child_rss_bytes": null,
+        "sources_per_second": 23059.30608635594,
+        "latency_ms": {
+          "p50": 0.02461650000284976,
+          "p95": 0.0416840999957202,
+          "p99": 0.05644789000569974
+        }
+      },
+      "batch8_validated": {
+        "calls": 2000,
+        "sources_per_call": 8,
+        "elapsed_seconds": 0.21436743400000324,
+        "cpu_seconds": 0.20999999999999996,
+        "cpu_scope": "benchmark_process",
+        "parent_peak_sampled_rss_bytes": 191533056,
+        "model_child_rss_bytes": null,
+        "sources_per_second": 74638.20274118576,
+        "latency_ms": {
+          "p50": 0.08203450000010548,
+          "p95": 0.14290379999621905,
+          "p99": 0.19976020000427752
+        }
+      },
+      "isolated_ipc": {
+        "calls": 1000,
+        "sources_per_call": 1,
+        "elapsed_seconds": 0.18714235200000218,
+        "cpu_seconds": 0.10000000000000009,
+        "cpu_scope": "model_child",
+        "parent_peak_sampled_rss_bytes": 191537152,
+        "model_child_rss_bytes": 83013632,
+        "sources_per_second": 5343.525873822449,
+        "latency_ms": {
+          "p50": 0.14883400000087477,
+          "p95": 0.2611710499980545,
+          "p99": 0.3495969300006862
+        }
+      }
+    }
+  },
+  "scheduling": {
+    "1000": {
+      "events": 1200,
+      "decision_opportunities": 120,
+      "wall_seconds": 0.5080684200000007,
+      "events_per_second": 2361.8866136179026,
+      "history_retained_bytes": 20871,
+      "mode": "math_only_scheduler_measurement"
+    },
+    "2000": {
+      "events": 1200,
+      "decision_opportunities": 60,
+      "wall_seconds": 0.4877908959999999,
+      "events_per_second": 2460.0705134931427,
+      "history_retained_bytes": 20871,
+      "mode": "math_only_scheduler_measurement"
+    },
+    "5000": {
+      "events": 1200,
+      "decision_opportunities": 40,
+      "wall_seconds": 0.5133236510000003,
+      "events_per_second": 2337.7064307523974,
+      "history_retained_bytes": 20871,
+      "mode": "math_only_scheduler_measurement"
+    }
+  },
+  "limitations": [
+    "microbenchmark_not_network_capacity",
+    "batch_has_zero_wait_time_here",
+    "RSS_sampled_not_OS_peak",
+    "single_measurement_run_no_hardware_SLA"
+  ],
+  "batching_decision": "retain single-source worker: batching throughput benefits require latency/arrival-rate study; no batch wait in production"
+}

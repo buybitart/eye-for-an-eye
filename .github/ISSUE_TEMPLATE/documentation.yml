@@ -1,0 +1,23 @@
+name: Documentation problem
+description: A page says something that is wrong, unclear, or no longer true.
+labels: [documentation]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        A page that describes a different version of the software is the defect
+        this project most wants reported. **Not for security vulnerabilities:**
+        read `SECURITY.md`.
+  - type: input
+    id: page
+    attributes:
+      label: Which page
+      description: The path, for example `docs/AUTONOMOUS_MODE.md`.
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What it says, and what is actually true
+    validations:
+      required: true

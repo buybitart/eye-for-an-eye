@@ -1,0 +1,306 @@
+# dataset-generalization-test-v2: the P15.3 locked benchmark.
+#
+# The twenty-seven families of matrix-eval-v1, trimmed on the plain benign side
+# to make room, plus SIX FAMILIES THAT DID NOT EXIST when the MathRisk v2
+# weights were chosen. Those six are compositions of primitives the corpus has
+# only ever shown separately -- slow pacing with port breadth and address
+# breadth; credential shapes spread thin across addresses; decoy contact
+# followed by service enumeration -- and three benign controls built from the
+# same primitives: sustained volume, address breadth, authenticated bursts.
+#
+# `dataset/split.py` withholds all six from training entirely, so no feature, no
+# weight, no calibrator and no gate was fitted against them. They are what makes
+# this a generalisation benchmark rather than another sample of the same corpus.
+#
+# The plain benign families are trimmed rather than the hard negatives: a hard
+# negative is the evidence that a term does not fire on legitimate traffic, and
+# there is no spare capacity there.
+matrix_version = "2.0"
+dataset_version = "dataset-generalization-test-v2"
+snapshot_interval_seconds = 2.0
+max_samples_per_source = 40
+max_samples_per_scenario = 960
+
+
+[[scenario]]
+id = "benign/web/browse"
+group = "benign-web"
+generator = "benign.web_client"
+runs = 38
+params = { requests = 16, period = 1.1, follow_ups = 2 }
+
+[[scenario]]
+id = "benign/web/browse-slow"
+group = "benign-web"
+generator = "benign.web_client"
+runs = 23
+params = { requests = 12, period = 3.4, follow_ups = 1 }
+
+[[scenario]]
+id = "benign/web/page-burst"
+group = "benign-web-burst"
+generator = "benign.web_burst"
+runs = 38
+params = { bursts = 5, burst_size = 9 }
+
+[[scenario]]
+id = "benign/ssh/short-session"
+group = "benign-ssh"
+generator = "benign.ssh_session"
+runs = 38
+params = { sessions = 7, period = 8.0 }
+
+[[scenario]]
+id = "benign/retry/flaky-link"
+group = "benign-retry"
+generator = "benign.retry_then_success"
+runs = 27
+params = { attempts = 16, period = 1.8 }
+
+[[scenario]]
+id = "benign/noise/ambient"
+group = "benign-noise"
+generator = "benign.ambient_noise"
+runs = 27
+params = { contacts_count = 12, period = 5.5 }
+
+[[scenario]]
+id = "benign/web/api-client"
+group = "benign-api"
+generator = "benign.web_client"
+runs = 27
+params = { requests = 20, period = 0.9, follow_ups = 3, ports = [443, 8443, 9090] }
+
+[[scenario]]
+id = "hard-negative/monitoring/agent"
+group = "hard-negative-monitoring"
+generator = "benign.monitoring_agent"
+runs = 21
+params = { checks = 45, period = 2.5 }
+
+[[scenario]]
+id = "hard-negative/monitoring/fast-agent"
+group = "hard-negative-monitoring"
+generator = "benign.monitoring_agent"
+runs = 21
+params = { checks = 70, period = 1.2 }
+
+[[scenario]]
+id = "hard-negative/health-check/load-balancer"
+group = "hard-negative-health-check"
+generator = "benign.health_checker"
+runs = 21
+params = { checks = 110, period = 0.55 }
+
+[[scenario]]
+id = "hard-negative/admin/diagnostic-3"
+group = "hard-negative-admin"
+generator = "benign.admin_diagnostic"
+runs = 35
+params = { port_count = 3, period = 4.5 }
+
+[[scenario]]
+id = "hard-negative/admin/diagnostic-5"
+group = "hard-negative-admin"
+generator = "benign.admin_diagnostic"
+runs = 35
+params = { port_count = 5, period = 3.2 }
+
+[[scenario]]
+id = "hard-negative/admin/diagnostic-10"
+group = "hard-negative-admin"
+generator = "benign.admin_diagnostic"
+runs = 35
+params = { port_count = 10, period = 2.0 }
+
+[[scenario]]
+id = "hard-negative/discovery/service-discovery"
+group = "hard-negative-discovery"
+generator = "benign.service_discovery"
+runs = 28
+params = { rounds = 7, period = 5.0, port_count = 6 }
+
+[[scenario]]
+id = "scan/sequential/10-ports"
+group = "scan-sequential"
+generator = "scanner.sequential_scan"
+runs = 12
+params = { port_count = 10, period = 1.6 }
+
+[[scenario]]
+id = "scan/sequential/50-ports"
+group = "scan-sequential"
+generator = "scanner.sequential_scan"
+runs = 8
+params = { port_count = 50, period = 0.5 }
+
+[[scenario]]
+id = "scan/sequential/100-ports"
+group = "scan-sequential"
+generator = "scanner.sequential_scan"
+runs = 8
+params = { port_count = 100, period = 0.2 }
+
+[[scenario]]
+id = "scan/randomized/50-ports"
+group = "scan-randomized"
+generator = "scanner.randomized_scan"
+runs = 8
+params = { port_count = 50, period = 0.6 }
+
+[[scenario]]
+id = "scan/randomized/100-ports"
+group = "scan-randomized"
+generator = "scanner.randomized_scan"
+runs = 8
+params = { port_count = 100, period = 0.25 }
+
+[[scenario]]
+id = "scan/horizontal/single-service"
+group = "scan-horizontal"
+generator = "scanner.horizontal_scan"
+runs = 12
+params = { destinations = 6, port = 445, period = 1.1 }
+
+[[scenario]]
+id = "probe/service-enumeration"
+group = "probe-enumeration"
+generator = "scanner.service_enumeration"
+runs = 6
+params = { rounds = 4, period = 0.7 }
+
+[[scenario]]
+id = "recon/multi-stage"
+group = "recon-multi-stage"
+generator = "scanner.multi_stage_recon"
+runs = 8
+params = { sweep = 28, probes = 12, period = 0.7 }
+
+[[scenario]]
+id = "protocol/mismatch"
+group = "protocol-mismatch"
+generator = "protocol.protocol_mismatch"
+runs = 10
+params = { attempts = 28, period = 1.1 }
+
+[[scenario]]
+id = "probe/repeated"
+group = "probe-repeated"
+generator = "protocol.repeated_probes"
+runs = 8
+params = { attempts = 45, period = 0.9 }
+
+[[scenario]]
+id = "credential/automation"
+group = "credential-automation"
+generator = "protocol.credential_automation"
+runs = 6
+params = { attempts = 32, period = 0.8, port = 21 }
+
+[[scenario]]
+id = "benign/web/truncated-capture"
+group = "benign-truncated"
+generator = "benign.web_client"
+runs = 23
+params = { requests = 16, period = 1.3, follow_ups = 2 }
+
+[[scenario]]
+id = "probe/repeated-truncated-capture"
+group = "probe-truncated"
+generator = "protocol.repeated_probes"
+runs = 8
+params = { attempts = 45, period = 0.9 }
+
+[[scenario]]
+id = "hard-negative/health-check/connect-probe"
+group = "hard-negative-connect"
+generator = "benign.connect_probe"
+runs = 35
+params = { checks = 45, period = 2.0, port_count = 3 }
+
+[[scenario]]
+id = "scan/connect-only"
+group = "scan-connect"
+generator = "scanner.connect_scan"
+runs = 10
+params = { port_count = 40, period = 0.6, order = "sequential" }
+
+[[scenario]]
+id = "deception/decoy-enumeration"
+group = "deception-enumeration"
+generator = "deception.decoy_enumeration"
+runs = 8
+params = { sessions = 10, commands = 5, period = 2.5 }
+
+[[scenario]]
+id = "hard-negative/deception/brush-past"
+group = "hard-negative-deception"
+generator = "deception.decoy_brush_past"
+runs = 35
+params = { touches = 5, period = 18.0 }
+
+[[scenario]]
+id = "scan/slow/sequential"
+group = "scan-slow"
+generator = "scanner.slow_scan"
+runs = 4
+params = { port_count = 16, delay = 8.0, order = "sequential" }
+
+[[scenario]]
+id = "scan/slow/randomized"
+group = "scan-slow"
+generator = "scanner.slow_scan"
+runs = 4
+params = { port_count = 14, delay = 11.0, order = "random" }
+
+[[scenario]]
+id = "scan/burst/pause"
+group = "scan-burst"
+generator = "scanner.burst_scan"
+runs = 10
+params = { bursts = 4, burst_size = 10, inside = 0.6, pause = 30.0 }
+
+[[scenario]]
+id = "credential/low-rate"
+group = "credential-low-rate"
+generator = "protocol.low_rate_credentials"
+runs = 6
+params = { attempts = 14, period = 10.0, port = 22 }
+
+# --- P15.3: unseen compositions, withheld from every development cycle ---
+
+[[scenario]]
+id = "composite/paced-breadth-sweep"
+group = "composite-paced-breadth"
+generator = "composite.paced_breadth_sweep"
+runs = 14
+
+[[scenario]]
+id = "composite/credential-spray"
+group = "composite-credential-spray"
+generator = "composite.credential_spray"
+runs = 14
+
+[[scenario]]
+id = "composite/decoy-then-enumerate"
+group = "composite-decoy-recon"
+generator = "composite.decoy_then_enumerate"
+runs = 14
+
+[[scenario]]
+id = "hard-negative/backup-client"
+group = "hard-negative-backup"
+generator = "composite.backup_client"
+runs = 22
+
+[[scenario]]
+id = "hard-negative/content-crawler"
+group = "hard-negative-crawler"
+generator = "composite.content_crawler"
+runs = 22
+
+[[scenario]]
+id = "hard-negative/batch-api-client"
+group = "hard-negative-batch-api"
+generator = "composite.batch_api_client"
+runs = 22

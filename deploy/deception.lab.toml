@@ -1,0 +1,17 @@
+config_version = 1
+[deployment]
+profile = "lab"
+egress = "disabled"
+# Direct localhost P3 dialogue, no firewall apply and no outbound callbacks.
+[network]
+bind_address = "127.0.0.1"
+port = 1234
+protocol = "tcp"
+[deception]
+mode = "lab"
+catalogue_version = 2
+source_allowlist = ["127.0.0.1/32"]
+port_set = "custom"
+decoy_ports = [1234]
+port_profiles = {"1234" = "ftp"}
+# Supply --secret-file with persistent bytes; no secret is bundled.

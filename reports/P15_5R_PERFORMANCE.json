@@ -1,0 +1,1217 @@
+{
+  "result": {
+    "environment": {
+      "python": "3.12.3 (main, Mar 23 2026, 19:04:32) [GCC 13.3.0]",
+      "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
+      "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+      "logical_cpus": 2,
+      "physical_ram_bytes": 8422264832,
+      "kernel_settings": "Linux: stock distribution sysctl, no tuning applied by this harness",
+      "dependencies": [
+        [
+          "PyYAML",
+          "6.0.3"
+        ],
+        [
+          "Pygments",
+          "2.21.0"
+        ],
+        [
+          "bandit",
+          "1.9.4"
+        ],
+        [
+          "defusedxml",
+          "0.7.1"
+        ],
+        [
+          "dnspython",
+          "2.8.0"
+        ],
+        [
+          "eye-for-an-eye",
+          "0.8.0rc1"
+        ],
+        [
+          "flatbuffers",
+          "25.12.19"
+        ],
+        [
+          "iniconfig",
+          "2.3.0"
+        ],
+        [
+          "ipwhois",
+          "1.3.0"
+        ],
+        [
+          "markdown-it-py",
+          "4.2.0"
+        ],
+        [
+          "maxminddb",
+          "3.1.1"
+        ],
+        [
+          "mdurl",
+          "0.1.2"
+        ],
+        [
+          "ml_dtypes",
+          "0.6.0"
+        ],
+        [
+          "numpy",
+          "2.5.3"
+        ],
+        [
+          "onnx",
+          "1.22.0"
+        ],
+        [
+          "onnxruntime",
+          "1.29.0"
+        ],
+        [
+          "packaging",
+          "26.3"
+        ],
+        [
+          "pluggy",
+          "1.6.0"
+        ],
+        [
+          "protobuf",
+          "7.36.1"
+        ],
+        [
+          "pytest",
+          "9.1.1"
+        ],
+        [
+          "rich",
+          "15.0.0"
+        ],
+        [
+          "scapy",
+          "2.7.0"
+        ],
+        [
+          "stevedore",
+          "5.9.1"
+        ],
+        [
+          "typing_extensions",
+          "4.16.0"
+        ]
+      ],
+      "source_sha256": "dedfb4b58d35f3bd8908586826fa2a44809a14cb74ac016a5a61395df05fd9f6",
+      "git": "absent; pre-P5 SHA256/text snapshot retained",
+      "seed": 20260908,
+      "catalogue_version": 2
+    },
+    "case": "autonomous",
+    "full": true,
+    "profiled": false,
+    "data": {
+      "configuration": {
+        "config_version": 1,
+        "deployment": {
+          "profile": "sensor",
+          "egress": "disabled"
+        },
+        "network": {
+          "bind_address": "127.0.0.1",
+          "port": 1234,
+          "protocol": "tcp",
+          "udp_responses": false
+        },
+        "limits": {
+          "max_connections": 256,
+          "max_connections_per_ip": 8,
+          "max_request_bytes": 4096,
+          "max_response_bytes": 1024,
+          "first_byte_timeout": 2.0,
+          "idle_timeout": 5.0,
+          "total_timeout": 10.0,
+          "state_entries": 10000,
+          "state_ttl": 600.0,
+          "connections_per_second": 100.0
+        },
+        "enrichment": {
+          "enabled": false,
+          "rdap_enabled": false,
+          "mmdb_path": "",
+          "workers": 4,
+          "queue_size": 512,
+          "timeout": 2.0,
+          "negative_ttl": 30.0
+        },
+        "capture": {
+          "interface": "",
+          "pcap_path": "",
+          "bpf": "ip or ip6",
+          "p0f_db": "",
+          "ipc_socket": "",
+          "helper_uid": 65534,
+          "analysis_uid": 65534,
+          "max_frame_bytes": 8192
+        },
+        "active_probes": {
+          "enabled": false,
+          "allowed_cidrs": [],
+          "timeout": 1.0
+        },
+        "deception": {
+          "enabled": true,
+          "secret_file": "",
+          "secret_env": "EYE_FOR_AN_EYE_SECRET",
+          "mode": "sensor",
+          "catalogue_version": 2,
+          "port_set": "custom",
+          "decoy_ports": [],
+          "port_profiles": {},
+          "source_allowlist": [
+            "127.0.0.0/8",
+            "::1/128"
+          ],
+          "redirected": false,
+          "username_policy": "redact",
+          "preview_enabled": false,
+          "max_messages": 12,
+          "max_transitions": 40,
+          "jitter_enabled": false,
+          "jitter_min_ms": 10,
+          "jitter_max_ms": 150,
+          "overload_degraded": 0.7,
+          "overload_observe_only": 0.9,
+          "overload_recover": 0.5,
+          "recovery_seconds": 2.0,
+          "storage_slow_seconds": 0.1
+        },
+        "lab": {
+          "enabled": false,
+          "max_duration": 10.0,
+          "max_bytes": 256,
+          "max_connections": 16
+        },
+        "logging": {
+          "file": "",
+          "max_bytes": 5000000,
+          "backups": 2,
+          "queue_size": 512,
+          "events_per_second": 100.0,
+          "per_source_per_second": 5.0,
+          "per_event_type_per_second": 100.0,
+          "repeated_window": 1.0,
+          "min_free_bytes": 1048576
+        },
+        "runtime": {
+          "sensor_id": "local",
+          "config_path": "",
+          "queue_events": 1024,
+          "queue_bytes": 4194304,
+          "shutdown_timeout": 10.0,
+          "status_file": "",
+          "enforce_unprivileged": true,
+          "load_shedding": false,
+          "low_priority_watermark": 0.75,
+          "normal_priority_watermark": 0.9
+        },
+        "storage": {
+          "enabled": false,
+          "path": "eye-for-an-eye.sqlite3",
+          "max_events": 100000,
+          "retention_seconds": 86400.0,
+          "max_bytes": 134217728,
+          "busy_timeout": 0.2,
+          "max_batch_events": 1,
+          "max_batch_delay_ms": 10.0,
+          "cleanup_interval": 5.0,
+          "cleanup_batch": 500,
+          "pressure_warning": 0.7,
+          "pressure_critical": 0.9
+        },
+        "firewall": {
+          "enabled": false,
+          "lab_namespace": "",
+          "destination_addresses": [],
+          "decoy_ports": [],
+          "real_service_ports": [
+            22
+          ],
+          "management_ports": [
+            22,
+            3389
+          ],
+          "listener_address": "127.0.0.1",
+          "listener_port": 1234,
+          "lease_seconds": 30
+        },
+        "fingerprint": {
+          "initial_ttls": [
+            32,
+            64,
+            128,
+            255
+          ],
+          "max_hops": 32,
+          "ip_id_samples": 32,
+          "min_probe_evidence": 8
+        },
+        "correlation": {
+          "enabled": true,
+          "windows": [
+            60,
+            900
+          ],
+          "max_windows": 4,
+          "max_sources": 10000,
+          "max_events_per_source": 64,
+          "max_bytes": 33554432,
+          "ttl_seconds": 900.0,
+          "emit_interval": 5.0,
+          "distributed_groups": 1024,
+          "distributed_sources": 5,
+          "focused_seconds": 300.0,
+          "scanner_threshold": 40,
+          "bot_threshold": 35,
+          "suspicious_threshold": 25,
+          "weights": {
+            "port_breadth": 25,
+            "host_breadth": 35,
+            "probe_diversity": 15,
+            "connection_rate": 10,
+            "sequential_ports": 15,
+            "anomalies": 20,
+            "credentials": 25,
+            "persistence": 20,
+            "repeated_probe": 15,
+            "timing_regular": 20,
+            "sequence_repeat": 15
+          }
+        },
+        "api": {
+          "enabled": false,
+          "bind_address": "127.0.0.1",
+          "port": 8777,
+          "allow_insecure_non_loopback": false,
+          "docs_enabled": false,
+          "redact_ip": false,
+          "token_file": "",
+          "max_page_size": 100,
+          "max_response_bytes": 65536,
+          "max_query_seconds": 0.2,
+          "max_range_seconds": 604800,
+          "max_scan_rows": 5000,
+          "requests_per_second": 20.0,
+          "max_connections": 16
+        },
+        "metrics": {
+          "enabled": false,
+          "bind_address": "127.0.0.1",
+          "port": 8778,
+          "allow_insecure_non_loopback": false
+        },
+        "ml": {
+          "enabled": true,
+          "required": false,
+          "model_path": "",
+          "manifest_path": "",
+          "max_model_bytes": 16777216,
+          "max_pending": 64,
+          "max_concurrent": 1,
+          "inference_timeout_ms": 200,
+          "startup_timeout_seconds": 15.0,
+          "cache_entries": 256,
+          "cache_ttl_seconds": 10.0
+        },
+        "decision": {
+          "enabled": true,
+          "mode": "shadow",
+          "interval_ms": 0,
+          "math_weight": 0.55,
+          "ml_weight": 0.35,
+          "persistence_weight": 0.1,
+          "watch_threshold": 0.4,
+          "rate_limit_threshold": 0.7,
+          "block_threshold": 0.88,
+          "hysteresis_margin": 0.1,
+          "minimum_samples_for_block": 20,
+          "minimum_observation_seconds": 5.0,
+          "minimum_quality": 0.7,
+          "minimum_categories": 3,
+          "minimum_math_risk": 0.8,
+          "minimum_ml_confidence": 0.7,
+          "anomaly_weight": 0.1,
+          "half_life_seconds": 60.0,
+          "history_entries": 4096,
+          "history_ttl_seconds": 43200.0
+        },
+        "enforcement": {
+          "enabled": false,
+          "host_enabled": false,
+          "management_networks": [],
+          "allowlist": [],
+          "trusted_proxies": [],
+          "max_entries": 1024,
+          "block_seconds": [
+            300,
+            1800,
+            7200,
+            43200
+          ],
+          "offense_decay_seconds": 21600.0
+        },
+        "reliability": {
+          "registry_path": "",
+          "anomaly_enabled": true,
+          "anomaly_model_path": "",
+          "anomaly_manifest_path": "",
+          "anomaly_timeout_ms": 200.0,
+          "anomaly_max_failures": 5,
+          "ood_enabled": true,
+          "distribution_path": "",
+          "ood_borderline_threshold": 0.25,
+          "ood_high_threshold": 0.6,
+          "ood_minimum_features": 4,
+          "ood_suppresses_block": true,
+          "drift_enabled": true,
+          "drift_minimum_samples": 200,
+          "drift_warning_threshold": 0.1,
+          "drift_drifted_threshold": 0.25,
+          "drift_interval_seconds": 900.0,
+          "drift_ood_rate_warning": 0.3,
+          "drift_ood_rate_unreliable": 0.6,
+          "degraded_model_suppresses_block": true,
+          "review_queue_enabled": false,
+          "review_queue_path": "",
+          "review_queue_secret_file": "",
+          "review_queue_max_entries": 2000,
+          "review_queue_per_source": 20,
+          "review_queue_per_day": 500,
+          "review_queue_ttl_days": 30,
+          "review_queue_min_observations": 5
+        },
+        "learning": {
+          "enabled": false,
+          "auto_prepare_dataset": false,
+          "auto_train": false,
+          "candidate_shadow_enabled": true,
+          "candidate_sample_every": 1,
+          "candidate_max_failures": 5,
+          "jobs_path": "",
+          "workspace_path": "",
+          "audit_log_path": "",
+          "training_max_duration_seconds": 1800,
+          "training_max_memory_mb": 2048,
+          "training_max_parallel_jobs": 1,
+          "training_nice": 10,
+          "minimum_retraining_interval_days": 14,
+          "minimum_trusted_samples": 200,
+          "minimum_samples_per_label": 50,
+          "minimum_label_sources": 20,
+          "keep_job_records": 50
+        },
+        "model_governance": {
+          "auto_promote_enabled": false,
+          "auto_promote_global_enabled": false,
+          "auto_promote_sites": [],
+          "minimum_shadow_seconds": 604800.0,
+          "minimum_shadow_samples": 5000,
+          "minimum_source_groups": 500,
+          "minimum_trusted_outcomes": 50,
+          "promotion_cooldown_seconds": 604800.0,
+          "max_promotions_per_day": 2,
+          "max_promotions_per_site_per_day": 1,
+          "max_rollbacks_per_day": 3,
+          "guarded_activation_enabled": true,
+          "auto_rollback_enabled": true,
+          "frozen": false,
+          "journal_path": "",
+          "history_path": ""
+        },
+        "autonomy": {
+          "enabled": true,
+          "mode": "shadow",
+          "cost_profiles": {},
+          "default_cost_profile": "public_website",
+          "decision_margin": 0.25,
+          "release_margin": 0.1,
+          "minimum_observations": 20,
+          "minimum_observation_seconds": 10.0,
+          "minimum_data_quality": 0.55,
+          "minimum_signal_diversity": 3,
+          "minimum_behavioural_diversity": 2,
+          "maximum_uncertainty": 0.6,
+          "blocks_per_minute": 10,
+          "max_active_blocks": 500,
+          "max_block_share": 0.02,
+          "minimum_sources_for_share": 200,
+          "max_false_blocks_per_1000": 1.0,
+          "minimum_benign_sample": 500,
+          "breaker_cooldown_seconds": 300.0,
+          "recovery_cooldown_seconds": 900.0,
+          "decision_journal_path": "journal_and_export-journal.jsonl",
+          "decision_journal_max_entries": 20000,
+          "journal_max_file_bytes": 8388608,
+          "journal_max_files": 4,
+          "journal_max_total_bytes": 33554432,
+          "shadow_export_path": "journal_and_export-export.jsonl",
+          "shadow_export_max_file_bytes": 8388608,
+          "shadow_export_max_files": 8,
+          "shadow_export_max_total_bytes": 67108864,
+          "shadow_export_max_records": 100000,
+          "shadow_export_bucket_seconds": 3600,
+          "journal_include_source": false,
+          "journal_required_for_action": false,
+          "pseudonym_secret_file": "",
+          "calibrator_path": "models/mathrisk-cal-v4-isotonic.json"
+        },
+        "web": {
+          "enabled": false,
+          "source_type": "nginx",
+          "access_log_path": "",
+          "start_at_end": true,
+          "secret_file": "",
+          "trusted_proxy_networks": [],
+          "trust_forwarded_headers": true,
+          "store_raw_path": false,
+          "store_query_values": false,
+          "max_sources": 4096,
+          "max_distinct_paths": 64,
+          "source_ttl_seconds": 1800.0,
+          "max_lines_per_poll": 2000,
+          "max_queued_events": 20000,
+          "evaluation_interval_seconds": 5.0,
+          "minimum_quality": 0.5,
+          "expected_methods": [
+            "GET",
+            "HEAD",
+            "POST",
+            "OPTIONS"
+          ]
+        },
+        "challenge": {
+          "enabled": false,
+          "mode": "shadow",
+          "secret_file": "",
+          "previous_secret_file": "",
+          "site_id": "default",
+          "token_ttl_seconds": 900,
+          "cookie_secure": true,
+          "cookie_same_site": "Lax",
+          "cookie_path": "/",
+          "risk_floor": 0.45,
+          "risk_ceiling": 0.88,
+          "max_per_source_per_hour": 5,
+          "max_per_second": 20,
+          "max_contexts": 10000,
+          "minimum_seconds_between": 10.0,
+          "max_attempts": 3,
+          "grace_seconds": 300.0,
+          "failure_decay_seconds": 1800.0,
+          "api_path_prefixes": [],
+          "no_challenge_path_prefixes": []
+        },
+        "sites": {
+          "enabled": false,
+          "max_sites": 32,
+          "default_site": "",
+          "unknown_site_action": "OBSERVE",
+          "max_sources_global": 8192,
+          "max_sources_per_site": 2048,
+          "reserved_sources_per_site": 64,
+          "profiles": {}
+        },
+        "probes_path": ""
+      },
+      "workload": {
+        "events": 3000,
+        "sources": 4,
+        "calibrator": "mathrisk-cal-v4-isotonic.json",
+        "enforcer_attached": false,
+        "mode": "shadow"
+      },
+      "per_window": [
+        {
+          "case": "legacy",
+          "autonomy_attached": false,
+          "measurement": {
+            "operations": 3000,
+            "seconds": 4.348025466000308,
+            "operations_per_second": 689.9683599966723,
+            "cpu_seconds": 4.347548883,
+            "p50_ms": 1.4706100000694278,
+            "p95_ms": 1.5641989998584904,
+            "p99_ms": 1.9909610000468092,
+            "max_ms": 2.790327000184334,
+            "resources_before": {
+              "threads": 1,
+              "cpu_seconds": 0.148809699,
+              "handles": 4,
+              "rss_bytes": 29257728,
+              "fd_kind": "Linux /proc/self/fd"
+            },
+            "resources_after": {
+              "threads": 1,
+              "cpu_seconds": 4.496728052,
+              "handles": 4,
+              "rss_bytes": 30703616,
+              "fd_kind": "Linux /proc/self/fd"
+            }
+          },
+          "rss_start_bytes": 29257728,
+          "decision_metrics": {
+            "anomaly_model_unavailable_total": 1,
+            "math_decision_total": 3000,
+            "decision_observe_total": 48,
+            "decision_disagreement_total": 0,
+            "shadow_would_block_total": 0,
+            "enforced_block_total": 0,
+            "policy_override_total": 2912,
+            "policy_ood_suppressed_total": 0,
+            "policy_model_health_suppressed_total": 0,
+            "data_quality_low_total": 3000,
+            "decision_watch_total": 2952
+          },
+          "counters": null,
+          "journal": null,
+          "shadow_export": null,
+          "added_seconds_vs_legacy": 0.0,
+          "added_ratio_vs_legacy": 1.0,
+          "added_ms_per_decision": null,
+          "added_ms_per_decision_withheld": "0 decisions is below the 100-decision floor for a per-decision figure"
+        },
+        {
+          "case": "authority",
+          "autonomy_attached": true,
+          "measurement": {
+            "operations": 3000,
+            "seconds": 5.630452774000332,
+            "operations_per_second": 532.816830265065,
+            "cpu_seconds": 5.6300981839999995,
+            "p50_ms": 1.9035020000046643,
+            "p95_ms": 1.994447000015498,
+            "p99_ms": 2.1984640002301603,
+            "max_ms": 3.5126420002598024,
+            "resources_before": {
+              "threads": 1,
+              "cpu_seconds": 4.516698465,
+              "handles": 4,
+              "rss_bytes": 30777344,
+              "fd_kind": "Linux /proc/self/fd"
+            },
+            "resources_after": {
+              "threads": 1,
+              "cpu_seconds": 10.14716018,
+              "handles": 4,
+              "rss_bytes": 31604736,
+              "fd_kind": "Linux /proc/self/fd"
+            }
+          },
+          "rss_start_bytes": 30777344,
+          "decision_metrics": {
+            "anomaly_model_unavailable_total": 1,
+            "math_decision_total": 3000,
+            "decision_observe_total": 48,
+            "decision_disagreement_total": 0,
+            "shadow_would_block_total": 0,
+            "enforced_block_total": 0,
+            "policy_override_total": 2912,
+            "policy_ood_suppressed_total": 0,
+            "policy_model_health_suppressed_total": 0,
+            "data_quality_low_total": 3000,
+            "decision_watch_total": 2952
+          },
+          "counters": {
+            "decisions": 3000,
+            "blocks": 0,
+            "shadow_blocks": 0,
+            "enforced": 0,
+            "enforcement_refused": 0,
+            "enforcement_failed": 0,
+            "enforcement_withheld": 0,
+            "journalled": 0,
+            "journal_failures": 0,
+            "exported": 0,
+            "export_failures": 0
+          },
+          "journal": null,
+          "shadow_export": null,
+          "added_seconds_vs_legacy": 1.282427308000024,
+          "added_ratio_vs_legacy": 1.2949447555052414,
+          "added_ms_per_decision": 0.4274757693333413,
+          "added_ms_per_decision_withheld": ""
+        },
+        {
+          "case": "journal",
+          "autonomy_attached": true,
+          "measurement": {
+            "operations": 3000,
+            "seconds": 6.219925974000034,
+            "operations_per_second": 482.3208527786867,
+            "cpu_seconds": 6.219616256999998,
+            "p50_ms": 2.1051029998488957,
+            "p95_ms": 2.1922930000073393,
+            "p99_ms": 2.3742590001347708,
+            "max_ms": 3.3489860002191563,
+            "resources_before": {
+              "threads": 1,
+              "cpu_seconds": 10.157850146,
+              "handles": 4,
+              "rss_bytes": 31604736,
+              "fd_kind": "Linux /proc/self/fd"
+            },
+            "resources_after": {
+              "threads": 1,
+              "cpu_seconds": 16.377836976,
+              "handles": 5,
+              "rss_bytes": 31666176,
+              "fd_kind": "Linux /proc/self/fd"
+            }
+          },
+          "rss_start_bytes": 31604736,
+          "decision_metrics": {
+            "anomaly_model_unavailable_total": 1,
+            "math_decision_total": 3000,
+            "decision_observe_total": 48,
+            "decision_disagreement_total": 0,
+            "shadow_would_block_total": 0,
+            "enforced_block_total": 0,
+            "policy_override_total": 2912,
+            "policy_ood_suppressed_total": 0,
+            "policy_model_health_suppressed_total": 0,
+            "data_quality_low_total": 3000,
+            "decision_watch_total": 2952
+          },
+          "counters": {
+            "decisions": 3000,
+            "blocks": 0,
+            "shadow_blocks": 0,
+            "enforced": 0,
+            "enforcement_refused": 0,
+            "enforcement_failed": 0,
+            "enforcement_withheld": 0,
+            "journalled": 3000,
+            "journal_failures": 0,
+            "exported": 0,
+            "export_failures": 0
+          },
+          "journal": {
+            "status": "HEALTHY",
+            "path": "<run-tmp>/dense/journal-journal.jsonl",
+            "files": 2,
+            "total_bytes": 10646762,
+            "records_in_active_file": 637,
+            "cooling_off": false,
+            "limits": {
+              "max_file_bytes": 8388608,
+              "max_files": 4,
+              "max_total_bytes": 33554432,
+              "max_records": 20000,
+              "slow_write_seconds": 0.25,
+              "cooldown_seconds": 5.0
+            },
+            "counters": {
+              "written": 3000,
+              "failed": 0,
+              "rotated": 1,
+              "refused_too_large": 0,
+              "retention_deleted": 0,
+              "dropped_backpressure": 0,
+              "slow_writes": 0
+            },
+            "last_error": "",
+            "permissions": "0o600",
+            "journal_schema_version": 1,
+            "include_source": false,
+            "required_for_action": false,
+            "note": "the canonical full decision record. The operational log carries a bounded summary of the same decision"
+          },
+          "shadow_export": null,
+          "added_seconds_vs_legacy": 1.871900507999726,
+          "added_ratio_vs_legacy": 1.4305173745271695,
+          "added_ms_per_decision": 0.6239668359999087,
+          "added_ms_per_decision_withheld": ""
+        },
+        {
+          "case": "journal_and_export",
+          "autonomy_attached": true,
+          "measurement": {
+            "operations": 3000,
+            "seconds": 6.433558572000038,
+            "operations_per_second": 466.3049176324468,
+            "cpu_seconds": 6.433113174999999,
+            "p50_ms": 2.1730400003434625,
+            "p95_ms": 2.2707349999109283,
+            "p99_ms": 2.5077039999814588,
+            "max_ms": 3.370747000190022,
+            "resources_before": {
+              "threads": 1,
+              "cpu_seconds": 16.387476942,
+              "handles": 4,
+              "rss_bytes": 31674368,
+              "fd_kind": "Linux /proc/self/fd"
+            },
+            "resources_after": {
+              "threads": 1,
+              "cpu_seconds": 22.820997079,
+              "handles": 6,
+              "rss_bytes": 31698944,
+              "fd_kind": "Linux /proc/self/fd"
+            }
+          },
+          "rss_start_bytes": 31674368,
+          "decision_metrics": {
+            "anomaly_model_unavailable_total": 1,
+            "math_decision_total": 3000,
+            "decision_observe_total": 48,
+            "decision_disagreement_total": 0,
+            "shadow_would_block_total": 0,
+            "enforced_block_total": 0,
+            "policy_override_total": 2912,
+            "policy_ood_suppressed_total": 0,
+            "policy_model_health_suppressed_total": 0,
+            "data_quality_low_total": 3000,
+            "decision_watch_total": 2952
+          },
+          "counters": {
+            "decisions": 3000,
+            "blocks": 0,
+            "shadow_blocks": 0,
+            "enforced": 0,
+            "enforcement_refused": 0,
+            "enforcement_failed": 0,
+            "enforcement_withheld": 0,
+            "journalled": 3000,
+            "journal_failures": 0,
+            "exported": 3000,
+            "export_failures": 0
+          },
+          "journal": {
+            "status": "HEALTHY",
+            "path": "<run-tmp>/dense/journal_and_export-journal.jsonl",
+            "files": 2,
+            "total_bytes": 10646765,
+            "records_in_active_file": 637,
+            "cooling_off": false,
+            "limits": {
+              "max_file_bytes": 8388608,
+              "max_files": 4,
+              "max_total_bytes": 33554432,
+              "max_records": 20000,
+              "slow_write_seconds": 0.25,
+              "cooldown_seconds": 5.0
+            },
+            "counters": {
+              "written": 3000,
+              "failed": 0,
+              "rotated": 1,
+              "refused_too_large": 0,
+              "retention_deleted": 0,
+              "dropped_backpressure": 0,
+              "slow_writes": 0
+            },
+            "last_error": "",
+            "permissions": "0o600",
+            "journal_schema_version": 1,
+            "include_source": false,
+            "required_for_action": false,
+            "note": "the canonical full decision record. The operational log carries a bounded summary of the same decision"
+          },
+          "shadow_export": {
+            "status": "HEALTHY",
+            "path": "<run-tmp>/dense/journal_and_export-export.jsonl",
+            "files": 2,
+            "total_bytes": 9539682,
+            "records_in_active_file": 363,
+            "cooling_off": false,
+            "limits": {
+              "max_file_bytes": 8388608,
+              "max_files": 8,
+              "max_total_bytes": 67108864,
+              "max_records": 100000,
+              "slow_write_seconds": 0.05,
+              "cooldown_seconds": 5.0
+            },
+            "counters": {
+              "written": 3000,
+              "failed": 0,
+              "rotated": 1,
+              "refused_too_large": 0,
+              "retention_deleted": 0,
+              "dropped_backpressure": 0,
+              "slow_writes": 0
+            },
+            "last_error": "",
+            "permissions": "0o600",
+            "shadow_export_schema_version": 1,
+            "timestamp_bucket_seconds": 3600,
+            "pseudonym_secret_configured": false,
+            "labels": "never written by this software",
+            "note": "derived analytic rows for independent evaluation. Local only; nothing here is sent anywhere"
+          },
+          "added_seconds_vs_legacy": 2.0855331059997297,
+          "added_ratio_vs_legacy": 1.4796506189551333,
+          "added_ms_per_decision": 0.6951777019999099,
+          "added_ms_per_decision_withheld": ""
+        }
+      ],
+      "per_window_summary": {
+        "events": 3000,
+        "decisions": 3000,
+        "blocks": 0,
+        "full_stack_ratio_vs_legacy": 1.4796506189551333,
+        "full_stack_added_ms_per_decision": 0.6951777019999099,
+        "withheld": ""
+      },
+      "shipped_interval": [
+        {
+          "case": "legacy",
+          "autonomy_attached": false,
+          "measurement": {
+            "operations": 3000,
+            "seconds": 2.6839470769996296,
+            "operations_per_second": 1117.756764173489,
+            "cpu_seconds": 2.6837985510000024,
+            "p50_ms": 0.9119430001192086,
+            "p95_ms": 0.9756540002854308,
+            "p99_ms": 1.073527000244212,
+            "max_ms": 1.615745999970386,
+            "resources_before": {
+              "threads": 1,
+              "cpu_seconds": 22.828559534,
+              "handles": 4,
+              "rss_bytes": 31698944,
+              "fd_kind": "Linux /proc/self/fd"
+            },
+            "resources_after": {
+              "threads": 1,
+              "cpu_seconds": 25.512753903,
+              "handles": 4,
+              "rss_bytes": 31698944,
+              "fd_kind": "Linux /proc/self/fd"
+            }
+          },
+          "rss_start_bytes": 31698944,
+          "decision_metrics": {
+            "anomaly_model_unavailable_total": 1,
+            "math_decision_total": 8,
+            "decision_observe_total": 4,
+            "decision_disagreement_total": 0,
+            "shadow_would_block_total": 0,
+            "enforced_block_total": 0,
+            "policy_override_total": 4,
+            "policy_ood_suppressed_total": 0,
+            "policy_model_health_suppressed_total": 0,
+            "data_quality_low_total": 8,
+            "decision_watch_total": 4
+          },
+          "counters": null,
+          "journal": null,
+          "shadow_export": null,
+          "added_seconds_vs_legacy": 0.0,
+          "added_ratio_vs_legacy": 1.0,
+          "added_ms_per_decision": null,
+          "added_ms_per_decision_withheld": "0 decisions is below the 100-decision floor for a per-decision figure"
+        },
+        {
+          "case": "authority",
+          "autonomy_attached": true,
+          "measurement": {
+            "operations": 3000,
+            "seconds": 2.7073723519997657,
+            "operations_per_second": 1108.085482879401,
+            "cpu_seconds": 2.707280002000001,
+            "p50_ms": 0.9115449997807445,
+            "p95_ms": 0.9795650003070477,
+            "p99_ms": 1.3786449999315664,
+            "max_ms": 3.4707849999904283,
+            "resources_before": {
+              "threads": 1,
+              "cpu_seconds": 25.522355145,
+              "handles": 4,
+              "rss_bytes": 31698944,
+              "fd_kind": "Linux /proc/self/fd"
+            },
+            "resources_after": {
+              "threads": 1,
+              "cpu_seconds": 28.229998341,
+              "handles": 4,
+              "rss_bytes": 31698944,
+              "fd_kind": "Linux /proc/self/fd"
+            }
+          },
+          "rss_start_bytes": 31698944,
+          "decision_metrics": {
+            "anomaly_model_unavailable_total": 1,
+            "math_decision_total": 8,
+            "decision_observe_total": 4,
+            "decision_disagreement_total": 0,
+            "shadow_would_block_total": 0,
+            "enforced_block_total": 0,
+            "policy_override_total": 4,
+            "policy_ood_suppressed_total": 0,
+            "policy_model_health_suppressed_total": 0,
+            "data_quality_low_total": 8,
+            "decision_watch_total": 4
+          },
+          "counters": {
+            "decisions": 8,
+            "blocks": 0,
+            "shadow_blocks": 0,
+            "enforced": 0,
+            "enforcement_refused": 0,
+            "enforcement_failed": 0,
+            "enforcement_withheld": 0,
+            "journalled": 0,
+            "journal_failures": 0,
+            "exported": 0,
+            "export_failures": 0
+          },
+          "journal": null,
+          "shadow_export": null,
+          "added_seconds_vs_legacy": 0.023425275000136025,
+          "added_ratio_vs_legacy": 1.0087279198613421,
+          "added_ms_per_decision": null,
+          "added_ms_per_decision_withheld": "8 decisions is below the 100-decision floor for a per-decision figure"
+        },
+        {
+          "case": "journal",
+          "autonomy_attached": true,
+          "measurement": {
+            "operations": 3000,
+            "seconds": 2.7115307060003033,
+            "operations_per_second": 1106.386143207358,
+            "cpu_seconds": 2.7110770360000025,
+            "p50_ms": 0.9146479997070855,
+            "p95_ms": 0.9880689999590686,
+            "p99_ms": 1.1607790002017282,
+            "max_ms": 2.360847000090871,
+            "resources_before": {
+              "threads": 1,
+              "cpu_seconds": 28.240141683,
+              "handles": 4,
+              "rss_bytes": 31703040,
+              "fd_kind": "Linux /proc/self/fd"
+            },
+            "resources_after": {
+              "threads": 1,
+              "cpu_seconds": 30.951580422,
+              "handles": 5,
+              "rss_bytes": 31703040,
+              "fd_kind": "Linux /proc/self/fd"
+            }
+          },
+          "rss_start_bytes": 31703040,
+          "decision_metrics": {
+            "anomaly_model_unavailable_total": 1,
+            "math_decision_total": 8,
+            "decision_observe_total": 4,
+            "decision_disagreement_total": 0,
+            "shadow_would_block_total": 0,
+            "enforced_block_total": 0,
+            "policy_override_total": 4,
+            "policy_ood_suppressed_total": 0,
+            "policy_model_health_suppressed_total": 0,
+            "data_quality_low_total": 8,
+            "decision_watch_total": 4
+          },
+          "counters": {
+            "decisions": 8,
+            "blocks": 0,
+            "shadow_blocks": 0,
+            "enforced": 0,
+            "enforcement_refused": 0,
+            "enforcement_failed": 0,
+            "enforcement_withheld": 0,
+            "journalled": 8,
+            "journal_failures": 0,
+            "exported": 0,
+            "export_failures": 0
+          },
+          "journal": {
+            "status": "HEALTHY",
+            "path": "<run-tmp>/shipped/journal-journal.jsonl",
+            "files": 1,
+            "total_bytes": 27703,
+            "records_in_active_file": 8,
+            "cooling_off": false,
+            "limits": {
+              "max_file_bytes": 8388608,
+              "max_files": 4,
+              "max_total_bytes": 33554432,
+              "max_records": 20000,
+              "slow_write_seconds": 0.25,
+              "cooldown_seconds": 5.0
+            },
+            "counters": {
+              "written": 8,
+              "failed": 0,
+              "rotated": 0,
+              "refused_too_large": 0,
+              "retention_deleted": 0,
+              "dropped_backpressure": 0,
+              "slow_writes": 0
+            },
+            "last_error": "",
+            "permissions": "0o600",
+            "journal_schema_version": 1,
+            "include_source": false,
+            "required_for_action": false,
+            "note": "the canonical full decision record. The operational log carries a bounded summary of the same decision"
+          },
+          "shadow_export": null,
+          "added_seconds_vs_legacy": 0.02758362900067368,
+          "added_ratio_vs_legacy": 1.010277262631985,
+          "added_ms_per_decision": null,
+          "added_ms_per_decision_withheld": "8 decisions is below the 100-decision floor for a per-decision figure"
+        },
+        {
+          "case": "journal_and_export",
+          "autonomy_attached": true,
+          "measurement": {
+            "operations": 3000,
+            "seconds": 2.7026825500001905,
+            "operations_per_second": 1110.0082767766376,
+            "cpu_seconds": 2.7025101770000006,
+            "p50_ms": 0.9127769999395241,
+            "p95_ms": 0.9827339999901596,
+            "p99_ms": 1.1559499998838874,
+            "max_ms": 2.857955999843398,
+            "resources_before": {
+              "threads": 1,
+              "cpu_seconds": 30.961037149,
+              "handles": 4,
+              "rss_bytes": 31703040,
+              "fd_kind": "Linux /proc/self/fd"
+            },
+            "resources_after": {
+              "threads": 1,
+              "cpu_seconds": 33.663947079,
+              "handles": 6,
+              "rss_bytes": 31703040,
+              "fd_kind": "Linux /proc/self/fd"
+            }
+          },
+          "rss_start_bytes": 31703040,
+          "decision_metrics": {
+            "anomaly_model_unavailable_total": 1,
+            "math_decision_total": 8,
+            "decision_observe_total": 4,
+            "decision_disagreement_total": 0,
+            "shadow_would_block_total": 0,
+            "enforced_block_total": 0,
+            "policy_override_total": 4,
+            "policy_ood_suppressed_total": 0,
+            "policy_model_health_suppressed_total": 0,
+            "data_quality_low_total": 8,
+            "decision_watch_total": 4
+          },
+          "counters": {
+            "decisions": 8,
+            "blocks": 0,
+            "shadow_blocks": 0,
+            "enforced": 0,
+            "enforcement_refused": 0,
+            "enforcement_failed": 0,
+            "enforcement_withheld": 0,
+            "journalled": 8,
+            "journal_failures": 0,
+            "exported": 8,
+            "export_failures": 0
+          },
+          "journal": {
+            "status": "HEALTHY",
+            "path": "<run-tmp>/shipped/journal_and_export-journal.jsonl",
+            "files": 1,
+            "total_bytes": 27703,
+            "records_in_active_file": 8,
+            "cooling_off": false,
+            "limits": {
+              "max_file_bytes": 8388608,
+              "max_files": 4,
+              "max_total_bytes": 33554432,
+              "max_records": 20000,
+              "slow_write_seconds": 0.25,
+              "cooldown_seconds": 5.0
+            },
+            "counters": {
+              "written": 8,
+              "failed": 0,
+              "rotated": 0,
+              "refused_too_large": 0,
+              "retention_deleted": 0,
+              "dropped_backpressure": 0,
+              "slow_writes": 0
+            },
+            "last_error": "",
+            "permissions": "0o600",
+            "journal_schema_version": 1,
+            "include_source": false,
+            "required_for_action": false,
+            "note": "the canonical full decision record. The operational log carries a bounded summary of the same decision"
+          },
+          "shadow_export": {
+            "status": "HEALTHY",
+            "path": "<run-tmp>/shipped/journal_and_export-export.jsonl",
+            "files": 1,
+            "total_bytes": 24735,
+            "records_in_active_file": 8,
+            "cooling_off": false,
+            "limits": {
+              "max_file_bytes": 8388608,
+              "max_files": 8,
+              "max_total_bytes": 67108864,
+              "max_records": 100000,
+              "slow_write_seconds": 0.05,
+              "cooldown_seconds": 5.0
+            },
+            "counters": {
+              "written": 8,
+              "failed": 0,
+              "rotated": 0,
+              "refused_too_large": 0,
+              "retention_deleted": 0,
+              "dropped_backpressure": 0,
+              "slow_writes": 0
+            },
+            "last_error": "",
+            "permissions": "0o600",
+            "shadow_export_schema_version": 1,
+            "timestamp_bucket_seconds": 3600,
+            "pseudonym_secret_configured": false,
+            "labels": "never written by this software",
+            "note": "derived analytic rows for independent evaluation. Local only; nothing here is sent anywhere"
+          },
+          "added_seconds_vs_legacy": 0.018735473000560887,
+          "added_ratio_vs_legacy": 1.0069805672254555,
+          "added_ms_per_decision": null,
+          "added_ms_per_decision_withheld": "8 decisions is below the 100-decision floor for a per-decision figure"
+        }
+      ],
+      "shipped_interval_summary": {
+        "events": 3000,
+        "decisions": 8,
+        "blocks": 0,
+        "full_stack_ratio_vs_legacy": 1.0069805672254555,
+        "full_stack_added_ms_per_decision": null,
+        "withheld": "8 decisions is below the 100-decision floor for a per-decision figure"
+      },
+      "bytes_written": {
+        "journal-journal.jsonl": 27703,
+        "journal_and_export-export.jsonl": 24735,
+        "journal_and_export-journal.jsonl": 27703
+      },
+      "note": "interval_ms=0 makes every event a decision window and is not a realistic stream; it is the density at which one decision can be measured. No enforcer is attached in any case."
+    }
+  },
+  "watchdog": {
+    "wall_seconds": 180,
+    "cpu_seconds": 150,
+    "rss_bytes": 536870912,
+    "observed_worker_peak_rss": 31952896,
+    "stderr": ""
+  }
+}

@@ -1,0 +1,55 @@
+# Passive analysis profile. Configure IPC capture or an offline PCAP before run.
+config_version = 1
+[deployment]
+profile = "sensor"
+egress = "disabled"
+[network]
+bind_address = "127.0.0.1"
+udp_responses = false
+[capture]
+ipc_socket = "" # Linux: configure a separate CAP_NET_RAW helper.
+pcap_path = ""
+[active_probes]
+enabled = false
+[enrichment]
+enabled = false
+rdap_enabled = false
+[runtime]
+status_file = "status.json"
+[storage]
+enabled = true
+path = "events.sqlite3"
+retention_seconds = 86400.0
+max_events = 100000
+max_bytes = 134217728
+[api]
+enabled = true
+bind_address = "127.0.0.1"
+port = 8777
+[metrics]
+enabled = true
+bind_address = "127.0.0.1"
+port = 8778
+[firewall]
+enabled = false
+
+# P7: local decisions; no model download or firewall changes by default.
+[ml]
+enabled = true
+required = false
+model_path = ""
+manifest_path = ""
+max_pending = 64
+max_concurrent = 1
+inference_timeout_ms = 200
+
+[decision]
+enabled = true
+mode = "shadow"
+interval_ms = 2000
+
+[enforcement]
+enabled = false
+management_networks = []
+allowlist = []
+trusted_proxies = []

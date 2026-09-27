@@ -1,0 +1,479 @@
+{
+ "test_policy_version": "p15.3-test-policy-v1",
+ "written": "before dataset-generalization-test-v2 was generated or scored",
+ "objective": "close Gate C scientifically: demonstrate that detection survives behaviour no fitted component has seen, on a benchmark no decision was tuned against",
+ "locked_corpus": {
+  "name": "dataset-generalization-test-v2",
+  "matrix": "dataset/scenarios/matrix-generalization-v2.toml",
+  "seed_salt": "p15.3-locked",
+  "scored": "exactly once",
+  "prior_test_status": "reports/P15_2_LOCKED_TEST.json is diagnostic evidence from here on. It was inspected during P15.3 and may not be the final evidence for Gate C after P15.3 changes"
+ },
+ "observability_schema_version": 1,
+ "in_scope_classes": {
+  "IN_SCOPE_OBSERVABLE": [
+   "benign-api",
+   "benign-noise",
+   "benign-retry",
+   "benign-ssh",
+   "benign-web",
+   "benign-web-burst",
+   "composite-credential-spray",
+   "composite-decoy-recon",
+   "composite-paced-breadth",
+   "credential-automation",
+   "credential-low-rate",
+   "deception-enumeration",
+   "hard-negative-admin",
+   "hard-negative-backup",
+   "hard-negative-batch-api",
+   "hard-negative-connect",
+   "hard-negative-crawler",
+   "hard-negative-deception",
+   "hard-negative-discovery",
+   "hard-negative-health-check",
+   "hard-negative-monitoring",
+   "probe-enumeration",
+   "probe-repeated",
+   "protocol-mismatch",
+   "recon-multi-stage",
+   "scan-burst",
+   "scan-connect",
+   "scan-horizontal",
+   "scan-randomized",
+   "scan-sequential",
+   "scan-slow"
+  ],
+  "IN_SCOPE_PARTIALLY_OBSERVABLE": [
+   "benign-truncated",
+   "probe-truncated"
+  ],
+  "OUT_OF_SCOPE": [],
+  "INVALID_TEST_SCENARIO": []
+ },
+ "families": {
+  "benign-api": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "ALLOW",
+   "critical_for_gate_c": false
+  },
+  "benign-noise": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "ALLOW",
+   "critical_for_gate_c": false
+  },
+  "benign-retry": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "ALLOW",
+   "critical_for_gate_c": false
+  },
+  "benign-ssh": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "ALLOW",
+   "critical_for_gate_c": false
+  },
+  "benign-truncated": {
+   "class": "IN_SCOPE_PARTIALLY_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "ALLOW",
+   "critical_for_gate_c": false
+  },
+  "benign-web": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "ALLOW",
+   "critical_for_gate_c": false
+  },
+  "benign-web-burst": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "ALLOW",
+   "critical_for_gate_c": false
+  },
+  "composite-credential-spray": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "seen_by_fitted_components": false,
+   "withheld_to": "test",
+   "expected_action": "TEMP_BLOCK when every safety gate is satisfied, otherwise a softer action naming the gate that refused",
+   "critical_for_gate_c": true
+  },
+  "composite-decoy-recon": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "seen_by_fitted_components": false,
+   "withheld_to": "test",
+   "expected_action": "TEMP_BLOCK when every safety gate is satisfied, otherwise a softer action naming the gate that refused",
+   "critical_for_gate_c": true
+  },
+  "composite-paced-breadth": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "seen_by_fitted_components": false,
+   "withheld_to": "test",
+   "expected_action": "TEMP_BLOCK when every safety gate is satisfied, otherwise a softer action naming the gate that refused",
+   "critical_for_gate_c": true
+  },
+  "credential-automation": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "TEMP_BLOCK when every safety gate is satisfied, otherwise a softer action naming the gate that refused",
+   "critical_for_gate_c": true
+  },
+  "credential-low-rate": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "seen_by_fitted_components": false,
+   "withheld_to": "test",
+   "expected_action": "TEMP_BLOCK when every safety gate is satisfied, otherwise a softer action naming the gate that refused",
+   "critical_for_gate_c": true
+  },
+  "deception-enumeration": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "TEMP_BLOCK when every safety gate is satisfied, otherwise a softer action naming the gate that refused",
+   "critical_for_gate_c": true
+  },
+  "hard-negative-admin": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "seen_by_fitted_components": false,
+   "withheld_to": "test",
+   "expected_action": "ALLOW",
+   "critical_for_gate_c": false
+  },
+  "hard-negative-backup": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "seen_by_fitted_components": false,
+   "withheld_to": "test",
+   "expected_action": "ALLOW",
+   "critical_for_gate_c": false
+  },
+  "hard-negative-batch-api": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "seen_by_fitted_components": false,
+   "withheld_to": "test",
+   "expected_action": "ALLOW",
+   "critical_for_gate_c": false
+  },
+  "hard-negative-connect": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "ALLOW",
+   "critical_for_gate_c": false
+  },
+  "hard-negative-crawler": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "seen_by_fitted_components": false,
+   "withheld_to": "test",
+   "expected_action": "ALLOW",
+   "critical_for_gate_c": false
+  },
+  "hard-negative-deception": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "ALLOW",
+   "critical_for_gate_c": false
+  },
+  "hard-negative-discovery": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "seen_by_fitted_components": false,
+   "withheld_to": "validation",
+   "expected_action": "ALLOW",
+   "critical_for_gate_c": false
+  },
+  "hard-negative-health-check": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "seen_by_fitted_components": false,
+   "withheld_to": "test",
+   "expected_action": "ALLOW",
+   "critical_for_gate_c": false
+  },
+  "hard-negative-monitoring": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "NO_ACTION_EXPECTED",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "ALLOW",
+   "critical_for_gate_c": false
+  },
+  "probe-enumeration": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "TEMP_BLOCK when every safety gate is satisfied, otherwise a softer action naming the gate that refused",
+   "critical_for_gate_c": true
+  },
+  "probe-repeated": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "TEMP_BLOCK when every safety gate is satisfied, otherwise a softer action naming the gate that refused",
+   "critical_for_gate_c": true
+  },
+  "probe-truncated": {
+   "class": "IN_SCOPE_PARTIALLY_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "TEMP_BLOCK when every safety gate is satisfied, otherwise a softer action naming the gate that refused",
+   "critical_for_gate_c": false
+  },
+  "protocol-mismatch": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "TEMP_BLOCK when every safety gate is satisfied, otherwise a softer action naming the gate that refused",
+   "critical_for_gate_c": true
+  },
+  "recon-multi-stage": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "TEMP_BLOCK when every safety gate is satisfied, otherwise a softer action naming the gate that refused",
+   "critical_for_gate_c": true
+  },
+  "scan-burst": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "seen_by_fitted_components": false,
+   "withheld_to": "validation",
+   "expected_action": "TEMP_BLOCK when every safety gate is satisfied, otherwise a softer action naming the gate that refused",
+   "critical_for_gate_c": true
+  },
+  "scan-connect": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "TEMP_BLOCK when every safety gate is satisfied, otherwise a softer action naming the gate that refused",
+   "critical_for_gate_c": true
+  },
+  "scan-horizontal": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "TEMP_BLOCK when every safety gate is satisfied, otherwise a softer action naming the gate that refused",
+   "critical_for_gate_c": true
+  },
+  "scan-randomized": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "TEMP_BLOCK when every safety gate is satisfied, otherwise a softer action naming the gate that refused",
+   "critical_for_gate_c": true
+  },
+  "scan-sequential": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "seen_by_fitted_components": true,
+   "withheld_to": null,
+   "expected_action": "TEMP_BLOCK when every safety gate is satisfied, otherwise a softer action naming the gate that refused",
+   "critical_for_gate_c": true
+  },
+  "scan-slow": {
+   "class": "IN_SCOPE_OBSERVABLE",
+   "enforcement_eligibility": "TEMP_BLOCK_ELIGIBLE",
+   "seen_by_fitted_components": false,
+   "withheld_to": "test",
+   "expected_action": "TEMP_BLOCK when every safety gate is satisfied, otherwise a softer action naming the gate that refused",
+   "critical_for_gate_c": true
+  }
+ },
+ "critical_families": [
+  "composite-credential-spray",
+  "composite-decoy-recon",
+  "composite-paced-breadth",
+  "credential-automation",
+  "credential-low-rate",
+  "deception-enumeration",
+  "probe-enumeration",
+  "probe-repeated",
+  "protocol-mismatch",
+  "recon-multi-stage",
+  "scan-burst",
+  "scan-connect",
+  "scan-horizontal",
+  "scan-randomized",
+  "scan-sequential",
+  "scan-slow"
+ ],
+ "unseen_families": [
+  "composite-credential-spray",
+  "composite-decoy-recon",
+  "composite-paced-breadth",
+  "credential-low-rate",
+  "hard-negative-admin",
+  "hard-negative-backup",
+  "hard-negative-batch-api",
+  "hard-negative-crawler",
+  "hard-negative-discovery",
+  "hard-negative-health-check",
+  "scan-burst",
+  "scan-slow"
+ ],
+ "required_safety_conditions": [
+  "no hack-back, no counter-attack, no scanning back",
+  "no permanent automatic block: every autonomous block carries a TTL",
+  "automatic TTL ceiling 43200s (12 hours), enforced in security/enforcement.py and unreachable by configuration",
+  "owned nftables objects only; never a rule the operator wrote",
+  "management networks, the allowlist and trusted proxies are protected: PolicyGuard returns OBSERVE for a protected source before any arithmetic",
+  "loopback, unspecified, multicast, link-local and local addresses protected",
+  "CDN and proxy addresses never network-blocked, because the address carries everybody else",
+  "the payment_webhook profile never network-blocks, at any probability",
+  "the mass-block circuit breaker is enabled and its trips are reported",
+  "a block requires a CalibratedProbability; MathRisk, ModelScore and AnomalyScore are refused by the expected-loss engine",
+  "a non-finite probability produces no action"
+ ],
+ "data_rules": [
+  "no raw sensitive payload is stored; credential-shaped traffic records shape and count, never content",
+  "scenario identity, generator name, seed, salt and label are provenance metadata and never enter the ML feature vector or MathRisk",
+  "every source address is drawn from RFC 5737 documentation ranges and nothing is transmitted anywhere",
+  "source groups do not span splits; assert_no_leakage must pass on the combined fitted and locked corpora"
+ ],
+ "forbidden_features": [
+  "a previous final action",
+  "block status",
+  "would_block",
+  "a PolicyGuard result",
+  "a cost decision",
+  "any label-derived quantity"
+ ],
+ "gate_c": {
+  "fails_if_any": [
+   "a malicious IN_SCOPE_OBSERVABLE family eligible for TEMP_BLOCK is detected on zero sources; aggregate recall may not hide it",
+   "unseen-family recall is zero while seen-family recall is not",
+   "an uncalibrated quantity reaches the cost arithmetic, or a calibrator is applied to a model it was not fitted against, or a non-finite value produces an action",
+   "the report omits the seen/unseen split, the per-family table or the worst family",
+   "leakage is found and not excluded",
+   "runtime parity fails for the production probability path"
+  ],
+  "does_not_fail_because": [
+   "supervised ML remains auxiliary rather than authoritative",
+   "an OUT_OF_SCOPE family is undetected",
+   "a TEMP_BLOCK-ineligible profile produced no blocks",
+   "recall is low: there is no recall target, and inventing one after the result would be the same error in the opposite direction"
+  ],
+  "recall_target": null,
+  "note": "a critical, fully observable, TEMP_BLOCK-eligible family with zero meaningful detection keeps Gate C FAIL (\u00a752)"
+ },
+ "gate_e_regression_limits": {
+  "false_blocks_per_1000_benign": "at most 1.0, measured on trusted ground truth over the full decision path",
+  "block_precision": "at least 0.95",
+  "minimum_benign_sources": 500,
+  "minimum_malicious_sources": 50,
+  "degenerate_decision": "allow-all or block-all is an automatic FAIL, reported on every branch of the release gate",
+  "hard_negatives": "every hard-negative family must be present and scored; the three P15.3 compositions exist specifically as controls for the three MathRisk v2 terms",
+  "uncertainty": "zero observed false blocks is reported with its Wilson upper bound and never as proven zero"
+ },
+ "release_thresholds": {
+  "max_false_blocks_per_1000_benign": 1.0,
+  "min_block_precision": 0.95,
+  "min_benign_sample": 500,
+  "min_positive_sample": 50,
+  "note": "operator policy; none of these values is measured"
+ },
+ "decision_gates": {
+  "minimum_observations": 20,
+  "minimum_observation_seconds": 10.0,
+  "minimum_data_quality": 0.55,
+  "minimum_signal_diversity": 3,
+  "minimum_behavioural_diversity": 2,
+  "maximum_uncertainty": 0.6,
+  "block_ttl_ladder": [
+   300,
+   1800,
+   7200,
+   43200
+  ],
+  "maximum_block_ttl_seconds": 43200
+ },
+ "cost_policy": {
+  "version": "cost-policy-v1",
+  "digest": "b0b45ea9a51b08c7f28d42859b2aff229e7d62b6aba7e77075de89b7770693ce",
+  "unchanged_in_p15_3": true,
+  "decision_margin": 0.25,
+  "release_margin": 0.1,
+  "profiles": {
+   "admin": {
+    "false_block": 8.0,
+    "false_allow": 1.0,
+    "threshold": 0.888889,
+    "network_block_permitted": true
+   },
+   "api": {
+    "false_block": 80.0,
+    "false_allow": 1.0,
+    "threshold": 0.987654,
+    "network_block_permitted": true
+   },
+   "honeypot": {
+    "false_block": 2.0,
+    "false_allow": 1.0,
+    "threshold": 0.666667,
+    "network_block_permitted": true
+   },
+   "payment_webhook": {
+    "false_block": 500.0,
+    "false_allow": 1.0,
+    "threshold": 0.998004,
+    "network_block_permitted": false
+   },
+   "public_website": {
+    "false_block": 40.0,
+    "false_allow": 1.0,
+    "threshold": 0.97561,
+    "network_block_permitted": true
+   }
+  }
+ },
+ "component_versions": {
+  "math_risk": "math-risk-v3",
+  "authority": "autonomous-decision-authority-v1",
+  "cost_policy": "cost-policy-v1"
+ },
+ "scoring_rule": "the locked benchmark is scored exactly once. If it fails, the candidate fails: no weight, threshold, gate, feature or calibrator is changed and the test rerun. Gate C remains FAIL and a future cycle designs a new test (\u00a766, \u00a783)",
+ "what_this_does_not_claim": [
+  "generalisation to real Internet traffic: every corpus is synthetic",
+  "detection of behaviour sharing no primitive with anything known",
+  "that supervised ML is production-ready; it remains auxiliary"
+ ],
+ "digest": "c9da9f0061e1c81a51d28f3fa98ea6767fa0b62109b8d4f55c0ae414c004ec3f"
+}

@@ -1,0 +1,206 @@
+{
+  "model_family": "logistic_regression",
+  "positive_class": "malicious_automation_like",
+  "label_meaning": "positive means automation-like behaviour observed by this sensor; it is not a claim of attacker identity, human intent or a confirmed attack",
+  "model_feature_names": [
+    "connections_10s",
+    "connections_60s",
+    "connections_900s",
+    "ports_60s",
+    "ports_900s",
+    "destinations_60s",
+    "families_60s",
+    "repetition_60s",
+    "sequential_60s",
+    "anomaly_60s",
+    "credentials_60s",
+    "continuation_60s",
+    "persistence_900s",
+    "burst_10s",
+    "interarrival_mean_60s",
+    "interarrival_cv_60s",
+    "deception_60s",
+    "available_connections_10s",
+    "available_connections_60s",
+    "available_connections_900s",
+    "available_ports_60s",
+    "available_ports_900s",
+    "available_destinations_60s",
+    "available_families_60s",
+    "available_repetition_60s",
+    "available_sequential_60s",
+    "available_anomaly_60s",
+    "available_credentials_60s",
+    "available_continuation_60s",
+    "available_persistence_900s",
+    "available_burst_10s",
+    "available_interarrival_mean_60s",
+    "available_interarrival_cv_60s",
+    "available_deception_60s"
+  ],
+  "excluded_from_model": {
+    "previous_risk": "autoregressive: decayed output of this system, not an observation",
+    "available_previous_risk": "availability mask of an excluded autoregressive column"
+  },
+  "zero_weight_columns": [
+    "previous_risk",
+    "available_previous_risk"
+  ],
+  "training_dataset_sha256": "7162949bc533b7cd0f5974fe6c4e160613388c2d6ea3d45b8f7252c53dcdf005",
+  "training_seed": 20260909,
+  "training_synthetic_only": true,
+  "threshold_authority": "DecisionFusion and PolicyGuard; the model never selects an action",
+  "recommended_mode": "shadow",
+  "recommended_shadow_only": true,
+  "quality_gate_status": "PROVISIONAL",
+  "library_versions": {
+    "python": "3.12.13",
+    "platform": "Linux-6.8.0-136-generic-x86_64-with-glibc2.35",
+    "numpy": "2.5.3",
+    "scikit-learn": "1.9.0",
+    "scipy": "1.18.1",
+    "onnx": "1.22.0",
+    "onnxruntime": "1.29.0",
+    "skl2onnx": "1.20.0"
+  },
+  "manifest_version": 1,
+  "model_version": "risk-logreg-v1",
+  "feature_schema_version": 1,
+  "feature_order": [
+    "connections_10s",
+    "connections_60s",
+    "connections_900s",
+    "ports_60s",
+    "ports_900s",
+    "destinations_60s",
+    "families_60s",
+    "repetition_60s",
+    "sequential_60s",
+    "anomaly_60s",
+    "credentials_60s",
+    "continuation_60s",
+    "persistence_900s",
+    "burst_10s",
+    "interarrival_mean_60s",
+    "interarrival_cv_60s",
+    "deception_60s",
+    "previous_risk",
+    "available_connections_10s",
+    "available_connections_60s",
+    "available_connections_900s",
+    "available_ports_60s",
+    "available_ports_900s",
+    "available_destinations_60s",
+    "available_families_60s",
+    "available_repetition_60s",
+    "available_sequential_60s",
+    "available_anomaly_60s",
+    "available_credentials_60s",
+    "available_continuation_60s",
+    "available_persistence_900s",
+    "available_burst_10s",
+    "available_interarrival_mean_60s",
+    "available_interarrival_cv_60s",
+    "available_deception_60s",
+    "available_previous_risk"
+  ],
+  "input_name": "features",
+  "input_shape": [
+    1,
+    36
+  ],
+  "input_dtype": "float32",
+  "output_names": [
+    "label",
+    "probabilities"
+  ],
+  "classes": [
+    "benign-like",
+    "malicious-automation-like"
+  ],
+  "score_semantics": "uncalibrated_model_score",
+  "training_dataset_version": "synthetic-behavior-v3",
+  "created_at": "2026-09-08T00:00:00Z",
+  "sha256": "04c66d6e1f5375168bfe3f33f42e30601218c25672ec57651110fbb360375601",
+  "quality_gate_passed": false,
+  "quality_gate_detail": {
+    "test_false_positive_rate_ok": false,
+    "test_block_precision_ok": false,
+    "no_group_leakage": true,
+    "onnx_parity_ok": true,
+    "passed": false
+  },
+  "onnx_parity": {
+    "rows": 994,
+    "max_absolute_difference": 3.5762786865234375e-07,
+    "mean_absolute_difference": 3.5891420525541786e-08,
+    "tolerance": 1e-05,
+    "training_dtype": "float64",
+    "runtime_dtype": "float32",
+    "passed": true
+  },
+  "metrics": {
+    "validation_pr_auc": 0.9973565656848581,
+    "validation_roc_auc": 0.9970081776477627,
+    "test_pr_auc": 0.698921749315975,
+    "test_roc_auc": 0.8291242791420981,
+    "test_at_0.50": {
+      "threshold": 0.5,
+      "confusion_matrix": [
+        [
+          390,
+          116
+        ],
+        [
+          27,
+          461
+        ]
+      ],
+      "precision": 0.7989601386481803,
+      "recall": 0.944672131147541,
+      "f1": 0.8657276995305164,
+      "false_positive_rate": 0.22924901185770752,
+      "false_negative_rate": 0.055327868852459015,
+      "specificity": 0.7707509881422925,
+      "accuracy": 0.8561368209255533,
+      "positive_decisions": 577,
+      "block_precision": 0.7989601386481803,
+      "false_blocks": 116,
+      "false_blocks_per_1000_benign": 229.2490118577075
+    },
+    "test_at_reference_block_threshold": {
+      "threshold": 0.9,
+      "confusion_matrix": [
+        [
+          409,
+          97
+        ],
+        [
+          82,
+          406
+        ]
+      ],
+      "precision": 0.8071570576540755,
+      "recall": 0.8319672131147541,
+      "f1": 0.8193743693239153,
+      "false_positive_rate": 0.191699604743083,
+      "false_negative_rate": 0.1680327868852459,
+      "specificity": 0.808300395256917,
+      "accuracy": 0.8199195171026157,
+      "positive_decisions": 503,
+      "block_precision": 0.8071570576540755,
+      "false_blocks": 97,
+      "false_blocks_per_1000_benign": 191.699604743083
+    },
+    "reference_block_threshold": 0.9,
+    "metrics_source": "held-out synthetic test split, scored through the production adapter"
+  },
+  "hyperparameters": {
+    "C": 10.0,
+    "class_weight": "balanced",
+    "penalty": "l2 (l1_ratio=0)",
+    "solver": "lbfgs",
+    "max_iter": 5000,
+    "seed": 20260909
+  }
+}

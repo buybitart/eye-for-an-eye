@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "samples": [
+    {
+      "id": "scan",
+      "pcap": "scan.pcap",
+      "sha256": "f1250220270ed32f89f7a6a44ed4f93ea7d054f75b36fb6c1fd8cbd759f2b13d",
+      "expected_labels": [
+        {
+          "src_ip": "192.0.2.1",
+          "window_seconds": 60,
+          "label": "scanner"
+        }
+      ],
+      "metadata": {
+        "description": "small deterministic final-window contract fixture"
+      },
+      "source": {
+        "kind": "synthetic",
+        "generator": "generate.py",
+        "external_capture": false
+      }
+    },
+    {
+      "id": "noise",
+      "pcap": "noise.pcap",
+      "sha256": "9bae91c231857ee6dad51ac910f7d870ae183c43bd923f758cc367f2e8be0ef5",
+      "expected_labels": [
+        {
+          "src_ip": "192.0.2.1",
+          "window_seconds": 60,
+          "label": "noise"
+        }
+      ],
+      "metadata": {
+        "description": "small deterministic final-window contract fixture"
+      },
+      "source": {
+        "kind": "synthetic",
+        "generator": "generate.py",
+        "external_capture": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "source_sha256": "818fcc166ff3076212ab9242b05fa9f0a4b197e5f04013aee86ac6d846c94f9f",
+  "python": "3.12.14",
+  "platform": "Windows-11-10.0.22635-SP0",
+  "workload": "synthetic classic PCAP + single-source correlation + 10000 active sources within TTL",
+  "configuration": {
+    "enabled": true,
+    "windows": [
+      60,
+      900
+    ],
+    "max_windows": 4,
+    "max_sources": 10000,
+    "max_events_per_source": 256,
+    "max_bytes": 33554432,
+    "ttl_seconds": 900.0,
+    "emit_interval": 5.0,
+    "distributed_groups": 1024,
+    "distributed_sources": 5,
+    "focused_seconds": 300.0,
+    "scanner_threshold": 40,
+    "bot_threshold": 35,
+    "suspicious_threshold": 25,
+    "weights": {
+      "port_breadth": 25,
+      "host_breadth": 35,
+      "probe_diversity": 15,
+      "connection_rate": 10,
+      "sequential_ports": 15,
+      "anomalies": 20,
+      "credentials": 25,
+      "persistence": 20,
+      "repeated_probe": 15,
+      "timing_regular": 20,
+      "sequence_repeat": 15
+    }
+  },
+  "correlation": {
+    "input_events": 1000,
+    "seconds": 8.715030400002433,
+    "events_per_second": 114.74429280243483,
+    "cpu_seconds": 2.03125,
+    "latency_mean_ms": 8.706024999984947,
+    "latency_p50_ms": 8.589450000727084,
+    "latency_p95_ms": 14.34010000230046,
+    "source_cache_hit_rate": 0.999,
+    "sample_drop_rate": 0.744,
+    "state": {
+      "sources": 1,
+      "groups": 0,
+      "bytes": 67345,
+      "source_cache": {
+        "hit": 999,
+        "miss": 1,
+        "eviction": 0,
+        "expired": 0,
+        "rejected": 0
+      },
+      "group_cache": {
+        "hit": 0,
+        "miss": 0,
+        "eviction": 0,
+        "expired": 0,
+        "rejected": 0
+      },
+      "input_events": 1000,
+      "results": 42,
+      "sample_drops": 744
+    }
+  },
+  "memory": {
+    "input_sources": 10000,
+    "retained_sources": 10000,
+    "python_current_bytes": 12053094,
+    "python_peak_bytes": 12058726,
+    "accounted_state_bytes": 15552038,
+    "bytes_per_input_source": 1205.3094,
+    "rss_measured": false
+  },
+  "offline_pipeline": {
+    "packets": 1000,
+    "seconds": 3.3804574999958277,
+    "packets_per_second": 295.8179477189801,
+    "parse_errors": 0,
+    "output_drops": 0,
+    "input_drop_rate": 0.0,
+    "mode": "paced offline; no live queue/OS capture"
+  },
+  "limitations": [
+    "single Windows run, synthetic input, no live wire-rate claim",
+    "tracemalloc covers Python allocations, not native RSS or kernel buffers",
+    "sample drop rate is bounded-window truncation, not packet capture loss"
+  ]
+}

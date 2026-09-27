@@ -1,0 +1,111 @@
+{
+ "baseline_schema_version": 1,
+ "purpose": "the values P15.4 may not move. Recorded from the constants in force, not transcribed, so the record and the running system cannot disagree without the digest changing",
+ "cost_policy": {
+  "version": "cost-policy-v1",
+  "digest": "b0b45ea9a51b08c7f28d42859b2aff229e7d62b6aba7e77075de89b7770693ce",
+  "decision_margin": 0.25,
+  "release_margin": 0.1,
+  "profiles": {
+   "admin": {
+    "false_block": 8.0,
+    "false_allow": 1.0,
+    "challenge": 0.05,
+    "rate_limit": 0.15,
+    "threshold": 0.888889,
+    "network_block_permitted": true
+   },
+   "api": {
+    "false_block": 80.0,
+    "false_allow": 1.0,
+    "challenge": 1.0,
+    "rate_limit": 0.15,
+    "threshold": 0.987654,
+    "network_block_permitted": true
+   },
+   "honeypot": {
+    "false_block": 2.0,
+    "false_allow": 1.0,
+    "challenge": 0.05,
+    "rate_limit": 0.15,
+    "threshold": 0.666667,
+    "network_block_permitted": true
+   },
+   "payment_webhook": {
+    "false_block": 500.0,
+    "false_allow": 1.0,
+    "challenge": 5.0,
+    "rate_limit": 0.15,
+    "threshold": 0.998004,
+    "network_block_permitted": false
+   },
+   "public_website": {
+    "false_block": 40.0,
+    "false_allow": 1.0,
+    "challenge": 0.05,
+    "rate_limit": 0.15,
+    "threshold": 0.97561,
+    "network_block_permitted": true
+   }
+  }
+ },
+ "decision_gates": {
+  "minimum_observations": 20,
+  "minimum_observation_seconds": 10.0,
+  "minimum_data_quality": 0.55,
+  "minimum_signal_diversity": 3,
+  "minimum_behavioural_diversity": 2,
+  "maximum_uncertainty": 0.6,
+  "block_ttl_ladder": [
+   300,
+   1800,
+   7200,
+   43200
+  ],
+  "maximum_block_ttl_seconds": 43200
+ },
+ "authority_version": "autonomous-decision-authority-v1",
+ "block_ttl": {
+  "ladder_seconds": [
+   300,
+   1800,
+   7200,
+   43200
+  ],
+  "maximum_block_ttl_seconds": 43200,
+  "enforcement_ceiling_seconds": 43200,
+  "permanent_block_possible": false
+ },
+ "block_budget_and_mass_block_breaker": {
+  "blocks_per_minute": 10,
+  "max_active_blocks": 500,
+  "max_block_share": 0.02,
+  "minimum_sources_for_share": 200,
+  "max_false_blocks_per_1000": 1.0,
+  "minimum_benign_sample": 500,
+  "cooldown_seconds": 300.0
+ },
+ "policy_guard": {
+  "management_networks": [],
+  "allowlist": [],
+  "trusted_proxies": [],
+  "protected_unconditionally": [
+   "loopback",
+   "unspecified",
+   "multicast",
+   "link_local",
+   "local_addresses"
+  ],
+  "profiles_never_network_blocked": [
+   "payment_webhook"
+  ]
+ },
+ "release_thresholds": {
+  "max_false_blocks_per_1000_benign": 1.0,
+  "min_block_precision": 0.95,
+  "min_benign_sample": 500,
+  "min_positive_sample": 50,
+  "note": "operator policy; none of these values is measured"
+ },
+ "digest": "044b600ef51df72124a9e68f32c88e0853261143aa40b48d3e54b77c8a4b57b0"
+}

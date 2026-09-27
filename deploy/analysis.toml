@@ -1,0 +1,25 @@
+config_version = 1
+[deployment]
+profile = "sensor"
+egress = "disabled"
+[runtime]
+sensor_id = "capture-1"
+status_file = "/run/eye-for-an-eye/capture-status.json"
+enforce_unprivileged = true
+[capture]
+ipc_socket = "/run/eye-for-an-eye/capture.sock"
+helper_uid = 10002
+analysis_uid = 10001
+[storage]
+enabled = true
+path = "/var/lib/eye-for-an-eye/capture.sqlite3"
+[logging]
+file = "" # systemd journal owns retention.
+[api]
+enabled = false
+bind_address = "127.0.0.1"
+port = 8779
+[metrics]
+enabled = false
+bind_address = "127.0.0.1"
+port = 8780

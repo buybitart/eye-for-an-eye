@@ -1,0 +1,44 @@
+[
+  {
+    "test_id": "B104",
+    "file": "eye_for_an_eye/network/capture_helper.py",
+    "code_sha256": "2067d7d0f9f40770ee27465b05271cfc22e399d5b46ee43b78725624f88c2789",
+    "reason": "False positive. Bandit reads the literals '0.0.0.0' and '::' as a bind to all interfaces. They are the opposite: the line subtracts them from the set of the capture interface's own addresses, so an unspecified address is not mistaken for one of ours. No socket is bound here."
+  },
+  {
+    "test_id": "B608",
+    "file": "eye_for_an_eye/storage/reader.py",
+    "code_sha256": "af1e2519ed441000b7d18e10a8e6dbb2df147debfc06dc304ce592055e2bf5ec",
+    "reason": "False positive. The f-string interpolates only `index` and `where`, both produced by `EventReader.where()` from fixed literals: `index` is one of five hard-coded index names, and `where` joins hard-coded column names each followed by `?`. Every operator-supplied value travels in `args` as a bound parameter and never reaches the SQL text."
+  },
+  {
+    "test_id": "B608",
+    "file": "eye_for_an_eye/storage/reader.py",
+    "code_sha256": "b6fd38107749cbefb62c7cb3421ea8d3b7c26dce7c14ecd4fb33869adedf8f94",
+    "reason": "False positive, same construction as the finding above: `index` and `where` come from `EventReader.where()`, which emits only fixed identifiers and `?` placeholders."
+  },
+  {
+    "test_id": "B608",
+    "file": "eye_for_an_eye/storage/reader.py",
+    "code_sha256": "a51db0a6183228cbd1b4bb443cd99e881c2c8823929886dbc348f92e30c128e8",
+    "reason": "False positive, same construction as the two findings above: `index` and `where` come from `EventReader.where()`, which emits only fixed identifiers and `?` placeholders."
+  },
+  {
+    "test_id": "B608",
+    "file": "eye_for_an_eye/storage/sqlite.py",
+    "code_sha256": "59f887f79a482c1259beadb851561a9324c16f34e3eb7f1c1d2ee613bc6117c2",
+    "reason": "False positive. This is the schema-creation script. Its single interpolation is `{APPLICATION_ID}`, a module-level integer constant; no part of it comes from an event, a request or a configuration string."
+  },
+  {
+    "test_id": "B608",
+    "file": "eye_for_an_eye/storage/sqlite.py",
+    "code_sha256": "63dab8ebd7a0c733c7f25f9181379e72f07617af20b9a46359b0bcfef3e42944",
+    "reason": "False positive. The only interpolation is `placeholders`, which is `','.join('?' for _ in events)` -- a run of question marks whose length is the batch size. The event ids are passed as bound parameters."
+  },
+  {
+    "test_id": "B103",
+    "file": "eye_for_an_eye/decision/registry.py",
+    "code_sha256": "28cd130af50e346db3d7757644938c431fc1bef47a0fe5022387307b8b0e4ff3",
+    "reason": "Accepted, not a false positive: the mode is deliberate. `mkdtemp` creates the staging directory 0o700, and it is about to be renamed into place as a published model version directory. A sensor running as a different user must be able to traverse and read it, so the mode is widened to 0o755 -- readable and traversable, and writable by nobody but the owner. The write bits are what matter: the artifact reader in `decision/onnx_model.py` refuses any artifact whose mode has `st_mode & 0o022`, so a group- or world-writable model directory could not be loaded even if one were created. This finding was previously unreviewed and the gate had been failing; it was reviewed during the P13 audit."
+  }
+]

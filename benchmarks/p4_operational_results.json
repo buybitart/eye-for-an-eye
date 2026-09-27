@@ -1,0 +1,151 @@
+{
+  "application": "0.5.0",
+  "environment": "Windows-11-10.0.22635-SP0",
+  "python": "3.12.14",
+  "source_sha256": "20e0de6e9aee3cd5021091f32a58499f0631425b91630657d6fa264d2a61d4ee",
+  "kind": "P4 local operational sanity, not a capacity benchmark",
+  "producer_events": 400,
+  "accepted": 400,
+  "elapsed_seconds": 4.74540520000005,
+  "consumer_layout": "2 HTTP API clients + 1 metrics scraper + 1 WAL writer; 5ms producer pacing",
+  "response_statuses": {
+    "metrics_200": 56,
+    "api_200": 101
+  },
+  "emit_ms": {
+    "p50": 0.15080000002853922,
+    "p95": 0.21449999997003033,
+    "p99": 0.24519999999483844,
+    "max": 0.39100000003600144
+  },
+  "api_ms": {
+    "p50": 6.825499999990825,
+    "p95": 12.115699999981189,
+    "p99": 13.03819999998268,
+    "max": 14.404900000045018
+  },
+  "metrics_ms": {
+    "p50": 2.6413000000502507,
+    "p95": 5.077099999994061,
+    "p99": 6.532200000037847,
+    "max": 7.984999999962383
+  },
+  "queue_peak_depth": 135,
+  "queue_peak_bytes": 75528,
+  "queue_budget": 256,
+  "queue_byte_budget": 1048576,
+  "database_initial_bytes": 77824,
+  "database_peak_bytes": 504224,
+  "database_final_bytes": 430080,
+  "database_budget": 16777216,
+  "rss_before": 34435072,
+  "rss_peak": 39956480,
+  "rss_after": 38817792,
+  "threads_before": 1,
+  "threads_after": 1,
+  "shutdown_seconds": 0.18312949999994999,
+  "metrics": {
+    "connections_rejected_total": 0,
+    "cache_evictions_total": 0,
+    "events_created_total": 432,
+    "storage_pressure": 0,
+    "connections_accepted_total": 0,
+    "enrichment_requests_total": 0,
+    "storage_bytes": 462848,
+    "storage_write_duration_seconds_count": 432,
+    "parse_errors_total": 0,
+    "deception_response_bytes_total": 0,
+    "queue_depth": 0,
+    "deception_connections_total": 0,
+    "fingerprint_errors_total": 0,
+    "enrichment_duration_seconds_sum": 0,
+    "connections_active": 0,
+    "log_dropped_total": 107,
+    "api_errors_total": 0,
+    "enrichment_duration_seconds_count": 0,
+    "events_dropped_total": 0,
+    "storage_written_total": 432,
+    "storage_write_failures_total": 0,
+    "response_bytes_total": 0,
+    "enrichment_failures_total": 0,
+    "fingerprint_results_total": 0,
+    "packet_parse_errors_total": 0,
+    "storage_writes_total": 432,
+    "storage_retained_events": 432,
+    "enrichment_latency_seconds": 0,
+    "correlation_results_total": 32,
+    "log_suppressed_total": 0,
+    "queue_bytes": 0,
+    "log_errors_total": 0,
+    "deception_responses_total": 0,
+    "api_requests_total": 101,
+    "handler_duration_seconds_count": 400,
+    "cache_entries": 16,
+    "storage_write_duration_seconds_sum": 3.189999999999941,
+    "source_state_entries": 16,
+    "storage_failures_total": 0,
+    "handler_duration_seconds_sum": 3.3600000000000136,
+    "packets_received_total": 0,
+    "metrics_errors_total": 0,
+    "handler_latency_seconds": 3.3600000000000136
+  },
+  "storage_metrics": {
+    "retention_deleted": 0,
+    "retained_events": 432,
+    "disk_bytes": 462848,
+    "written": 432
+  },
+  "logging_metrics": {
+    "queued": 325,
+    "written": 325,
+    "sampled": 107,
+    "writer_stalled": 0
+  },
+  "health_during_load": {
+    "status": "HEALTHY",
+    "live": true,
+    "ready": true,
+    "components": {
+      "capture": "DISABLED",
+      "listeners": "DISABLED",
+      "correlation": "HEALTHY",
+      "event_queue": "HEALTHY",
+      "storage": "HEALTHY",
+      "enrichment": "DISABLED",
+      "logging": "HEALTHY",
+      "deception": "DISABLED",
+      "api": "HEALTHY",
+      "metrics": "HEALTHY"
+    },
+    "limitations": [
+      "readiness_is_sensor_intake_not_optional_storage_or_api_availability"
+    ]
+  },
+  "health_after_shutdown": {
+    "status": "UNAVAILABLE",
+    "live": false,
+    "ready": false,
+    "components": {
+      "capture": "DISABLED",
+      "listeners": "DISABLED",
+      "correlation": "HEALTHY",
+      "event_queue": "HEALTHY",
+      "storage": "HEALTHY",
+      "enrichment": "DISABLED",
+      "logging": "HEALTHY",
+      "deception": "DISABLED",
+      "api": "DISABLED",
+      "metrics": "DISABLED"
+    },
+    "limitations": [
+      "readiness_is_sensor_intake_not_optional_storage_or_api_availability"
+    ]
+  },
+  "limitations": [
+    "Windows localhost only",
+    "no live packet capture or firewall",
+    "stdout sink discarded after JSON serialization",
+    "RSS is measured, not a hard process cap"
+  ],
+  "passed": true
+}

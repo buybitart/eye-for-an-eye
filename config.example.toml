@@ -1,0 +1,240 @@
+config_version = 1
+probes_path = ""
+[deployment]
+profile = "sensor"
+egress = "disabled"
+# Safe defaults. Paths resolve relative to this file; CLI paths resolve from cwd.
+# Copy to config.local.toml for local settings. No database or secret is bundled.
+
+[network]
+bind_address = "127.0.0.1"
+port = 1234
+protocol = "tcp"
+udp_responses = false # P0 rejects true; UDP is receive-only.
+
+[limits]
+max_connections = 256 # Portable selector ceiling: 256.
+max_connections_per_ip = 8
+max_request_bytes = 4096
+max_response_bytes = 1024
+first_byte_timeout = 2.0
+idle_timeout = 5.0
+total_timeout = 10.0
+state_entries = 10000
+state_ttl = 600.0
+connections_per_second = 100.0 # Also caps received UDP datagrams per second.
+
+[enrichment]
+enabled = false
+rdap_enabled = false # External registry requests require enabled=true as well.
+mmdb_path = "" # Operator-maintained MMDB; enable enrichment to use it.
+workers = 4 # 1..16 supervisors; at most one child process per supervisor.
+queue_size = 512 # 1..10000 pending jobs, nonblocking submission.
+timeout = 2.0 # Parent deadline; worker teardown adds a bounded cleanup interval.
+negative_ttl = 30.0
+
+[capture]
+interface = "" # Capture-helper only. Analysis uses IPC or offline PCAP.
+pcap_path = ""
+bpf = "ip or ip6" # Live capture only; offline replay processes all IP records.
+p0f_db = "" # Optional p0f v3 signature database, maximum 8 MiB.
+ipc_socket = "" # Linux: absolute path in an analysis-owned directory, <=100 bytes.
+helper_uid = 65534 # Set explicit, distinct service UIDs in deployment.
+analysis_uid = 65534
+max_frame_bytes = 8192
+
+[active_probes]
+enabled = false # Only nat; requires an explicit lab policy and enforce_unprivileged=false.
+# PCAP replay always rejects active probes. Standard P1 units keep enforcement enabled.
+allowed_cidrs = [] # Explicit authorized lab IPv4 /24 or narrower, preferably /32.
+timeout = 1.0
+
+[deception]
+enabled = true
+secret_file = "" # Raw persistent bytes, 32..4096; required for services TCP.
+secret_env = "EYE_FOR_AN_EYE_SECRET" # Alternative: persistent hex-encoded bytes.
+mode = "sensor" # "lab" requires loopback bind and narrow non-global allowlist.
+catalogue_version = 2 # Explicit P2 -> P3 mapping migration; see SERVICE_PROFILES.
+port_set = "custom" # common / extended / custom; selection does not bind extra ports.
+decoy_ports = [] # Empty custom set means network.port; conflicts with protected ports fail.
+port_profiles = {} # Optional {"1234"="ftp"}; supported families: http, ftp, ssh.
+source_allowlist = ["127.0.0.0/8", "::1/128"] # Explicitly configure eligible deployment clients.
+redirected = false # true requires verified Linux IPv4 TCP original destination.
+username_policy = "redact" # "hash" uses a separate persistent HMAC domain.
+preview_enabled = false # True stores only command class; arguments/headers/body always omitted.
+max_messages = 12 # Cumulative per connection; profile may impose a lower value.
+max_transitions = 40
+jitter_enabled = false # Optional deterministic delay, never extends total deadline.
+jitter_min_ms = 10
+jitter_max_ms = 150
+overload_degraded = 0.7
+overload_observe_only = 0.9
+overload_recover = 0.5
+recovery_seconds = 2.0
+storage_slow_seconds = 0.1
+
+[lab]
+enabled = false # Only the deprecated garbage entrypoint can enable this.
+max_duration = 10.0 # Global runtime budget; ceiling 60 seconds.
+max_bytes = 256 # Global response budget across all accepted clients; ceiling 4096.
+max_connections = 16 # Lifetime accepted connections; ceiling 64.
+
+[logging]
+file = "" # Empty means JSONL on stdout; a file enables built-in rotation.
+max_bytes = 5000000
+backups = 2
+queue_size = 512
+events_per_second = 100.0
+per_source_per_second = 5.0
+per_event_type_per_second = 100.0
+repeated_window = 1.0
+min_free_bytes = 1048576
+
+[runtime]
+sensor_id = "local"
+queue_events = 1024
+queue_bytes = 4194304
+shutdown_timeout = 10.0
+status_file = "" # Atomic JSON snapshot; health/metrics CLI reads it without starting workers.
+enforce_unprivileged = true # Linux analysis rejects root/effective capabilities.
+load_shedding = false # Opt-in FIFO admission: LOW below 75%, NORMAL below 90%, HIGH to hard cap.
+low_priority_watermark = 0.75 # Also suppress optional enrichment above this queue pressure.
+normal_priority_watermark = 0.9
+
+[storage]
+enabled = false # Enable explicitly; deploy profiles enable bounded SQLite.
+path = "eye-for-an-eye.sqlite3"
+max_events = 100000
+retention_seconds = 86400.0
+max_bytes = 134217728 # Conservative envelope for main DB + WAL + SHM.
+busy_timeout = 0.2
+max_batch_events = 1 # Opt-in 8 recommended for measured write-heavy load; hard ceiling 32.
+max_batch_delay_ms = 10.0 # 1..50 ms; checked between bounded handlers; shutdown flushes pending rows.
+cleanup_interval = 5.0
+cleanup_batch = 500
+pressure_warning = 0.7
+pressure_critical = 0.9
+
+[api]
+enabled = false
+bind_address = "127.0.0.1"
+port = 8777
+allow_insecure_non_loopback = false # Explicit override emits warning; use authenticated TLS proxy.
+docs_enabled = false # Minimal OpenAPI JSON only; no interactive UI.
+redact_ip = false
+token_file = "" # Optional 32..256-byte bearer token, also protects metrics. Never log this value.
+max_page_size = 100 # Hard maximum 500.
+max_response_bytes = 65536 # Includes HTTP headers.
+max_query_seconds = 0.2 # SQLite cancellation; ceiling 1 second.
+max_range_seconds = 604800 # Default query 1 hour; maximum 7 days.
+max_scan_rows = 5000 # Aggregates mark partial=true if capped.
+requests_per_second = 20.0
+max_connections = 16 # Bounded sockets; one serial query worker per endpoint.
+
+[metrics]
+enabled = false
+bind_address = "127.0.0.1"
+port = 8778
+allow_insecure_non_loopback = false
+
+[firewall]
+enabled = false
+lab_namespace = "" # Only e4e-lab-* namespaces distinct from the initial namespace.
+destination_addresses = [] # Explicit non-global IPv4 literals. IPv6 redirect unsupported.
+decoy_ports = []
+real_service_ports = [22]
+management_ports = [22, 3389]
+listener_address = "127.0.0.1"
+listener_port = 1234
+lease_seconds = 30 # 5..300s; kernel expiry limits stale redirects after failure.
+
+[fingerprint]
+initial_ttls = [32, 64, 128, 255]
+max_hops = 32 # Configured prior, not an observed path length.
+ip_id_samples = 32
+min_probe_evidence = 8 # Byte evidence; similarity is not tool identity/probability.
+
+[correlation]
+enabled = true
+windows = [60, 900] # Event-time sliding windows, max 3600 seconds each.
+max_windows = 4
+max_sources = 10000
+max_events_per_source = 256
+max_bytes = 33554432 # 3/4 source cache + 1/4 distributed groups; not an RSS cap.
+ttl_seconds = 900.0 # Must cover longest window.
+emit_interval = 5.0
+distributed_groups = 1024
+distributed_sources = 5
+focused_seconds = 300.0
+scanner_threshold = 40
+bot_threshold = 35
+suspicious_threshold = 25
+
+[correlation.weights]
+port_breadth = 25
+host_breadth = 35
+probe_diversity = 15
+connection_rate = 10
+sequential_ports = 15
+anomalies = 20
+credentials = 25
+persistence = 20
+repeated_probe = 15
+timing_regular = 20
+sequence_repeat = 15
+
+# P7: local decisions; no model download or firewall changes by default.
+[ml]
+enabled = true
+required = false
+model_path = ""
+manifest_path = ""
+max_pending = 64
+max_concurrent = 1
+inference_timeout_ms = 200
+
+[decision]
+enabled = true
+mode = "shadow"
+interval_ms = 2000
+
+[enforcement]
+enabled = false
+management_networks = []
+allowlist = []
+trusted_proxies = []
+
+# P14: controlled automatic model promotion. Everything here is off, on a fresh
+# install and after every upgrade. Turning it on lets a validated candidate that
+# passed every gate enter service under a reduced action ceiling, without being
+# asked first. It is a real change in how much this software does by itself, so
+# it is a deliberate edit rather than a default.
+#
+# Start with one small site. Never start with the shared model.
+[model_governance]
+auto_promote_enabled = false
+# The shared base model reaches every site on this machine, including sites
+# whose operator never opted in. Separate switch, separate decision.
+auto_promote_global_enabled = false
+# Sites that opted in, by name. A site that is not listed never auto-promotes,
+# whatever the switches above say.
+auto_promote_sites = []
+# How much shadow observation a candidate needs before its evidence counts.
+# Configurable because one number cannot be right for both a quiet admin panel
+# and a busy API.
+minimum_shadow_seconds = 604800.0
+minimum_shadow_samples = 5000
+minimum_source_groups = 500
+# Reviewed outcomes with trusted provenance. Below this, the quality gates
+# answer NEED_MORE_DATA rather than guessing from unlabelled traffic.
+minimum_trusted_outcomes = 50
+promotion_cooldown_seconds = 604800.0
+max_promotions_per_day = 2
+max_promotions_per_site_per_day = 1
+max_rollbacks_per_day = 3
+# Both of these must stay true while auto-promotion is on. `config validate`
+# refuses the combination rather than accepting it quietly: promotion without a
+# guarded stage skips the only test that covers your actual visitors, and
+# promotion without automatic rollback is a one-way door.
+guarded_activation_enabled = true
+auto_rollback_enabled = true

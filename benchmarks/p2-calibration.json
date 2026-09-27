@@ -1,0 +1,93 @@
+{
+  "samples": 2,
+  "confusion_matrix": {
+    "noise": {
+      "noise": 1,
+      "scanner": 0
+    },
+    "scanner": {
+      "noise": 0,
+      "scanner": 1
+    }
+  },
+  "per_class": {
+    "noise": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "false_positive_rate": 0.0,
+      "false_negative_rate": 0.0,
+      "support": 1
+    },
+    "scanner": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "false_positive_rate": 0.0,
+      "false_negative_rate": 0.0,
+      "support": 1
+    }
+  },
+  "undefined_denominator": null,
+  "calibrated": false,
+  "inputs": [
+    {
+      "id": "scan",
+      "sha256": "f1250220270ed32f89f7a6a44ed4f93ea7d054f75b36fb6c1fd8cbd759f2b13d",
+      "source": {
+        "kind": "synthetic",
+        "generator": "generate.py",
+        "external_capture": false
+      },
+      "packets": 32,
+      "parse_errors": 0
+    },
+    {
+      "id": "noise",
+      "sha256": "9bae91c231857ee6dad51ac910f7d870ae183c43bd923f758cc367f2e8be0ef5",
+      "source": {
+        "kind": "synthetic",
+        "generator": "generate.py",
+        "external_capture": false
+      },
+      "packets": 1,
+      "parse_errors": 0
+    }
+  ],
+  "rule_config": {
+    "enabled": true,
+    "windows": [
+      60,
+      900
+    ],
+    "max_windows": 4,
+    "max_sources": 10000,
+    "max_events_per_source": 256,
+    "max_bytes": 33554432,
+    "ttl_seconds": 900.0,
+    "emit_interval": 5.0,
+    "distributed_groups": 1024,
+    "distributed_sources": 5,
+    "focused_seconds": 300.0,
+    "scanner_threshold": 40,
+    "bot_threshold": 35,
+    "suspicious_threshold": 25,
+    "weights": {
+      "port_breadth": 25,
+      "host_breadth": 35,
+      "probe_diversity": 15,
+      "connection_rate": 10,
+      "sequential_ports": 15,
+      "anomalies": 20,
+      "credentials": 25,
+      "persistence": 20,
+      "repeated_probe": 15,
+      "timing_regular": 20,
+      "sequence_repeat": 15
+    }
+  },
+  "limitations": [
+    "fixtures_are_not_representative_accuracy_evidence",
+    "labels_apply_to_final_active_source_windows",
+    "distributed_group_labels_require_a_future_corpus_schema",
+    "no_automatic_download_or_weight_fitting"
+  ]
+}

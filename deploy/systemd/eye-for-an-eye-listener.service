@@ -1,0 +1,47 @@
+[Unit]
+Description=Eye for an Eye unprivileged finite deception listener
+After=local-fs.target
+
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+StandardOutput=journal
+StandardError=journal
+User=eye-for-an-eye
+Group=eye-for-an-eye-ipc
+WorkingDirectory=/opt/eye-for-an-eye
+LoadCredential=deception.secret:/etc/eye-for-an-eye/deception.secret
+ExecStartPre=/opt/eye-for-an-eye/.venv/bin/eye-for-an-eye config validate --config /etc/eye-for-an-eye/listener.toml --secret-file %d/deception.secret
+ExecStart=/opt/eye-for-an-eye/.venv/bin/eye-for-an-eye run --config /etc/eye-for-an-eye/listener.toml --secret-file %d/deception.secret
+Restart=on-failure
+RestartSec=3
+RestartPreventExitStatus=2 3 4 6
+TimeoutStopSec=12
+KillMode=control-group
+UMask=0077
+RuntimeDirectory=eye-for-an-eye-listener
+RuntimeDirectoryMode=0750
+StateDirectory=eye-for-an-eye-listener
+StateDirectoryMode=0700
+ReadWritePaths=/run/eye-for-an-eye-listener /var/lib/eye-for-an-eye-listener
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
+LimitNOFILE=1024
+TasksMax=32
+MemoryMax=256M
+
+[Install]
+WantedBy=multi-user.target

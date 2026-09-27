@@ -1,0 +1,61 @@
+{
+  "manifest_version": 1,
+  "model_version": "gradient_boosting-research-v1",
+  "feature_schema_version": 1,
+  "feature_order": [
+    "connections_10s",
+    "connections_60s",
+    "connections_900s",
+    "ports_60s",
+    "ports_900s",
+    "destinations_60s",
+    "families_60s",
+    "repetition_60s",
+    "sequential_60s",
+    "anomaly_60s",
+    "credentials_60s",
+    "continuation_60s",
+    "persistence_900s",
+    "burst_10s",
+    "interarrival_mean_60s",
+    "interarrival_cv_60s",
+    "deception_60s",
+    "previous_risk",
+    "available_connections_10s",
+    "available_connections_60s",
+    "available_connections_900s",
+    "available_ports_60s",
+    "available_ports_900s",
+    "available_destinations_60s",
+    "available_families_60s",
+    "available_repetition_60s",
+    "available_sequential_60s",
+    "available_anomaly_60s",
+    "available_credentials_60s",
+    "available_continuation_60s",
+    "available_persistence_900s",
+    "available_burst_10s",
+    "available_interarrival_mean_60s",
+    "available_interarrival_cv_60s",
+    "available_deception_60s",
+    "available_previous_risk"
+  ],
+  "input_name": "features",
+  "input_shape": [
+    1,
+    36
+  ],
+  "input_dtype": "float32",
+  "output_names": [
+    "label",
+    "probabilities"
+  ],
+  "classes": [
+    "benign-like",
+    "malicious-automation-like"
+  ],
+  "score_semantics": "uncalibrated_model_score",
+  "training_dataset_version": "synthetic-behavior-v2",
+  "created_at": "2026-09-08T00:00:00Z",
+  "sha256": "dc58b9d7a846faea7369169cc5302c4c35187a043e8dda6588084f395757547d"
+}

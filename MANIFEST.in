@@ -1,0 +1,21 @@
+include LICENSE
+include README.md pyproject.toml uv.lock CHANGELOG.md SECURITY.md CONTRIBUTING.md Dockerfile docker-compose.lab.yml
+include config.*.toml
+include +*.py
+recursive-include eye_for_an_eye/templates *.toml
+recursive-include deploy *.toml *.service *.conf
+recursive-include docs *.md
+recursive-include scripts *.py
+recursive-include requirements *.txt
+recursive-include tests *.py *.pcap *.json *.txt
+recursive-include tests/fixtures/p7 *.onnx
+recursive-include training *.py *.md
+recursive-include dataset *.py *.md *.toml
+recursive-include models *.md
+recursive-include datasets *.md
+recursive-include reports *.md
+recursive-include benchmarks *.py *.toml *.md
+recursive-include security *.md *.json
+recursive-include release *.json
+recursive-include .github *.yml
+global-exclude *.py[cod] *.secret *.mmdb

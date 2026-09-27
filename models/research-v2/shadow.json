@@ -1,0 +1,725 @@
+{
+  "synthetic_only": true,
+  "test_rows": 1854,
+  "candidates": {
+    "math_only": {
+      "summary": {
+        "total_sources_retained": 93,
+        "source_limit_exceeded_events": 0,
+        "decisions_by_action": {
+          "OBSERVE": 1055,
+          "WATCH": 659,
+          "RATE_LIMIT": 112,
+          "TEMP_BLOCK": 28
+        },
+        "highest_action_by_source": {
+          "OBSERVE": 43,
+          "RATE_LIMIT": 15,
+          "WATCH": 27,
+          "TEMP_BLOCK": 8
+        },
+        "would_block_sources": 8,
+        "agreement": {
+          "none": 1854
+        },
+        "risk_deciles": [
+          472,
+          379,
+          179,
+          34,
+          204,
+          79,
+          116,
+          184,
+          190,
+          17
+        ],
+        "top_math_contributions_sum": [
+          [
+            "anomaly_60s",
+            1330.17512
+          ],
+          [
+            "families_60s",
+            793.5
+          ],
+          [
+            "ports_60s",
+            664.4059099999998
+          ],
+          [
+            "continuation_60s",
+            510.08108999999786
+          ],
+          [
+            "persistence_900s",
+            452.5566099999999
+          ],
+          [
+            "sequential_60s",
+            440.9999999999953
+          ]
+        ],
+        "potential_false_positive_sources": 0,
+        "block_precision": 1.0,
+        "labelled_would_block_sources": 8,
+        "unlabelled_would_block_sources": 0
+      },
+      "false_positive_block_sources": [],
+      "scenarios": {
+        "browser": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "monitoring": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "reverse_proxy": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "backup": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "health_checker": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "software_updater": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "administrator": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "load_balancer": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "sequential_scan": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 3,
+              "min": 0.0,
+              "mean": 0.28072232559294175,
+              "max": 0.8421669767788252
+            },
+            "RATE_LIMIT": {
+              "reached": 3,
+              "min": 4.653223050391404,
+              "mean": 4.7365321832238125,
+              "max": 4.823523694789363
+            }
+          }
+        },
+        "credential_burst": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 3,
+              "min": 4.027206882394727,
+              "mean": 4.344906575846174,
+              "max": 4.601923515415919
+            }
+          }
+        },
+        "protocol_abuse": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 3,
+              "min": 0.0,
+              "mean": 0.3011820654526008,
+              "max": 0.9035461963578024
+            }
+          }
+        },
+        "slow_scan": {
+          "sources": 18,
+          "would_block": 5,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 18,
+              "min": 0.0,
+              "mean": 10.184519639839268,
+              "max": 59.20040904528503
+            },
+            "RATE_LIMIT": {
+              "reached": 15,
+              "min": 201.50245943768186,
+              "mean": 446.48693574360834,
+              "max": 761.4577983156053
+            },
+            "TEMP_BLOCK": {
+              "reached": 5,
+              "min": 458.1617401158224,
+              "mean": 624.0913670071892,
+              "max": 730.2926209812051
+            }
+          }
+        },
+        "random_ports": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 3,
+              "min": 0.0,
+              "mean": 1.8360124868235008,
+              "max": 4.093358769113621
+            },
+            "RATE_LIMIT": {
+              "reached": 2,
+              "min": 9.839956992973084,
+              "mean": 10.024403670051441,
+              "max": 10.208850347129797
+            }
+          }
+        },
+        "low_rate_credentials": {
+          "sources": 18,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "burst_pause": {
+          "sources": 3,
+          "would_block": 3,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 3,
+              "min": 0.0,
+              "mean": 0.1439969252945087,
+              "max": 0.4319907758835261
+            },
+            "RATE_LIMIT": {
+              "reached": 3,
+              "min": 405.1436653971318,
+              "mean": 406.40336797304934,
+              "max": 407.1658013030229
+            },
+            "TEMP_BLOCK": {
+              "reached": 3,
+              "min": 406.3555714559055,
+              "mean": 407.25278060181637,
+              "max": 407.7845627673744
+            }
+          }
+        },
+        "distributed_sources": {
+          "sources": 18,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 17,
+              "min": 0.0,
+              "mean": 16.76794069019149,
+              "max": 41.403647129312986
+            }
+          }
+        }
+      }
+    },
+    "logistic": {
+      "summary": {
+        "total_sources_retained": 93,
+        "source_limit_exceeded_events": 0,
+        "decisions_by_action": {
+          "OBSERVE": 1017,
+          "WATCH": 697,
+          "RATE_LIMIT": 40,
+          "TEMP_BLOCK": 100
+        },
+        "highest_action_by_source": {
+          "OBSERVE": 42,
+          "TEMP_BLOCK": 21,
+          "WATCH": 28,
+          "RATE_LIMIT": 2
+        },
+        "would_block_sources": 21,
+        "agreement": {
+          "none": 1852,
+          "math_low_ml_high": 2
+        },
+        "risk_deciles": [
+          494,
+          462,
+          58,
+          3,
+          15,
+          61,
+          234,
+          154,
+          294,
+          79
+        ],
+        "top_math_contributions_sum": [
+          [
+            "anomaly_60s",
+            1330.17512
+          ],
+          [
+            "families_60s",
+            793.5
+          ],
+          [
+            "ports_60s",
+            664.4059099999998
+          ],
+          [
+            "continuation_60s",
+            510.08108999999786
+          ],
+          [
+            "persistence_900s",
+            452.5566099999999
+          ],
+          [
+            "sequential_60s",
+            440.9999999999953
+          ]
+        ],
+        "potential_false_positive_sources": 0,
+        "block_precision": 1.0,
+        "labelled_would_block_sources": 21,
+        "unlabelled_would_block_sources": 0
+      },
+      "false_positive_block_sources": [],
+      "scenarios": {
+        "browser": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "monitoring": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "reverse_proxy": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "backup": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "health_checker": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "software_updater": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "administrator": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "load_balancer": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "sequential_scan": {
+          "sources": 3,
+          "would_block": 3,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 3,
+              "min": 0.0,
+              "mean": 0.0,
+              "max": 0.0
+            },
+            "RATE_LIMIT": {
+              "reached": 3,
+              "min": 4.653223050391404,
+              "mean": 4.7365321832238125,
+              "max": 4.823523694789363
+            },
+            "TEMP_BLOCK": {
+              "reached": 3,
+              "min": 6.7606723215328985,
+              "mean": 7.2500165559971395,
+              "max": 7.7498967104912735
+            }
+          }
+        },
+        "credential_burst": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 3,
+              "min": 2.1690607725243867,
+              "mean": 2.3294971551069033,
+              "max": 2.41009360164753
+            }
+          }
+        },
+        "protocol_abuse": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 3,
+              "min": 0.0,
+              "mean": 0.0,
+              "max": 0.0
+            }
+          }
+        },
+        "slow_scan": {
+          "sources": 18,
+          "would_block": 15,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 18,
+              "min": 0.0,
+              "mean": 1.298800889465561,
+              "max": 23.378416010380096
+            },
+            "RATE_LIMIT": {
+              "reached": 15,
+              "min": 201.50245943768186,
+              "mean": 446.48693574360834,
+              "max": 761.4577983156053
+            },
+            "TEMP_BLOCK": {
+              "reached": 15,
+              "min": 201.50245943768186,
+              "mean": 446.48693574360834,
+              "max": 761.4577983156053
+            }
+          }
+        },
+        "random_ports": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 3,
+              "min": 0.0,
+              "mean": 0.18752213766280443,
+              "max": 0.5625664129884133
+            },
+            "RATE_LIMIT": {
+              "reached": 2,
+              "min": 9.839956992973084,
+              "mean": 10.024403670051441,
+              "max": 10.208850347129797
+            }
+          }
+        },
+        "low_rate_credentials": {
+          "sources": 18,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "burst_pause": {
+          "sources": 3,
+          "would_block": 3,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 3,
+              "min": 0.0,
+              "mean": 0.0,
+              "max": 0.0
+            },
+            "RATE_LIMIT": {
+              "reached": 3,
+              "min": 405.1436653971318,
+              "mean": 406.40336797304934,
+              "max": 407.1658013030229
+            },
+            "TEMP_BLOCK": {
+              "reached": 3,
+              "min": 405.1436653971318,
+              "mean": 406.40336797304934,
+              "max": 407.1658013030229
+            }
+          }
+        },
+        "distributed_sources": {
+          "sources": 18,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 18,
+              "min": 0.0,
+              "mean": 1.2216636148434445,
+              "max": 21.989945067182003
+            }
+          }
+        }
+      }
+    },
+    "gradient_boosting": {
+      "summary": {
+        "total_sources_retained": 93,
+        "source_limit_exceeded_events": 0,
+        "decisions_by_action": {
+          "OBSERVE": 593,
+          "WATCH": 1121,
+          "RATE_LIMIT": 43,
+          "TEMP_BLOCK": 97
+        },
+        "highest_action_by_source": {
+          "OBSERVE": 24,
+          "TEMP_BLOCK": 21,
+          "WATCH": 46,
+          "RATE_LIMIT": 2
+        },
+        "would_block_sources": 21,
+        "agreement": {
+          "none": 1415,
+          "math_low_ml_high": 439
+        },
+        "risk_deciles": [
+          475,
+          101,
+          0,
+          17,
+          163,
+          312,
+          242,
+          144,
+          318,
+          82
+        ],
+        "top_math_contributions_sum": [
+          [
+            "anomaly_60s",
+            1330.17512
+          ],
+          [
+            "families_60s",
+            793.5
+          ],
+          [
+            "ports_60s",
+            664.4059099999998
+          ],
+          [
+            "continuation_60s",
+            510.08108999999786
+          ],
+          [
+            "persistence_900s",
+            452.5566099999999
+          ],
+          [
+            "sequential_60s",
+            440.9999999999953
+          ]
+        ],
+        "potential_false_positive_sources": 0,
+        "block_precision": 1.0,
+        "labelled_would_block_sources": 21,
+        "unlabelled_would_block_sources": 0
+      },
+      "false_positive_block_sources": [],
+      "scenarios": {
+        "browser": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "monitoring": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "reverse_proxy": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "backup": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "health_checker": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "software_updater": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "administrator": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "load_balancer": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {}
+        },
+        "sequential_scan": {
+          "sources": 3,
+          "would_block": 3,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 3,
+              "min": 0.0,
+              "mean": 0.0,
+              "max": 0.0
+            },
+            "RATE_LIMIT": {
+              "reached": 3,
+              "min": 4.653223050391404,
+              "mean": 4.7365321832238125,
+              "max": 4.823523694789363
+            },
+            "TEMP_BLOCK": {
+              "reached": 3,
+              "min": 7.190472723536074,
+              "mean": 7.645498833919362,
+              "max": 8.120137143400735
+            }
+          }
+        },
+        "credential_burst": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 3,
+              "min": 0.0,
+              "mean": 0.7852398776833768,
+              "max": 1.3266801663535466
+            }
+          }
+        },
+        "protocol_abuse": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 3,
+              "min": 0.0,
+              "mean": 0.0,
+              "max": 0.0
+            }
+          }
+        },
+        "slow_scan": {
+          "sources": 18,
+          "would_block": 15,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 18,
+              "min": 0.0,
+              "mean": 0.0,
+              "max": 0.0
+            },
+            "RATE_LIMIT": {
+              "reached": 15,
+              "min": 201.50245943768186,
+              "mean": 446.48693574360834,
+              "max": 761.4577983156053
+            },
+            "TEMP_BLOCK": {
+              "reached": 15,
+              "min": 201.50245943768186,
+              "mean": 446.48693574360834,
+              "max": 761.4577983156053
+            }
+          }
+        },
+        "random_ports": {
+          "sources": 3,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 3,
+              "min": 0.0,
+              "mean": 0.0,
+              "max": 0.0
+            },
+            "RATE_LIMIT": {
+              "reached": 2,
+              "min": 9.839956992973084,
+              "mean": 10.024403670051441,
+              "max": 10.208850347129797
+            }
+          }
+        },
+        "low_rate_credentials": {
+          "sources": 18,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 18,
+              "min": 0.0,
+              "mean": 40.047529192035945,
+              "max": 59.692703171911305
+            }
+          }
+        },
+        "burst_pause": {
+          "sources": 3,
+          "would_block": 3,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 3,
+              "min": 0.0,
+              "mean": 0.0,
+              "max": 0.0
+            },
+            "RATE_LIMIT": {
+              "reached": 3,
+              "min": 405.1436653971318,
+              "mean": 406.40336797304934,
+              "max": 407.1658013030229
+            },
+            "TEMP_BLOCK": {
+              "reached": 3,
+              "min": 405.1436653971318,
+              "mean": 406.40336797304934,
+              "max": 407.1658013030229
+            }
+          }
+        },
+        "distributed_sources": {
+          "sources": 18,
+          "would_block": 0,
+          "time_from_first_feature_seconds": {
+            "WATCH": {
+              "reached": 18,
+              "min": 0.0,
+              "mean": 0.0,
+              "max": 0.0
+            }
+          }
+        }
+      }
+    }
+  },
+  "timing_origin": "first feature at four observations; all per-source sequences retained; unreached actions omitted",
+  "release_recommendation": "SHADOW ONLY"
+}

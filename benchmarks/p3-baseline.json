@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "source_sha256": "fd0625e01169db2a852b11b77b5a1005ee775462ef661342b23bf161e0cc7784",
+  "python": "3.12.14",
+  "platform": "Windows-11-10.0.22635-SP0",
+  "workload": "localhost HTTP + real event queue/P2 correlation/JSON serialization; no SQLite",
+  "connections": 100,
+  "completed_http_responses": 100,
+  "connections_per_second": 85.28594800608346,
+  "seconds": 1.1725260999955935,
+  "cpu_seconds": 0.265625,
+  "latency_mean_ms": 11.724132999952417,
+  "latency_p50_ms": 11.46330000483431,
+  "latency_p95_ms": 23.73030000308063,
+  "latency_p99_ms": 28.228800001670606,
+  "handler_latency_p50_ms": 0.009499999578110874,
+  "handler_latency_p95_ms": 0.014000004739500582,
+  "handler_latency_p99_ms": 0.02469999890308827,
+  "handler_workload": "100 calls round-robin HTTP/FTP/SSH ProtocolSession.feed; construction and telemetry queue excluded",
+  "response_bytes": 7600,
+  "queue_drops": 0,
+  "idle_requested": 100,
+  "active_connections_measured": 100,
+  "rss_bytes_per_idle_connection": 6348.8,
+  "rss_delta_idle_bytes": 634880,
+  "resources_before": {
+    "threads": 1,
+    "cpu_seconds": 0.015625,
+    "handles": 157,
+    "rss_bytes": 26169344,
+    "fd_kind": "Windows process handles, includes more than sockets"
+  },
+  "resources_idle_before": {
+    "threads": 3,
+    "cpu_seconds": 0.28125,
+    "handles": 178,
+    "rss_bytes": 33099776,
+    "fd_kind": "Windows process handles, includes more than sockets"
+  },
+  "resources_idle": {
+    "threads": 3,
+    "cpu_seconds": 0.40625,
+    "handles": 378,
+    "rss_bytes": 33734656,
+    "fd_kind": "Windows process handles, includes more than sockets"
+  },
+  "resources_after": {
+    "threads": 1,
+    "cpu_seconds": 0.421875,
+    "handles": 172,
+    "rss_bytes": 33648640,
+    "fd_kind": "Windows process handles, includes more than sockets"
+  },
+  "shutdown_seconds": 0.10900000000401633,
+  "active_after_shutdown": 0,
+  "response_limit": 1024,
+  "deception": {
+    "events": 700,
+    "response_bytes": 7600,
+    "closed": 200
+  },
+  "limitations": [
+    "single synthetic Windows/Linux process run",
+    "client sockets share measured process with server",
+    "latency is full loopback interaction, includes scheduling and telemetry enqueue",
+    "RSS delta includes allocator/runtime noise, not isolated per-connection ownership",
+    "CPU uses process CPU time; native handle count is not exclusively socket FDs",
+    "logging disk writes, SQLite and live redirected traffic are not benchmarked"
+  ]
+}

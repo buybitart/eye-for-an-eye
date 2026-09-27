@@ -1,0 +1,20 @@
+# Blank issues are off so that every report arrives through a form that says,
+# in its first paragraph, not to report a security vulnerability here.
+blank_issues_enabled: false
+
+# A `contact_links` entry pointing at the security policy would be the obvious
+# addition, and it needs an absolute URL. It is left commented out so that the
+# tagged release source stays exactly what was validated, and because the page it
+# would point at is not live until Private Vulnerability Reporting is switched on.
+# A link that goes nowhere is worse than no link: a reporter would believe they
+# had disclosed to someone.
+#
+# Owner action after publication, as an ordinary later commit: uncomment the
+# entry, substituting this repository's own URL.
+#
+# contact_links:
+#   - name: Report a security vulnerability
+#     url: https://github.com/<owner>/<repo>/security/policy
+#     about: >-
+#       Do not open a public issue for a security vulnerability. Use private
+#       vulnerability reporting instead.

@@ -1,0 +1,106 @@
+# Website profile. Safe defaults for a web server or a small VPS.
+#
+# The system only watches. It does not block anything until you turn enforcement on.
+# Add a capture source below when you are ready. Without it, the service starts,
+# validates itself and stays idle.
+config_version = 1
+
+[deployment]
+profile = "sensor"
+egress = "disabled"
+
+[network]
+bind_address = "127.0.0.1"
+udp_responses = false
+
+[capture]
+# Linux: run a separate helper with CAP_NET_RAW and point this socket at it.
+# You can also replay a saved capture file with: eye-for-an-eye analyze-pcap
+ipc_socket = ""
+pcap_path = ""
+
+[active_probes]
+enabled = false
+
+[enrichment]
+enabled = false
+rdap_enabled = false
+
+[runtime]
+status_file = "status.json"
+
+[storage]
+enabled = true
+path = "events.sqlite3"
+retention_seconds = 604800.0
+max_events = 200000
+max_bytes = 268435456
+
+[api]
+# Local only. Do not open this port to the Internet.
+enabled = true
+bind_address = "127.0.0.1"
+port = 8777
+
+[metrics]
+enabled = true
+bind_address = "127.0.0.1"
+port = 8778
+
+[firewall]
+enabled = false
+
+[ml]
+# Local ONNX model. Empty paths mean no model is loaded, and the maths engine works alone.
+enabled = true
+required = false
+model_path = ""
+manifest_path = ""
+inference_timeout_ms = 200
+
+[decision]
+# Shadow Mode. The system decides but never blocks.
+enabled = true
+mode = "shadow"
+interval_ms = 2000
+
+[enforcement]
+# Turn this on only after you read the Shadow Mode report.
+# Put your own address and your management network here first.
+enabled = false
+management_networks = []
+allowlist = []
+trusted_proxies = []
+
+[web]
+# Web protection. Reads safe request metadata from a local Nginx access log.
+# It needs no password, no cookie and no request body to see behaviour.
+#
+# Run "eye-for-an-eye web log-format" for the log_format to install, then
+# "eye-for-an-eye web doctor" to check it.
+enabled = false
+source_type = "nginx"
+access_log_path = ""
+
+# A local key so repeated paths can be counted without the path being stored:
+#   head -c 48 /dev/urandom | base64 > web.secret && chmod 600 web.secret
+secret_file = ""
+
+# CRITICAL. Only list networks your own proxy, load balancer or CDN uses.
+# While this is empty, forwarded headers are ignored and every request looks
+# like it came from the proxy. That is the safe default: believing a forwarded
+# header from an arbitrary client lets anyone claim to be any address.
+#
+# A client behind one of these is never blocked at the network layer, because
+# that would hit the proxy and everyone else behind it.
+trusted_proxy_networks = []
+trust_forwarded_headers = true
+
+# Privacy. A URL routinely carries a reset token, an account id or a search
+# term, so neither of these is on by default.
+store_raw_path = false
+store_query_values = false
+
+# Methods this site expects. An API that uses PUT and DELETE should say so,
+# otherwise its normal traffic reads as method probing.
+expected_methods = ["GET", "HEAD", "POST", "OPTIONS"]

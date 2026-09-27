@@ -1,0 +1,54 @@
+name: Bug report
+description: Something behaves differently from what the documentation says.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        **Not for security vulnerabilities.** If this is a vulnerability, close
+        this form and read `SECURITY.md`. A public issue discloses the problem
+        to everyone running this software at the same moment you report it.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: >-
+        What you expected, what happened instead, and how to reach it. A
+        sanitised reproduction is worth more than a description.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The output of `eye-for-an-eye --version`.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: >-
+        Operating system, Python version, and which profile the deployment uses
+        (`production-shadow`, `production-autonomous`, `honeypot`, `lab`).
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Doctor output
+      description: >-
+        `eye-for-an-eye doctor --config <file>`. Review it before pasting: it
+        names paths on your machine.
+      render: text
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Before submitting
+      options:
+        - label: This is not a security vulnerability.
+          required: true
+        - label: >-
+            I have removed addresses, host names and anything else about my
+            deployment that I did not intend to publish.
+          required: true

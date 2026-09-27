@@ -1,0 +1,98 @@
+# ---------------------------------------------------------------------------
+# Eye for an Eye - files that must never enter the public repository.
+# Rules are grouped so a reviewer can see why each line is here.
+# ---------------------------------------------------------------------------
+
+# --- Local environments and caches (LOCAL_ONLY) ---
+.venv/
+venv/
+.uv-cache/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.coverage
+htmlcov/
+.p1-check-venv/
+.p*-check/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# --- Secrets and credentials (SECRET: never commit) ---
+*.secret
+*.dataset-secret
+.env
+.env.*
+*.pem
+*.key
+*.p12
+id_rsa
+id_ed25519
+credentials.json
+
+# --- Operator data written at runtime (PRIVATE) ---
+*.local.toml
+*.sqlite3*
+*.db*
+*.jsonl
+*.jsonl.*
+*.mmdb
+
+# --- Generated build and release output (GENERATED) ---
+release-artifacts/
+benchmarks/results/
+# A git bundle is a copy of this repository's history, not part of it.
+*.bundle
+
+# --- Generated dataset and model evidence (GENERATED, rebuild with the CLI) ---
+# Rebuild with: python -m dataset.cli build
+datasets/raw/
+datasets/processed/
+datasets/synthetic-behavior-v3/
+datasets/manifests/*-validation.json
+training/data/
+# P15.1's trusted evaluation corpus: 24 MB of generated scenario traffic.
+# The recipe is committed (dataset/scenarios/matrix-eval-v1.toml); the traffic
+# is not. Rebuild with:
+#   python -m dataset generate --matrix dataset/scenarios/matrix-eval-v1.toml \
+#       --output datasets/eval-v1 --dataset-version dataset-eval-v1
+datasets/eval-v1/
+# P15.2's calibration and locked-test corpora. Same recipe, different seed
+# salts, so the recipe is committed and the traffic is not:
+#   python -m dataset generate --matrix dataset/scenarios/matrix-eval-v1.toml \
+#       --output datasets/<dir> --dataset-version <version> --seed-salt <salt>
+# The salts are in training/evaluation_design.py.
+datasets/cal-v1/
+datasets/cal2-v1/
+datasets/test-v1/
+# P15.3's locked generalisation benchmark. A different matrix, because it holds
+# six behaviour families that exist nowhere else — and that matrix IS committed,
+# so the 34 MB of traffic rebuilds from it byte for byte:
+#   python -m dataset generate \
+#       --matrix dataset/scenarios/matrix-generalization-v2.toml \
+#       --output datasets/gen-test-v2 \
+#       --dataset-version dataset-generalization-test-v2 --seed-salt p15.3-locked
+# reports/P15_3_FINAL_REPORT.md records the sha256 of the samples.csv that was
+# actually scored, so a rebuild can be checked against the corpus the published
+# result came from.
+datasets/gen-test-v2/
+# Cached per-window engine scores. An optimisation, never evidence: every
+# number in a report is regenerated from the corpora above.
+reports/p15_2/
+
+# Shadow telemetry is unlabelled production-like data. It never enters the repository.
+datasets/unlabeled/
+
+# --- Third-party copyrighted books kept locally by the maintainer (PRIVATE) ---
+# Root PDFs are never published. Project history PDFs live in docs/history/.
+/*.pdf
+
+# The curated public release root, rebuilt by scripts/build_prod.py.
+# It is a derived artifact of this tree and is not tracked here.
+/prod/
