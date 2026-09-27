@@ -18,7 +18,7 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y nftables iproute2 libpcap0.8
       - name: Only owned isolated namespaces; no host firewall calls
         run: sudo env E4E_RUN_NAMESPACE_LAB=1 "$PWD/.venv/bin/python" -B -m pytest tests/linux_lab -q --junitxml=namespace-tests.xml
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
           name: explicit-namespace-lab
